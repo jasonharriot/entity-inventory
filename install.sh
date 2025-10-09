@@ -84,6 +84,22 @@ fi
 
 
 
+# Set up start script permissions
+chmod +x "start.sh"
+
+e=$?
+
+
+if [ $e -eq "1" ]; then
+	echo "Could not set permissions on start.sh."
+	generalerror=1
+elif [ $e -eq "0" ]; then
+	echo "Set execute permissions on start.sh."
+else
+	echo "Unknown permissions issue on start.sh."
+	generalerror=1
+fi
+
 
 
 # Start service

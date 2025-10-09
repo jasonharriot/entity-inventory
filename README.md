@@ -27,7 +27,6 @@ Edit /etc/nginx/sites-enabled/default:
 	}
 }```
 
-`chmod +x start.sh`
 `chmod +x install.sh`
 
 `./install.sh`
