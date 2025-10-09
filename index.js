@@ -3,7 +3,7 @@ const { DatabaseSync } = require('node:sqlite');
 const app = express();
 const database = new DatabaseSync('db.sqlite');
 
-const port = 80;
+const port = 8001;
 
 const { getIDCounter } = require('./getIDCounter.js');
 
@@ -76,7 +76,7 @@ app.get('/api/sheet', (req, res) => {
 
 app.listen(port, () => {
 	console.log(`Setting up database...`);
-	
+
 	database.exec(`CREATE TABLE IF NOT EXISTS cards (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		parent_ids TEXT DEFAULT '',
