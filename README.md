@@ -26,3 +26,8 @@ Edit /etc/nginx/sites-enabled/default:
 		proxy_pass http://localhost:8001/;
 	}
 }```
+
+`chmod +x start.sh`
+`chmod +x install.sh`
+
+`./install.sh`

@@ -98,13 +98,15 @@ e=$?
 if [ $e -eq "1" ]; then
 	echo "Symlink $servicefilepath already exists."
 elif [ $e -eq "0" ]; then
-	echo "Created service symlink $servicefilepath."
+	echo "Created service symlink."
 else
 	echo "Failed to create service symlink $servicefilepath. ($e)"
 	generalerror=1
 fi
 
 sudo systemctl enable "einventory.service"
+
+sudo systemctl restart "einventory.service"
 
 systemctl status "einventory.service" > /dev/null 2>&1
 
