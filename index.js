@@ -75,6 +75,8 @@ app.get('/api/sheet', (req, res) => {
 })
 
 app.listen(port, () => {
+	console.log(`Setting up database...`);
+	
 	database.exec(`CREATE TABLE IF NOT EXISTS cards (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		parent_ids TEXT DEFAULT '',
