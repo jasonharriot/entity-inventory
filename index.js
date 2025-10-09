@@ -7,7 +7,7 @@ const port = 80;
 
 const { getIDCounter } = require('./getIDCounter.js');
 
-const { SheetManager } = require('./SheetManager.js');
+const { SheetManager } = require('./sheetManager.js');
 
 app.use('/', express.static('html'));	//For requests to the root, just serve static.
 

@@ -2,10 +2,6 @@ const {PDFDocument, StandardFonts} = require('pdf-lib');
 const { issueIDs } = require('./issueIDs.js');
 const fs = require('node:fs');
 const qr = require('qrcode');
-const stream = require('node:stream');
-const { xmlSVGDecompose } = require('./xmlSVGDecompose.js');
-const { xmlSVGToPage } = require('./xmlSVGToPage.js');
-const { pngB64ToPage } = require('./pngB64ToPage');
 
 const { sampleIDString } = require('./sampleIDString.js');
 
