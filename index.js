@@ -9,6 +9,12 @@ const { getIDCounter } = require('./getIDCounter.js');
 
 const { SheetManager } = require('./sheetManager.js');
 
+app.use((req, res, next) => {
+	console.log(`[${new Date().toISOString()}] ${req.url}`);
+
+	next();
+});
+
 app.use('/', express.static('html'));	//For requests to the root, just serve static.
 
 app.get('/api/getIDCounter', (req, res) => {

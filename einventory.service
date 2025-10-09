@@ -1,0 +1,13 @@
+[Unit]
+Description=Entity Inventory service file
+After=network.target
+Wants=network-online.target
+
+[Service]
+Restart=always
+Type=simple
+ExecStart=/var/einventory/start.sh
+Environment=
+
+[Install]
+WantedBy=multi-user.target
