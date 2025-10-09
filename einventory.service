@@ -8,6 +8,7 @@ Restart=always
 Type=simple
 ExecStart=/var/einventory/start.sh
 Environment=
+User=pi
 
 [Install]
 WantedBy=multi-user.target
