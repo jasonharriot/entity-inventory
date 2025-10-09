@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+
+	</head>
+	<body>
+		<div id="header">
+			<h1>Entity Inventory</h1>
+			<h2>Sample Information&mdash;<span class="fillTagID">loading...</span></h2>
+		</div>
+
+		<div id="tagInfo">
+			Sample number: <span class="fillTagID"></span>
+			<br>
+			Chemical: <input type="text">
+			<br>
+			Date created: <input type="text">
+		</div>
+
+		<div id="footer">
+			EDAC Labs, Inc.
+		</div>
+		<script>
+			console.log('Sample info page...');
+
+			const params = new URLSearchParams(window.location.search);
+
+			let tagid = 'n/a';
+
+			if(params.has('tagid')){
+				tagid = params.get('tagid');
+			}
+
+			for(e of document.getElementsByClassName('fillTagID')){
+				console.log(e);
+				e.innerText = tagid;
+			}
+
+			
+		</script>
+	</body>
+</html>

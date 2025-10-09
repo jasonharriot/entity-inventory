@@ -1,4 +1,4 @@
-const {PDFDocument} = require('pdf-lib');
+const {PDFDocument, StandardFonts} = require('pdf-lib');
 const { issueIDs } = require('./issueIDs.js');
 const fs = require('node:fs');
 const qr = require('qrcode');
@@ -6,6 +6,8 @@ const stream = require('node:stream');
 const { xmlSVGDecompose } = require('./xmlSVGDecompose.js');
 const { xmlSVGToPage } = require('./xmlSVGToPage.js');
 const { pngB64ToPage } = require('./pngB64ToPage');
+
+const { sampleIDString } = require('./sampleIDString.js');
 
 module.exports = {
 	SheetManager: class{
@@ -22,7 +24,7 @@ module.exports = {
 
 			this.tagOffset = tagOffset;
 
-			this.tagBase = 'einventory.local/s/'	//QR codes have URLs like:
+			this.tagBase = 'http://einventory.local/s/'	//QR codes have URLs like:
 			//"einventory.local/s/10229"
 
 			this.tagSize = .6;	//QR code size, in inches.
@@ -54,7 +56,7 @@ module.exports = {
 		}
 
 		getQRCodePNGB64(id){
-			let filePath = `./qr/${id}.png`;
+			let filePath = `./qrtemp/${id}.png`;
 
 			return new Promise((resolve, reject) => {
 				qr.toFile(
@@ -77,12 +79,11 @@ module.exports = {
 						}
 
 						try{
-							let data = fs.readFileSync(filePath,'binary');
-							console.log('Read QR code PNG data from disk: ' + data.length);
+							let data = fs.readFileSync(filePath);
 
-							//fs.unlinkSync(filePath);	//Delete the file.
+							fs.unlinkSync(filePath);	//Delete the file.
 
-							resolve(data);
+							resolve(data.toString('base64'));
 
 						} catch(err){
 							console.error('Could not read PNG file at ' + filePath);
@@ -123,12 +124,25 @@ module.exports = {
 				//the promises to resolve. Don't need to do anything with the
 				//data.
 
-					console.log('Waited for all promises to resolve. Have '
-						+ qrCodePNGs.length + ' PNG images.');
-
 					resolveMain(qrCodePNGs);	//Finally, resolve the outer
 					//promise with all the PNG image data(s).
+				});
+			});
+		}
 
+		embedPNGs(doc, arr){
+			return new Promise((resolve, reject) => {
+
+				let promises = [];
+
+				arr.forEach((e) => {
+					let prom = doc.embedPng(e);
+
+					promises.push(prom);
+				});
+
+				Promise.all(promises).then(values => {
+					resolve(values);
 				});
 			});
 		}
@@ -159,80 +173,101 @@ module.exports = {
 			let newPage = doc.addPage([this.pageSize[0]*72, this.pageSize[1]*72]);
 
 			return new Promise((resolve, reject) => {
-				const promises = [	//We need the following promises to resolve
-					//and hand over their data before proceeding to the next
-					//step.
+				const promises1 = [
+					this.getQRCodePNGArray(newIDs)	//Fetch all QR PNGs. This
+					//must be done first because we need to embed them next.
+				]
 
-					this.getQRCodePNGArray(newIDs),	//Fetch all QR PNGs
+				Promise.all(promises1).then(values1 =>{	//TODO: Can this promise
+					//structure be made cleaner? It grows to the right...
 
-					doc.embedPage(templatePage)	//Set up the embed of our 
-					//template label page inside the main document
 
+					let pngArray = values1[0];	//Extract the respective
+					//results.
+
+					const promises2 = [
+						this.embedPNGs(doc, pngArray),	//Embed all the PNG images
+						doc.embedPage(templatePage),	//Set up the embed of our 
+						//template label page inside the main document
+						doc.embedFont(StandardFonts.CourierBold)	//TODO: Can we
+						//streamline this so it's only embedded once? What
+						//happens if it is embedded multiple times?
 					]
 
-				Promise.all(promises).then(values =>{	//Wait for all the pre-
-					//requisite promises to resolve, and capture a list of the 
-					//results in "values", which will be an array.
+					Promise.all(promises2).then(values2 =>{
+						let embeddedPNGs = values2[0];
+						let embeddedPage = values2[1];
+						let embeddedFont = values2[2];
 
-					let pngArray = values[0];	//Extract the respective
-					//results.
-					let embeddedPage = values[1];
+						let positions = this.getPositions();
 
-					let positions = this.getPositions();
+						for(let i=0; i<positions.length; i++){	//Index for
+							//positions and ids. Should be same length.
 
-					for(let i=0; i<positions.length; i++){	//Index for
-						//positions and ids. Should be same length.
+							let thisID = newIDs[i];
 
-						let thisID = newIDs[i];
+							let thisPNG = embeddedPNGs[i];
 
-						let thisPNG = pngArray[i];
+							let thisPosition = positions[i];
 
-						let thisPosition = positions[i];
+							//Position of BL corner of label in inches, from BL of
+							//page.
 
-						
+							let thisLabelX = thisPosition[0];
+							let thisLabelY = thisPosition[1];
 
-						//Position of BL corner of label in inches, from BL of
-						//page.
+							newPage.drawPage(embeddedPage, {
+								x: thisLabelX*72,
+								y: thisLabelY*72
+							});
 
-						let thisLabelX = thisPosition[0];
-						let thisLabelY = thisPosition[1];
+							let thisTagX = (thisLabelX + this.tagOffset[0]);
+							let thisTagY = (thisLabelY + this.tagOffset[1]);
 
-						newPage.drawPage(embeddedPage, {
-							x: thisLabelX*72,
-							y: thisLabelY*72
-						});
+							newPage.drawImage(thisPNG, {
+								x: thisTagX*72,
+								y: thisTagY*72,
+							
+								width: this.tagSize*72,
+								height: this.tagSize*72,
+								opacity: 1
+							});
 
-						let pngPos = [
-							(thisLabelX + this.tagOffset[0])*72,
-							(thisLabelY + this.tagOffset[1] + this.tagSize)*72
-							]
+							newPage.drawText(sampleIDString(thisID), {
+								x: (thisTagX-.05)*72, 
+								y: (thisTagY-.15)*72,
+								size:14,
+								font: embeddedFont
+							});
 
-						pngB64ToPage(thisPNG, newPage, pngPos, this.tagSize);
+							/*newPage.drawText(`No. ${i+1}`, {	//Debugging text
+								//shows the order of the labels on the sheet.
+								x: thisLabelX*72, 
+								y: thisLabelY*72,
+								size:6
+							});*/
+						}
 
-						//xmlSVGToPage(thisSVGSet, newPage, svgPos, this.tagSize);	//Draw all the SVG
-						//shapes contained in thisSVGSet to newPage
+						//Footer
+						let footerString = 'PRINT ONLY ONE COPY. DO NOT SAVE THIS FILE. '
+						+ new Date().toISOString()
 
-						newPage.drawText(`No. ${i+1}`, {
-							x: thisLabelX*72, 
-							y: thisLabelY*72,
-							size:6
-						});
+						newPage.drawText(footerString, {
+								x: .5*72, 
+								y: .25*72,
+								size:12
+							});
 
-						console.log(i, thisID, thisPNG.length, thisPosition);
-					}
+						newPage.drawText(footerString, {
+								x: .5*72, 
+								y: (this.pageSize[1]-.35)*72,
+								size:12
+							});
 
-					//Footer
-					let footerString = 'entity-inventory label sheet generator '
-					+ new Date().toISOString()
-					+ '. Do not copy this page.'
-					newPage.drawText(footerString, {
-							x: .5*72, 
-							y: .25*72,
-							size:12
-						});
+					}).then(resolve);	//Finally, resolve the outer promise
+					//indicating we are done doing stuff to the document.
 
-				}).then(resolve);	//Finally, resolve the outer promise
-				//indicating we are done doing stuff to the document.
+				});
 			});
 		}
 
@@ -246,11 +281,6 @@ module.exports = {
 
 						return;	//<-- Is this unreachable?
 					}
-
-					//for(let p=0; p<numPages; p++){
-						//let page = this.makePage(database, doc)
-						//doc.addPage(page);
-					//}
 
 					this.getTemplateDoc().then((tDoc) => {
 						//resolve(tDoc);	//As a test, we can just send the
