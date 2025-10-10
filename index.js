@@ -6,8 +6,9 @@ const database = new DatabaseSync('db.sqlite');
 const port = 8001;
 
 const { getIDCounter } = require('./getIDCounter.js');
-
+const { getEntryByTagID } = require('./getEntryByTagID');
 const { SheetManager } = require('./sheetManager.js');
+const { updateEntryOnScan } = require('./updateEntryOnScan.js');
 
 app.use((req, res, next) => {
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
@@ -24,13 +25,29 @@ app.get('/api/getIDCounter', (req, res) => {
 });
 
 app.get('/s/:tagid', (req, res) => {
-	console.log('Request for tag scan');
-	console.log(req.params.tagid);
+	let tagID = req.params.tagid;
+	console.log('Tag scan event:', tagID);
 
-	res.redirect(`/viewtag.html?tagid=${req.params.tagid}`);
+	updateEntryOnScan(database, tagID);	//Update the date_scanned fields
+
+	//let entry = getEntryByTagID(database, tagID);
+
+	//res.send(entry);
+
+	res.redirect(`/viewtag.html?tagid=${tagID}`);
 });
 
-app.get('/api/test/issue', (req, res) => {	//Should never call this, because
+app.get('/api/card/:tagid', (req, res) => {
+	let tagID = req.params.tagid;
+
+	console.log('Card info request:', tagID);
+
+	let entry = getEntryByTagID(database, tagID);
+
+	res.send(entry);
+})
+
+/*app.get('/api/test/issue', (req, res) => {	//Should never call this, because
 	//those IDs will be immediately orphaned with no way to generate labels
 	//for them.
 
@@ -47,7 +64,7 @@ app.get('/api/test/issue', (req, res) => {	//Should never call this, because
 	let idList = issueIDs(database, num);
 
 	res.send(idList);
-});
+});*/
 
 app.get('/api/sheet', (req, res) => {
 	labelOffset = [.196, .5];
@@ -69,7 +86,10 @@ app.get('/api/sheet', (req, res) => {
 		pdfObj.save().then((b64String) => {
 			res.writeHead(200, {
 				'Content-Type': 'application/pdf',
-				'Content-Disposition': 'filename="labels.pdf"'
+				'Content-Disposition': 'filename="labels.pdf"',
+				'Cache-Control': 'no-cache, no-store, must-revalidate',
+				'Pragma': 'no-cache',
+				'Expires': '0'
 			});
 
 			res.end(b64String);

@@ -2,42 +2,83 @@
 
 <html>
 	<head>
-
+		<link rel="stylesheet" href="/style/style.css" />
 	</head>
 	<body>
-		<div id="header">
-			<h1>Entity Inventory</h1>
-			<h2>Sample Information&mdash;<span class="fillTagID">loading...</span></h2>
-		</div>
+		<div id="container">
+			<div id="header">
+				<h1>Entity Inventory</h1>
 
-		<div id="tagInfo">
-			Sample number: <span class="fillTagID"></span>
-			<br>
-			Chemical: <input type="text">
-			<br>
-			Date created: <input type="text">
-		</div>
+				<h2><a class="backArrow" href="/"><img src="img/arrow_left.png">Home</a></h2>
+			</div>
 
-		<div id="footer">
-			EDAC Labs, Inc.
+			<div id="contentContainer">
+				<table class="cardTable">
+					<tbody>
+						<tr>
+							<td class="fieldCol">Tag ID number</td>
+							<td class="valueCol fillTagID"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Sample contents:</td>
+							<td class="valueCol fillContents"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Container size (L)</td>
+							<td class="valueCol fillContainerVolumeL"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Date of original experiment</td>
+							<td class="valueCol fillDateExperiment"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Date label printed</td>
+							<td class="valueCol fillDateIssued"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Date of sample creation</td>
+							<td class="valueCol fillDateSample"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Date of first scan</td>
+							<td class="valueCol fillDateScannedFirst"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Date of latest scan</td>
+							<td class="valueCol fillDateScannedLatest"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Physical form</td>
+							<td class="valueCol fillForm"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Initial mass of sample (kg)</td>
+							<td class="valueCol fillMassInitialkg"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Notes</td>
+							<td class="valueCol fillNotes"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Parent ID(s)</td>
+							<td class="valueCol fillParentIDs"></td>
+						</tr>
+						<tr>
+							<td class="fieldCol">Status</td>
+							<td class="valueCol fillStatus"></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+
+			<div id="footer">
+				EDAC Labs, Inc.
+			</div>
 		</div>
+		<script src="/js/getCard.js"></script>
+		<script src="/js/showCard.js"></script>
 		<script>
-			console.log('Sample info page...');
-
-			const params = new URLSearchParams(window.location.search);
-
-			let tagid = 'n/a';
-
-			if(params.has('tagid')){
-				tagid = params.get('tagid');
-			}
-
-			for(e of document.getElementsByClassName('fillTagID')){
-				console.log(e);
-				e.innerText = tagid;
-			}
-
-			
+			let card = getCard();
 		</script>
 	</body>
 </html>
