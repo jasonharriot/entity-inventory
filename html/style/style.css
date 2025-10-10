@@ -1,16 +1,15 @@
 body{
 }
 
+h1{
+	
+}
+
 .cardTable{
 
 }
 
 .fieldCol{
-}
-
-.valueCol{
-	font-family: monospace;
-	padding-left: 20px;
 }
 
 
@@ -22,7 +21,8 @@ body{
 }
 
 #header{
-	background-color: #ccffee;
+	background-color: #fff0f0;
+	border-left: 10px solid #f00;
 	
 	padding: 10px;
 }
@@ -35,8 +35,26 @@ body{
 	padding: 10px;
 	margin-top: 100px;
 	margin-bottom: 100px;
-	background-color: #ccffee;
+	background-color: #fff0f0;
+	border-left: 10px solid #f00;
 }
+
+.cardTable{
+	border-spacing: 0px;
+}
+
+.cardTable td{
+	padding: 5px 15px 5px 15px;
+}
+
+.rowEven{
+	background-color: #eee;
+}
+.rowOdd{
+	/*background-color: #ddd;*/
+}
+
+
 
 .backArrow{
 	text-decoration: none;
@@ -47,3 +65,12 @@ body{
 	height: 20px;
 	width: 20px;
 }
+
+.section{
+	margin-top: 30px;
+	border-left: 10px solid #f00;
+	padding: 20px;
+	padding-left: 10px;
+	background-color: #f9f9f9;
+}
+

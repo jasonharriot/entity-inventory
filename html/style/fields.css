@@ -1,0 +1,12 @@
+#fillTagID{
+	font-family: monospace;
+}
+
+#fillDateSample, #fillDateIssued, #fillDateExperiment, #fillDateScannedFirst, #fillDateModifiedFirst, #fillDateScannedLatest, #fillDateModifiedLatest{
+	font-family: monospace;
+}
+
+.edit{
+	color: #f00;
+	cursor: pointer;
+}

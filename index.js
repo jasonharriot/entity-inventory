@@ -24,6 +24,22 @@ app.get('/api/getIDCounter', (req, res) => {
 	res.send(counter);
 });
 
+app.get('/api/getTemplates', (req, res) => {
+	res.writeHead(501);
+	res.end();
+});
+
+app.post('/api/write/:tagid', (req, res) => {
+	let bodyStr = '';
+	req.on('data', (chunk) => {
+		bodyStr += chunk.toString();
+	});
+
+	req.on('end', () => {
+		res.end('Received POST: ' + bodyStr);
+	});
+})
+
 app.get('/s/:tagid', (req, res) => {
 	let tagID = req.params.tagid;
 	console.log('Tag scan event:', tagID);
