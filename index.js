@@ -50,8 +50,8 @@ app.get('/api/test/issue', (req, res) => {	//Should never call this, because
 });
 
 app.get('/api/sheet', (req, res) => {
-	labelOffset = [.3125, .5];
-	labelSpacing = [2.625, 1];
+	labelOffset = [.196, .5];
+	labelSpacing = [2.756, 1];
 	labelNum = [3, 10];
 
 	tagOffset = [1.92, .31];	//Position of the QR code from the bottom left of

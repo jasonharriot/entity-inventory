@@ -1,4 +1,4 @@
-const {PDFDocument, StandardFonts} = require('pdf-lib');
+const {PDFDocument, StandardFonts, rgb} = require('pdf-lib');
 const { issueIDs } = require('./issueIDs.js');
 const fs = require('node:fs');
 const qr = require('qrcode');
@@ -251,13 +251,15 @@ module.exports = {
 						newPage.drawText(footerString, {
 								x: .5*72, 
 								y: .25*72,
-								size:12
+								size:12,
+								color: rgb(.5, .5, .5)
 							});
 
 						newPage.drawText(footerString, {
 								x: .5*72, 
 								y: (this.pageSize[1]-.35)*72,
-								size:12
+								size:12,
+								color: rgb(.5, .5, .5)
 							});
 
 					}).then(resolve);	//Finally, resolve the outer promise
