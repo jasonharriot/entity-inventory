@@ -1,7 +1,7 @@
 # entity-inventory
 Create and manage information for unique physical entities with specialized labels
 
-
+# Installation
 `sudo apt install -y nodejs npm nginx`
 
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash`
@@ -15,7 +15,8 @@ Logout and log back in.
 
 Edit /etc/nginx/sites-enabled/default:
 
-```server {
+```
+server {
 	listen 80 default_server;
 	listen [::]:80 default_server;
 
@@ -25,7 +26,8 @@ Edit /etc/nginx/sites-enabled/default:
 		proxy_set_header X-Real-IP $remote_addr;
 		proxy_pass http://localhost:8001/;
 	}
-}```
+}
+```
 
 `chmod +x install.sh`
 
