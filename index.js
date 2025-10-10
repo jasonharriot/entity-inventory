@@ -50,7 +50,7 @@ app.get('/s/:tagid', (req, res) => {
 
 	//res.send(entry);
 
-	res.redirect(`/viewtag.html?tagid=${tagID}`);
+	res.redirect(`/viewcard.html?tagid=${tagID}`);
 });
 
 app.get('/api/card/:tagid', (req, res) => {
