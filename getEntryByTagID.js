@@ -1,4 +1,3 @@
-
 module.exports = {
 	getEntryByTagID: function (database, id){
 		let safeID = Number(id);
@@ -19,13 +18,12 @@ module.exports = {
 		//console.log(`There are ${entries.length} entries for ${safeID}`);
 
 		if(entries.length > 1){
-			console.log(`More than one entry is not acceptable. Returning empty results.`);
-			return {};
+			throw new Error(`More than one entry is not acceptable!`);
 		}
 
 		if(entries.length == 0){
 			console.log(`No entries for ${safeID}.`);
-			return {};
+			return null;
 		}
 
 		const entry = entries[0];

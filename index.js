@@ -9,6 +9,7 @@ const { getIDCounter } = require('./getIDCounter.js');
 const { getEntryByTagID } = require('./getEntryByTagID');
 const { SheetManager } = require('./sheetManager.js');
 const { updateEntryOnScan } = require('./updateEntryOnScan.js');
+const { updateFields } = require('./updateFields.js');
 
 app.use((req, res, next) => {
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
@@ -19,7 +20,6 @@ app.use((req, res, next) => {
 app.use('/', express.static('html'));	//For requests to the root, just serve static.
 
 app.get('/api/getIDCounter', (req, res) => {
-	
 	let counter = getIDCounter(database);
 	res.send(counter);
 });
@@ -29,19 +29,17 @@ app.get('/api/getTemplates', (req, res) => {
 	res.end();
 });
 
-app.post('/api/write/:tagid', (req, res) => {
-	let bodyStr = '';
-	req.on('data', (chunk) => {
-		bodyStr += chunk.toString();
-	});
-
-	req.on('end', () => {
-		res.end('Received POST: ' + bodyStr);
-	});
-})
-
 app.get('/s/:tagid', (req, res) => {
 	let tagID = req.params.tagid;
+
+	if(isNaN(tagID) || tagID <= 0 || tagID > 999999){	//Max id is 999999. 
+		console.error(`Bad tag ID: ${tagID}`);
+		console.error(e);
+		res.writeHead(400);
+		res.end();
+		return;
+	}
+
 	console.log('Tag scan event:', tagID);
 
 	updateEntryOnScan(database, tagID);	//Update the date_scanned fields
@@ -50,10 +48,10 @@ app.get('/s/:tagid', (req, res) => {
 
 	//res.send(entry);
 
-	res.redirect(`/viewcard.html?tagid=${tagID}`);
+	res.redirect(`../viewcard.html?tagid=${tagID}`);
 });
 
-app.get('/api/card/:tagid', (req, res) => {
+app.get('/api/card/read/:tagid', (req, res) => {
 	let tagID = req.params.tagid;
 
 	console.log('Card info request:', tagID);
@@ -61,7 +59,49 @@ app.get('/api/card/:tagid', (req, res) => {
 	let entry = getEntryByTagID(database, tagID);
 
 	res.send(entry);
-})
+});
+
+app.get('/api/card/write/:tagid', (req, res) => {
+	let tagID = req.params.tagid;
+
+	let query = req.query;
+
+	const editableFields = [
+		'type', 
+		'contents',
+		'date_sample',
+		'mass_initial',
+		'parent_ids',
+		'status',
+		'container_size',
+		'form',
+		'date_experiment',
+		'notes'
+		];
+
+	const data = Object.entries(query);
+
+	for(let [queryField, queryValue] of data){	//Check if 
+		//allowed to update field and (TODO) validate input
+
+		console.log(`Write: ${queryField}: "${queryValue}"`);
+
+		if(editableFields.includes(queryField)){
+			//console.log('Can edit.');
+
+		} else{
+			console.log(`Client attempted to write to illegal field ${queryField}.`);
+			res.send(`Field is not writable: ${queryField}`);
+			res.writeHead(400);
+			res.end();
+			return;
+		}
+	}
+
+	updateFields(database, tagID, data);
+
+	res.redirect(`../../../viewcard.html?tagid=${tagID}`);
+});
 
 /*app.get('/api/test/issue', (req, res) => {	//Should never call this, because
 	//those IDs will be immediately orphaned with no way to generate labels
@@ -121,19 +161,31 @@ app.listen(port, () => {
 
 	database.exec(`CREATE TABLE IF NOT EXISTS cards (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		parent_ids TEXT DEFAULT '',
-		container_volume_L REAL DEFAULT NULL,
+
+		type TEXT DEFAULT '',
 		contents TEXT DEFAULT '',
-		form TEXT DEFAULT '',
-		mass_initial_kg REAL DEFAULT NULL,
 		date_sample TEXT DEFAULT '', 
+		mass_initial TEXT DEFAULT '',
+
+		parent_ids TEXT DEFAULT '',
+		status TEXT DEFAULT '',
+
+		container_size TEXT DEFAULT '',
+		
+		form TEXT DEFAULT '',
+		
+		
 		date_experiment TEXT DEFAULT '',
+
 		date_issued TEXT DEFAULT CURRENT_TIMESTAMP,
 		date_scanned_first TEXT DEFAULT '',
 		date_scanned_latest TEXT DEFAULT '',
-		notes TEXT DEFAULT '',
-		status TEXT DEFAULT ''
+		date_modified_first TEXT DEFAULT '',
+		date_modified_latest TEXT DEFAULT '',
+		notes TEXT DEFAULT ''
+		
 		);`);
+
 
 	console.log(`Server running on port ${port}`);
 });
