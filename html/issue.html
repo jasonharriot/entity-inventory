@@ -32,7 +32,6 @@
 					<p>Template:</p>
 					<select id="selectTemplate">
 						<option value="">Select...</option>
-						<option value="avery_8160_1.pdf">Avery 8160 (1)</option>
 					</select>
 				</div>
 				<div class="issueOptionsSection">
@@ -50,7 +49,45 @@
 				EDAC Labs, Inc.
 			</div>
 
-			<script src="js/issue.js"></script>
+			<script src="js/issue.js" type="text/javascript"></script>
+			<script src="js/getTemplates.js" type="text/javascript"></script>
+
+			<script type="text/javascript">
+				let buttonIssueElem = document.getElementById('buttonIssuePDF');
+				let inputPageCountElem = document.getElementById('inputPageCount');
+				let selectTemplateElem = document.getElementById('selectTemplate');
+
+				getTemplates().then((templates) => {
+					templates.forEach((template) => {
+						let elem = document.createElement('option');
+						elem.value = template;
+						elem.innerText = template;
+
+						selectTemplateElem.appendChild(elem);
+					})
+				});
+
+				buttonIssueElem.addEventListener('click', () => {
+					let num=Number(inputPageCountElem.value);
+
+					let templateIndex = selectTemplateElem.selectedIndex;
+					let templateDisplayText = selectTemplateElem.options[templateIndex];
+					let templateValue = selectTemplateElem.value;
+
+					if(templateValue.length == 0){
+						alert('Select a template.');
+						return;
+						
+					} else if(isNaN(num) || num <= 0 || num >= 100){
+						alert('Enter a valid number of pages. (minimum 1, maximum 100)');
+						return;
+					}
+
+
+
+					window.location.href = `api/sheet/${templateValue}/${num}`;
+				})
+			</script>
 		</div>
 	</body>
 </html>

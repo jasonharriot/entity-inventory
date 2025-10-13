@@ -1,8 +1,8 @@
 function getCard(tagID){
 	return new Promise((resolve, reject) => {
-		fetch(`/api/card/read/${tagID}`).then(response => {	//Run the fetch. When we
-			//have a response, check some things, then return a promise which
-			//will resolve once the JSON data base been parsed.
+		fetch(`/api/card/read/${tagID}`).then(response => {	//Run the fetch.
+			//When we have a response, check some things, then return a promise
+			//which will resolve once the JSON data base been parsed.
 
 			if(!response.ok){
 				return Promise.reject('Response is not OK.');

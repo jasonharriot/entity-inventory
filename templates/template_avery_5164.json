@@ -1,0 +1,11 @@
+{
+	"pdfPath": "templates/template_avery_5164.pdf",
+	"labelOffset": [0.15, 0.5],
+	"labelSpacing": [4.2, 3.333],
+	"labelNum": [2, 3],
+	"tagOffset": [2.9, 0.7],
+	"tagSize": 0.75,
+	"pageSize": [8.5, 11],
+	"fontSize": 18,
+	"textOffset": [-0.08, -0.25]
+}

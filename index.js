@@ -2,6 +2,7 @@ const express = require('express');
 const { DatabaseSync } = require('node:sqlite');
 const app = express();
 const database = new DatabaseSync('db.sqlite');
+const fs = require('fs');
 
 const port = 8001;
 
@@ -25,8 +26,42 @@ app.get('/api/getIDCounter', (req, res) => {
 });
 
 app.get('/api/getTemplates', (req, res) => {
-	res.writeHead(501);
-	res.end();
+	fs.readdir('templates', (err, files) => {
+		if(err){
+			console.error(err);
+
+			res.writeHead(500);
+			res.end();
+			return;
+		}
+		let validTemplates = [];	//contains partial filenames for which a
+		//pdf file and a sidecar file exist.
+
+		files.forEach( (file) => {
+			const prefix = 'template_';	//Template files must start with this,
+			//and this will be truncated from the template name.
+
+			const suffix = '.pdf';	//Template files must end with this, and 
+			//this will be truncated from the template name.
+
+			if(file.startsWith(prefix) && file.endsWith(suffix)){
+				let partial = file.slice(prefix.length, file.length-suffix.length);
+				console.log(partial);
+
+				const sidecarExists = fs.existsSync(`templates/template_${partial}.json`);
+
+				if(sidecarExists){
+					validTemplates.push(partial);
+				}
+			}
+		});
+
+		console.log(`Found valid templates: ${validTemplates}`)
+
+		res.end(JSON.stringify(validTemplates));
+	});
+
+
 });
 
 app.get('/s/:tagid', (req, res) => {
@@ -122,21 +157,38 @@ app.get('/api/card/write/:tagid', (req, res) => {
 	res.send(idList);
 });*/
 
-app.get('/api/sheet', (req, res) => {
-	labelOffset = [.196, .5];
-	labelSpacing = [2.756, 1];
-	labelNum = [3, 10];
+app.get('/api/sheet/:templatePartial/:numPages', (req, res) => {
+	/*if(!('templatePartial' in req.params) || !('numPages' in req.params)){
+		res.writeHead(400);
+		res.end();
 
-	tagOffset = [1.92, .31];	//Position of the QR code from the bottom left of
-	//the label.
+		console.error('Missing param values in this call.');
+		console.error(req.params);
+		return;
+	}*/
 
-	let s = new SheetManager('templates/template_1inch.pdf', labelOffset, labelSpacing, labelNum, tagOffset);
+	const numPages = req.params.numPages;
+	const templatePartial = req.params.templatePartial;
 
-	const numPages = 3;
+	const templateSidecarPath = `templates/template_${templatePartial}.json`;
+
+	if(!fs.existsSync(templateSidecarPath)){
+		console.error(`JSON file ${templateSidecarPath} does not exist or cannot
+			be opened.`);
+		res.writeHead(400);
+		res.end();
+
+		return;
+	}
+
+	const templateJSON = JSON.parse(fs.readFileSync(templateSidecarPath));
+
+	let s = new SheetManager(templateJSON);
 
 	console.log('Making document...');
 
-	let prom = s.makeDocument(database, numPages);
+	let prom = s.makeDocument(database, numPages);	//makeDocument will return
+	//a PDF object (from pdf-lib, see the respective documentation).
 
 	prom.then((pdfObj, err) => {
 		pdfObj.save().then((b64String) => {

@@ -7,25 +7,28 @@ const { sampleIDString } = require('./sampleIDString.js');
 
 module.exports = {
 	SheetManager: class{
-		constructor(path, labelOffset, labelSpacing, labelNum, tagOffset){
-			this.templateFilePath = path;
-			this.labelOffset = labelOffset;	//Where is the top left of the first
+		constructor(template){
+			this.templateFilePath = template.pdfPath;
+			this.labelOffset = template.labelOffset;	//Where is the top left of the first
 			//label, relative to the top left of the page?
 
-			this.labelSpacing = labelSpacing;	//The [horizontal, vertical]
+			this.labelSpacing = template.labelSpacing;	//The [horizontal, vertical]
 			//spacing between two labels. Equal to the size of the label itself
 			//if there is to be no gap between them.
 
-			this.labelNum = labelNum;
+			this.labelNum = template.labelNum;	//How many labels per sheet?
+			this.tagOffset = template.tagOffset;
+			this.tagSize = template.tagSize;	//QR code size, in inches.
 
-			this.tagOffset = tagOffset;
+			this.pageSize = template.pageSize;
+
+			this.fontSize = template.fontSize;
+
+			this.textOffset = template.textOffset;
+
 
 			this.tagBase = 'http://einventory.local/s/'	//QR codes have URLs like:
 			//"einventory.local/s/10229"
-
-			this.tagSize = .6;	//QR code size, in inches.
-
-			this.pageSize = [8.5, 11];	//Letter size label sheets
 		}
 
 		getPositions(){	//Get the x, y positions of each label, in inches
@@ -230,9 +233,9 @@ module.exports = {
 							});
 
 							newPage.drawText(sampleIDString(thisID), {
-								x: (thisTagX-.05)*72, 
-								y: (thisTagY-.15)*72,
-								size:14,
+								x: (thisTagX+this.textOffset[0])*72, 
+								y: (thisTagY+this.textOffset[1])*72,
+								size:this.fontSize,
 								font: embeddedFont
 							});
 
@@ -277,23 +280,40 @@ module.exports = {
 						console.log("Something went wrong. No document was created.");
 						reject();
 
-						return;	//<-- Is this unreachable?
+						return;	//<-- TODO: Is this unreachable?
 					}
 
-					this.getTemplateDoc().then((tDoc) => {
+					this.getTemplateDoc().then((tDoc) => {	//Fetch the template
+						//pdf document which we will tile into the full sheet
+
 						//resolve(tDoc);	//As a test, we can just send the
 						//template file as-is.
 
 						let templatePage = tDoc.getPages()[0];	//Only try to
-						//embed the first page of the template document.
+						//embed the first page of the template document. There
+						//should only be one.
 
-						this.makePage(database, templatePage, doc).then(() => {
-							resolve(doc);	//The Promise returned by makePage
-							//will resolve when the page has been appended to 
-							//doc. Then resolve this function (makeDocument)
-							//with doc.
-							//makePage's promise resolves with no content. (TODO?)
+						let pagePromises = [];	//List containing promises which
+						//will resolve when each respective page has been added
+						//to the document
 
+						for(let i=0; i<numPages; i++){	//TODO: Is this a race
+							//condition? The pages could be added out of order.
+
+							let prom = new Promise((resolveSub, rejectSub) => {
+								this.makePage(database, templatePage, doc).then(() => {
+									resolveSub();
+								});
+							});
+
+							pagePromises.push(prom);
+						}
+
+						Promise.all(pagePromises).then((values) => {
+							resolve(doc);	//When all makePage calls have 
+							//resolved, resolve the outer promise with the 
+							//document object, which will at this point have
+							//all the requested pages built.
 						});
 					})
 				});
