@@ -1,5 +1,5 @@
 {
-	"pdfPath": "templates/template_avery_8160.pdf",
+	"filename": "template_avery_8160.pdf",
 	"labelOffset": [0.196, 0.5],
 	"labelSpacing": [2.756, 1],
 	"labelNum": [3, 10],

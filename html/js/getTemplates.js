@@ -1,6 +1,6 @@
 function getTemplates(){
 	return new Promise((resolve, reject) => {
-		fetch('api/getTemplates').then(response => {
+		fetch('api/template/list').then(response => {
 
 			if(!response.ok){
 				return Promise.reject(`Got bad response trying to fetch

@@ -1,0 +1,7 @@
+#cardListTable{
+	border-spacing: 0px;
+}
+
+#cardListTable td{
+	padding: 5px 15px 5px 15px;
+}

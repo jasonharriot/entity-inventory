@@ -8,7 +8,7 @@ const { sampleIDString } = require('./sampleIDString.js');
 module.exports = {
 	SheetManager: class{
 		constructor(template){
-			this.templateFilePath = template.pdfPath;
+			this.templateFilePath = `templates/${template.filename}`;
 			this.labelOffset = template.labelOffset;	//Where is the top left of the first
 			//label, relative to the top left of the page?
 
@@ -315,7 +315,13 @@ module.exports = {
 							//document object, which will at this point have
 							//all the requested pages built.
 						});
-					})
+					}).catch((e) => {
+						console.error(`Failed to load template PDF.`);
+						console.error(e);
+						reject();
+						return;
+
+					});
 				});
 			});
 		}

@@ -4,8 +4,7 @@ module.exports = {
 		
 		if(isNaN(safeID)){
 			console.error(`Bad tag ID: ${id}`);
-			console.error(e);
-			return {};
+			return null;
 		}
 
 		const query = database.prepare('SELECT * FROM cards WHERE id = ?');

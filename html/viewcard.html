@@ -10,7 +10,7 @@
 			<div id="header">
 				<h1>Entity Inventory</h1>
 
-				<h2><a class="backArrow" href="/"><img src="img/arrow_left.png">Home</a></h2>
+				<h2><a class="backArrow" href="."><img src="img/arrow_left.png">Home</a></h2>
 			</div>
 
 			<div id="contentContainer">
@@ -108,7 +108,8 @@
 
 			getCard(tagID).then((card) => {
 				if(card == null){
-					alert('This card does not exist yet. It must be issued by the PDF generator.');
+					alert('This card does not exist. The tag ID is invalid, or has not been issued yet.');
+					history.back();
 					return;
 				}
 

@@ -20,12 +20,12 @@ app.use((req, res, next) => {
 
 app.use('/', express.static('html'));	//For requests to the root, just serve static.
 
-app.get('/api/getIDCounter', (req, res) => {
+app.get('/api/get-id-counter', (req, res) => {
 	let counter = getIDCounter(database);
 	res.send(counter);
 });
 
-app.get('/api/getTemplates', (req, res) => {
+app.get('/api/template/list', (req, res) => {
 	fs.readdir('templates', (err, files) => {
 		if(err){
 			console.error(err);
@@ -85,6 +85,21 @@ app.get('/s/:tagid', (req, res) => {
 
 	res.redirect(`../viewcard.html?tagid=${tagID}`);
 });
+
+app.get('/api/card/list', (req, res) => {
+	const q = database.prepare(`SELECT * FROM cards WHERE
+		((contents IS NOT NULL AND contents <> '') OR
+		(type IS NOT NULL AND type <> '') OR
+		(date_sample IS NOT NULL AND date_sample <> '')) AND
+		((date_modified_first IS NOT NULL AND date_modified_first <> '') OR
+		id < 1000)
+		`);
+
+	const rows = q.all();
+
+	res.send(rows);
+	res.end();
+})
 
 app.get('/api/card/read/:tagid', (req, res) => {
 	let tagID = req.params.tagid;
@@ -157,7 +172,7 @@ app.get('/api/card/write/:tagid', (req, res) => {
 	res.send(idList);
 });*/
 
-app.get('/api/sheet/:templatePartial/:numPages', (req, res) => {
+app.get('/api/sheet/generate/:templatePartial/:numPages', (req, res) => {
 	/*if(!('templatePartial' in req.params) || !('numPages' in req.params)){
 		res.writeHead(400);
 		res.end();
