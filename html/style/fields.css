@@ -1,5 +1,5 @@
 #fillTagID{
-	font-family: monospace;
+	/*font-family: monospace;*/
 }
 
 #fillDateSample, #fillDateIssued, #fillDateExperiment, #fillDateScannedFirst, #fillDateModifiedFirst, #fillDateScannedLatest, #fillDateModifiedLatest{
