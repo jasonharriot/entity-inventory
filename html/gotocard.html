@@ -18,7 +18,7 @@
 				<div class="section">
 					<form id="formGoToCard" action="viewcard.html">
 						<h2>View card</h2>
-						<input type="text" name="tagid" placeholder="ID number">
+						<input type="text" name="tagid" placeholder="ID number" id="inputTagID">
 
 						<br>
 						<p><input type="submit" value="Submit"></p>
@@ -37,5 +37,11 @@
 			</div>
 		</div>
 		<script type="text/javascript" src="js/scanWatch.js"></script>
+
+		<script type="text/javascript">
+			const inputTagIDElem = document.getElementById("inputTagID");
+
+			inputTagIDElem.focus();
+		</script>
 	</body>
 </html>
