@@ -18,7 +18,8 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.use('/', express.static('html'));	//For requests to the root, just serve static.
+app.use('/', express.static('html'));	//For requests to the root, just serve
+//static files.
 
 app.get('/api/get-id-counter', (req, res) => {
 	let counter = getIDCounter(database);
@@ -45,10 +46,13 @@ app.get('/api/template/list', (req, res) => {
 			//this will be truncated from the template name.
 
 			if(file.startsWith(prefix) && file.endsWith(suffix)){
-				let partial = file.slice(prefix.length, file.length-suffix.length);
+				let partial = file.slice(prefix.length,
+					file.length - suffix.length);
+
 				console.log(partial);
 
-				const sidecarExists = fs.existsSync(`templates/template_${partial}.json`);
+				const sidecarExists = fs.existsSync(`templates/template_ \
+					${partial}.json`);
 
 				if(sidecarExists){
 					validTemplates.push(partial);
@@ -140,7 +144,8 @@ app.get('/api/card/write/:tagid', (req, res) => {
 			//console.log('Can edit.');
 
 		} else{
-			console.log(`Client attempted to write to illegal field ${queryField}.`);
+			console.log(`Client attempted to write to illegal field \
+				${queryField}.`);
 			res.send(`Field is not writable: ${queryField}`);
 			res.writeHead(400);
 			res.end();
@@ -153,28 +158,10 @@ app.get('/api/card/write/:tagid', (req, res) => {
 	res.redirect(`../../../view-card.html?tagid=${tagID}`);
 });
 
-/*app.get('/api/test/issue', (req, res) => {	//Should never call this, because
-	//those IDs will be immediately orphaned with no way to generate labels
-	//for them.
-
-	let num = 1;
-
-	if('num' in req.query){
-		num = Math.min(1000, Math.max(1, req.query.num));
-	}
-
-	console.log(`Number of IDs to issue: ${num}`);
-
-	//Num shall be 1 or more, and less than some large N.
-
-	let idList = issueIDs(database, num);
-
-	res.send(idList);
-});*/
-
 app.get('/api/backup/sqlite', (req, res) => {	//Send the whole database file.
 
-	const timestamp = new Date().toISOString().slice(0, 19).replace('T', '_'.replace(':', '-'));
+	const timestamp = new Date().toISOString().slice(0, 19)
+		.replace('T', '_'.replace(':', '-'));
 
 	const filename = `db_${timestamp}.sqlite`;
 
