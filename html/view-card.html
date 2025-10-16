@@ -8,14 +8,33 @@
 	<body>
 		<div id="container">
 			<div id="header">
-				<h1>Entity Inventory</h1>
-
-				<h2><a class="backArrow" href="."><img src="img/arrow_left.png">Home</a></h2>
+				<div>
+					<div>
+						<h1>Entity Inventory</h1>
+					</div>
+					<div>
+						<h2>
+							<a class="backArrow" href=".">
+								<img src="img/arrow-left.png">
+								Home
+							</a>
+						</h2>
+					</div>
+				</div>
+				<div class="scanDiv">
+					<img src="img/scanner.png" width="100px">
+					<p>Scan a tag at any time to view its details.</p>
+				</div>
 			</div>
 
 			<div id="contentContainer">
 				<div class="section">
-					<h2>Entity ID <span class="fill" id="fillTagID"><i>loading...</i></span></h2>
+					<h2>
+						Entity ID
+						<span class="fill" id="fillTagID">
+							<i>loading...</i>
+						</span>
+					</h2>
 					<p><input type="button" id="buttonEdit" value="Edit..."/></p>
 					<table class="cardTable">
 						<tbody>
@@ -96,16 +115,12 @@
 				<div>
 					<p>EDAC Labs, Inc.</p>
 				</div>
-				<div class="scanDiv">
-					<img src="img/scanner.png" width="100px">
-					<p>Scan a tag at any time to view its details.</p>
-				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="js/getCard.js"></script>
-		<script type="text/javascript" src="js/showCard.js"></script>
-		<script type="text/javascript" src="js/getTagID.js"></script>
-		<script type="text/javascript" src="js/scanWatch.js"></script>
+		<script type="text/javascript" src="js/func-get-card.js"></script>
+		<script type="text/javascript" src="js/func-show-card.js"></script>
+		<script type="text/javascript" src="js/func-get-tag-id.js"></script>
+		<script type="text/javascript" src="js/page-scan-watch.js"></script>
 
 		<script type="text/javascript">
 			const buttonEditElem = document.getElementById('buttonEdit');
@@ -114,7 +129,9 @@
 
 			getCard(tagID).then((card) => {
 				if(card == null){
-					alert('This card does not exist. The tag ID is invalid, or has not been issued yet.');
+					alert('This card does not exist. The tag ID is invalid, or \
+						has not been issued yet.');
+
 					history.back();
 					return;
 				}
@@ -122,7 +139,7 @@
 				showCard(card)
 
 				buttonEditElem.addEventListener('click', () =>  {
-					const hrefString = `editcard.html?tagid=${tagID}`;
+					const hrefString = `edit-card.html?tagid=${tagID}`;
 					window.location.href = hrefString;
 				})
 

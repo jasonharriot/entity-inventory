@@ -18,8 +18,8 @@ module.exports = {
 			case when date_modified_first is '' then ? else date_modified_first
 				end, date_modified_latest = ? WHERE id = ?`);
 
-		const result = q1.run(now, now, id);	//Insert the ID value into the query, and execute
-		//it.
+		const result = q1.run(now, now, id);	//Insert the ID value into the
+		//query, and execute it.
 
 		for([field, value] of data){
 			const queryString = `UPDATE cards SET ${field}=? WHERE id=?`;

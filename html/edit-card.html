@@ -9,15 +9,31 @@
 	<body>
 		<div id="container">
 			<div id="header">
-				<h1>Entity Inventory</h1>
+				<div>
+					<div>
+						<h1>Entity Inventory</h1>
+					</div>
 
-				<h2><a class="backArrow" href="."><img src="img/arrow_left.png">Home</a></h2>
+					<div>
+						<h2>
+							<a class="backArrow" href=".">
+								<img src="img/arrow-left.png">
+								Home
+							</a>
+						</h2>
+					</div>
+				</div>
 			</div>
 
 			<div id="contentContainer">
 				<div class="section">
 					<form id="formEdit" action="">
-						<h2>Entity ID <span class="fill" id="fillTagID"><i>loading...</i></span></h2>
+						<h2>
+							Entity ID
+							<span class="fill" id="fillTagID">
+								<i>loading...</i>
+							</span>
+						</h2>
 						<table class="cardTable">
 							<tbody>
 								<tr class="rowEven">
@@ -76,35 +92,9 @@
 				EDAC Labs, Inc.
 			</div>
 		</div>
-		<script type="text/javascript" src="js/getCard.js"></script>
-		<script type="text/javascript" src="js/showCard.js"></script>
-		<script type="text/javascript" src="js/getTagID.js"></script>
-
-		<script type="text/javascript">
-			const buttonSaveElem = document.getElementById('buttonSave');
-
-			const buttonDiscardElem = document.getElementById('buttonDiscard');
-
-			const formEditElem = document.getElementById('formEdit');
-
-			const tagID = getTagID();
-
-			buttonDiscardElem.addEventListener('click', () => {
-				if(confirm('Really discard changes?')){
-					window.location.href = `viewcard.html?tagid=${tagID}`
-				} 
-			});
-
-			getCard(tagID).then((card) => {
-				showCard(card);
-
-				formEditElem.setAttribute('action', `api/card/write/${tagID}`);
-				//Tell the form to POST to the API endpoint which includes the
-				//correct tag ID.
-
-			}).catch( (e) => {
-				console.error('Something went wrong:', e);
-			});
-		</script>
+		<script type="text/javascript" src="js/func-get-card.js"></script>
+		<script type="text/javascript" src="js/func-show-card.js"></script>
+		<script type="text/javascript" src="js/func-get-tag-id.js"></script>
+		<script type="text/javascript" src="js/page-edit-card.js"></script>
 	</body>
 </html>

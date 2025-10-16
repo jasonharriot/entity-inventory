@@ -1,5 +1,5 @@
 module.exports = {
-	getEntryByTagID: function (database, id){
+	getCardByTagID: function (database, id){
 		let safeID = Number(id);
 		
 		if(isNaN(safeID)){
@@ -17,7 +17,7 @@ module.exports = {
 		//console.log(`There are ${entries.length} entries for ${safeID}`);
 
 		if(entries.length > 1){
-			throw new Error(`More than one entry is not acceptable!`);
+			throw new Error(`More than one card is not acceptable!`);
 		}
 
 		if(entries.length == 0){
@@ -25,10 +25,10 @@ module.exports = {
 			return null;
 		}
 
-		const entry = entries[0];
+		const card = entries[0];
 
-		//console.log(entry);
+		//console.log(card);
 
-		return entry;
+		return card;
 	}
 }

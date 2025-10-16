@@ -6,11 +6,11 @@ const fs = require('fs');
 
 const port = 8001;
 
-const { getIDCounter } = require('./getIDCounter.js');
-const { getEntryByTagID } = require('./getEntryByTagID');
-const { SheetManager } = require('./sheetManager.js');
-const { updateEntryOnScan } = require('./updateEntryOnScan.js');
-const { updateFields } = require('./updateFields.js');
+const { getIDCounter } = require('./get-id-counter.js');
+const { getCardByTagID } = require('./get-card-by-tag-id');
+const { SheetManager } = require('./sheet-manager.js');
+const { updateCardOnScan } = require('./update-card-on-scan.js');
+const { updateFields } = require('./update-fields.js');
 
 app.use((req, res, next) => {
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
@@ -77,13 +77,13 @@ app.get('/s/:tagid', (req, res) => {
 
 	console.log('Tag scan event:', tagID);
 
-	updateEntryOnScan(database, tagID);	//Update the date_scanned fields
+	updateCardOnScan(database, tagID);	//Update the date_scanned fields
 
-	//let entry = getEntryByTagID(database, tagID);
+	//let card = getCardByTagID(database, tagID);
 
-	//res.send(entry);
+	//res.send(card);
 
-	res.redirect(`../viewcard.html?tagid=${tagID}`);
+	res.redirect(`../view-card.html?tagid=${tagID}`);
 });
 
 app.get('/api/card/list', (req, res) => {
@@ -106,9 +106,9 @@ app.get('/api/card/read/:tagid', (req, res) => {
 
 	console.log('Card info request:', tagID);
 
-	let entry = getEntryByTagID(database, tagID);
+	let card = getCardByTagID(database, tagID);
 
-	res.send(entry);
+	res.send(card);
 });
 
 app.get('/api/card/write/:tagid', (req, res) => {
@@ -150,7 +150,7 @@ app.get('/api/card/write/:tagid', (req, res) => {
 
 	updateFields(database, tagID, data);
 
-	res.redirect(`../../../viewcard.html?tagid=${tagID}`);
+	res.redirect(`../../../view-card.html?tagid=${tagID}`);
 });
 
 /*app.get('/api/test/issue', (req, res) => {	//Should never call this, because

@@ -9,14 +9,28 @@
 	<body>
 		<div id="container">
 			<div id="header">
-				<h1>Entity Inventory</h1>
-
-				<h2><a class="backArrow" href="."><img src="img/arrow_left.png">Home</a></h2>
+				<div>
+					<div>
+						<h1>Entity Inventory</h1>
+					</div>
+					<div>
+						<h2>
+							<a class="backArrow" href=".">
+								<img src="img/arrow-left.png">
+								Home
+							</a>
+						</h2>
+					</div>
+				</div>
+				<div class="scanDiv">
+					<img src="img/scanner.png" width="100px">
+					<p>Scan a tag at any time to view its details.</p>
+				</div>
 			</div>
 
 			<div id="contentContainer">
 				<div class="section">
-					<form id="formGoToCard" action="viewcard.html">
+					<form id="formGoToCard" action="view-card.html">
 						<h2>View card</h2>
 						<input type="text" name="tagid" placeholder="ID number" id="inputTagID">
 
@@ -30,18 +44,10 @@
 				<div>
 					<p>EDAC Labs, Inc.</p>
 				</div>
-				<div class="scanDiv">
-					<img src="img/scanner.png" width="100px">
-					<p>Scan a tag at any time to view its details.</p>
-				</div>
 			</div>
 		</div>
-		<script type="text/javascript" src="js/scanWatch.js"></script>
+		<script type="text/javascript" src="js/page-scan-watch.js"></script>
 
-		<script type="text/javascript">
-			const inputTagIDElem = document.getElementById("inputTagID");
-
-			inputTagIDElem.focus();
-		</script>
+		<script type="text/javascript" src="js/page-go-to-card.js"></script>
 	</body>
 </html>

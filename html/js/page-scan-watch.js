@@ -1,6 +1,5 @@
 //Watch for keyboard events from a USB / Bluetooth QR Code or barcode scanner.
 
-
 const basicAllowedCharacters = `&()-_+=;:./?
 abcdefghijklmnopqrstuvwxyz
 ABCDEFGHIJKLMNOPQRSTUVWXYZ
@@ -22,14 +21,6 @@ function handleTypedURL(s){
 	return;
 }
 
-//const bElem = document.getElementsByTagName('body')[0];
-
-//const inputCaptureElem = document.createElement('input');
-//inputCaptureElem.setAttribute('type', 'hidden');
-//inputCaptureElem.setAttribute('display', 'none');
-
-//bElem.appendChild(inputCaptureElem);
-
 document.addEventListener('keydown', (e) => {
 	const now = new Date();
 
@@ -42,8 +33,7 @@ document.addEventListener('keydown', (e) => {
 		cumulativeString = '';
 	}
 
-
-	if(e.key == 'Enter'){
+	if(e.key == 'Enter' && cumulativeString.startsWith('http')){
 		handleTypedURL(cumulativeString);
 
 	} else if(basicAllowedCharacters.indexOf(e.key) >= 0){

@@ -1,5 +1,5 @@
-const { getIDCounter } = require('./getIDCounter.js');
-const { getEntryByTagID } = require('./getEntryByTagID.js');
+const { getIDCounter } = require('./get-id-counter.js');
+const { getCardByTagID } = require('./get-card-by-tag-id.js');
 
 module.exports = {
 	issueIDs: function(database, num){
@@ -10,12 +10,13 @@ module.exports = {
 
 		let i=0;
 
-		const minimumEntry = getEntryByTagID(database, minimumTagID)
+		const minimumEntry = getCardByTagID(database, minimumTagID)
 
 		if(minimumEntry == null){
 			console.log(`Adding minimum-id entry with id=${minimumTagID}`)
 
-			const query = database.prepare(`INSERT OR IGNORE INTO cards(id) VALUES(?)`);
+			const query = database.prepare('INSERT OR IGNORE INTO cards(id) \
+				VALUES(?)');
 			query.run(minimumTagID);
 
 

@@ -19,7 +19,7 @@ function createCardListTableRow(card, columns){
 
 		if(column.field == 'id'){
 			const anchor = document.createElement('a');
-			anchor.href=`viewcard.html?tagid=${card.id}`;
+			anchor.href=`view-card.html?tagid=${card.id}`;
 			anchor.innerText = sampleIDString(card[column.field]);
 
 			col.appendChild(anchor);
@@ -76,7 +76,8 @@ fetch(`api/card/list`).then((response) => {
 
 	response.json().then((resJSON) => {
 		pTableMessageElem.innerText = `${resJSON.length} cards`;
-		let i=0; 
+		let i=0;
+
 		resJSON.forEach((card) => {
 			console.log(card.id);
 			let r = createCardListTableRow(card, columns);

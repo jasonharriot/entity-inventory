@@ -1,20 +1,20 @@
 const {PDFDocument, StandardFonts, rgb} = require('pdf-lib');
-const { issueIDs } = require('./issueIDs.js');
+const { issueIDs } = require('./issue-ids.js');
 const fs = require('node:fs');
 const qr = require('qrcode');
 
-const { sampleIDString } = require('./sampleIDString.js');
+const { tagIDString } = require('./tag-id-string.js');
 
 module.exports = {
 	SheetManager: class{
 		constructor(template){
 			this.templateFilePath = `templates/${template.filename}`;
-			this.labelOffset = template.labelOffset;	//Where is the top left of the first
-			//label, relative to the top left of the page?
+			this.labelOffset = template.labelOffset;	//Where is the top left
+			//of the first label, relative to the top left of the page?
 
-			this.labelSpacing = template.labelSpacing;	//The [horizontal, vertical]
-			//spacing between two labels. Equal to the size of the label itself
-			//if there is to be no gap between them.
+			this.labelSpacing = template.labelSpacing;	//The [horizontal,
+			//vertical] spacing between two labels. Equal to the size of the
+			//label itself if there is to be no gap between them.
 
 			this.labelNum = template.labelNum;	//How many labels per sheet?
 			this.tagOffset = template.tagOffset;
@@ -27,8 +27,8 @@ module.exports = {
 			this.textOffset = template.textOffset;
 
 
-			this.tagBase = 'http://einventory.local/s/'	//QR codes have URLs like:
-			//"einventory.local/s/10229"
+			this.tagBase = 'http://einventory.local/s/'	//QR codes have URLs
+			//like: "einventory.local/s/10229"
 		}
 
 		getPositions(){	//Get the x, y positions of each label, in inches
@@ -39,7 +39,9 @@ module.exports = {
 			for(let iy=0; iy<this.labelNum[1]; iy++){
 				for(let ix=0; ix<this.labelNum[0]; ix++){
 					const xPos = this.labelOffset[0] + this.labelSpacing[0]*ix;
-					const yPos = this.pageSize[1] - this.labelSpacing[1] - this.labelOffset[1] - this.labelSpacing[1]*iy;
+
+					const yPos = this.pageSize[1] - this.labelSpacing[1]
+						- this.labelOffset[1] - this.labelSpacing[1]*iy;
 
 					const pos = [xPos, yPos];
 
@@ -85,7 +87,9 @@ module.exports = {
 							resolve(data.toString('base64'));
 
 						} catch(err){
-							console.error('Could not read PNG file at ' + filePath);
+							console.error('Could not read PNG file at '
+								+ filePath);
+
 							console.error(err);
 							reject();
 						}
@@ -159,7 +163,8 @@ module.exports = {
 						resolve(doc);
 					}).catch((err)=>{
 						console.error(err);
-						console.log('An error occured while loading the PDF file.')
+						console.log('An error occured while loading the PDF \
+							file.')
 					});
 				});
 			});
@@ -169,7 +174,8 @@ module.exports = {
 			const newIDs = issueIDs(database, this.getLabelCount());	//
 			//Generate tag IDs for each label on this page
 
-			let newPage = doc.addPage([this.pageSize[0]*72, this.pageSize[1]*72]);
+			let newPage = doc.addPage([this.pageSize[0] * 72, 
+				this.pageSize[1] * 72]);
 
 			return new Promise((resolve, reject) => {
 				const promises1 = [
@@ -185,11 +191,14 @@ module.exports = {
 					//results.
 
 					const promises2 = [
-						this.embedPNGs(doc, pngArray),	//Embed all the PNG images
-						doc.embedPage(templatePage),	//Set up the embed of our 
-						//template label page inside the main document
-						doc.embedFont(StandardFonts.CourierBold)	//TODO: Can we
-						//streamline this so it's only embedded once? What
+						this.embedPNGs(doc, pngArray),
+						//Embed all the PNG images
+
+						doc.embedPage(templatePage),	//Set up the embed of
+						//the template label page inside the main document
+
+						doc.embedFont(StandardFonts.CourierBold)	//TODO: Can
+						//this be streamlined so it's only embedded once? What
 						//happens if it is embedded multiple times?
 					]
 
@@ -208,9 +217,6 @@ module.exports = {
 							let thisPNG = embeddedPNGs[i];
 
 							let thisPosition = positions[i];
-
-							//Position of BL corner of label in inches, from BL of
-							//page.
 
 							let thisLabelX = thisPosition[0];
 							let thisLabelY = thisPosition[1];
@@ -232,7 +238,7 @@ module.exports = {
 								opacity: 1
 							});
 
-							newPage.drawText(sampleIDString(thisID), {
+							newPage.drawText(tagIDString(thisID), {
 								x: (thisTagX+this.textOffset[0])*72, 
 								y: (thisTagY+this.textOffset[1])*72,
 								size:this.fontSize,
@@ -248,8 +254,8 @@ module.exports = {
 						}
 
 						//Footer
-						let footerString = 'PRINT ONLY ONE COPY. DO NOT SAVE THIS FILE. '
-						+ new Date().toISOString()
+						let footerString = 'PRINT ONLY ONE COPY. DO NOT SAVE \
+							THIS FILE. ' + new Date().toISOString()
 
 						newPage.drawText(footerString, {
 								x: .5*72, 
@@ -277,7 +283,9 @@ module.exports = {
 				PDFDocument.create().then((doc, rej) => {
 
 					if(rej){
-						console.log("Something went wrong. No document was created.");
+						console.log('Something went wrong. No document was \
+							created.');
+
 						reject();
 
 						return;	//<-- TODO: Is this unreachable?
@@ -301,7 +309,8 @@ module.exports = {
 							//condition? The pages could be added out of order.
 
 							let prom = new Promise((resolveSub, rejectSub) => {
-								this.makePage(database, templatePage, doc).then(() => {
+								this.makePage(database, templatePage, doc)
+								.then(() => {
 									resolveSub();
 								});
 							});
