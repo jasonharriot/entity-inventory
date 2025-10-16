@@ -51,11 +51,13 @@ app.get('/api/template/list', (req, res) => {
 
 				console.log(partial);
 
-				const sidecarExists = fs.existsSync(`templates/template_ \
-					${partial}.json`);
+				const sidecarExists = fs.existsSync(`templates/template_\
+${partial}.json`);
 
 				if(sidecarExists){
 					validTemplates.push(partial);
+				} else{
+					console.error(`PDF file has no matching sidecar: ${file}`);
 				}
 			}
 		});
