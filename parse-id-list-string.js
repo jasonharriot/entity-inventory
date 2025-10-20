@@ -25,7 +25,10 @@ module.exports = {
 			if(!isNaN(id)){
 				IDs.push(id);
 			} else{
-				console.error(`Couldn't parse NaN parent ID: ${seg}`);
+				//console.error(`Couldn't parse NaN parent ID: ${seg}`);
+				//This print will generate a large ammount of console spam. Be
+				//mindful.
+				
 				return;
 			}
 
