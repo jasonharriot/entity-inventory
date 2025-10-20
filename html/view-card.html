@@ -4,6 +4,7 @@
 	<head>
 		<link rel="stylesheet" href="style/style.css" />
 		<link rel="stylesheet" href="style/fields.css" />
+		<link rel="stylesheet" href="style/list.css" />
 	</head>
 	<body>
 		<div id="container">
@@ -82,6 +83,15 @@
 							<i>loading...</i>
 						</div>
 					</div>
+
+					<h3>Parent entities</h3>
+					<table id="parentCardTable" class="cardTable">
+					</table>
+
+					<h3>Child entities</h3>
+					<table id="childCardTable" class="cardTable">
+					</table>
+
 					<h3>History</h3>
 					<p>The following dates are in UTC for now (TODO!).</p>
 					<table class="cardTable">
@@ -120,32 +130,12 @@
 		<script type="text/javascript" src="js/func-get-card.js"></script>
 		<script type="text/javascript" src="js/func-show-card.js"></script>
 		<script type="text/javascript" src="js/func-get-tag-id.js"></script>
+		<script type="text/javascript" src="js/func-sample-id-string.js"></script>
+		<script type="text/javascript" src="js/func-create-card-list-table-header.js"></script>
+		<script type="text/javascript" src="js/func-create-card-list-table-row.js"></script>
+
+		<script type="text/javascript" src="js/page-view-card.js"></script>
+
 		<script type="text/javascript" src="js/page-scan-watch.js"></script>
-
-		<script type="text/javascript">
-			const buttonEditElem = document.getElementById('buttonEdit');
-
-			const tagID = getTagID();
-
-			getCard(tagID).then((card) => {
-				if(card == null){
-					alert('This card does not exist. The tag ID is invalid, or \
-						has not been issued yet.');
-
-					history.back();
-					return;
-				}
-
-				showCard(card)
-
-				buttonEditElem.addEventListener('click', () =>  {
-					const hrefString = `edit-card.html?tagid=${tagID}`;
-					window.location.href = hrefString;
-				})
-
-			}).catch( (e) => {
-				console.error('Something went wrong:', e);
-			});
-		</script>
 	</body>
 </html>

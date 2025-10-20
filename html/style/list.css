@@ -1,7 +1,19 @@
-#cardListTable{
+.cardTable{
 	border-spacing: 0px;
 }
 
-#cardListTable td{
+.cardTable td, .cardTable th{
 	padding: 5px 15px 5px 15px;
+}
+
+.cardTable th{
+	text-align: left;
+	border-bottom: 2px solid #000;
+}
+
+.rowEven{
+	background-color: #eee;
+}
+.rowOdd{
+	/*background-color: #ddd;*/
 }

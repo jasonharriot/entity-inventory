@@ -1,38 +1,3 @@
-function createCardListTableHeader(columns){
-	const row = document.createElement('tr');
-
-	columns.forEach((column) => {
-		const col = document.createElement('th');
-
-		col.innerText = column.name;
-		row.appendChild(col);
-	})
-
-	return row;
-}
-
-function createCardListTableRow(card, columns){
-	const row = document.createElement('tr');
-
-	columns.forEach((column) => {
-		const col = document.createElement('td');
-
-		if(column.field == 'id'){
-			const anchor = document.createElement('a');
-			anchor.href=`view-card.html?tagid=${card.id}`;
-			anchor.innerText = sampleIDString(card[column.field]);
-
-			col.appendChild(anchor);
-		} else{
-			col.innerText = card[column.field];
-		}
-
-		row.appendChild(col);
-	})
-
-	return row;
-}
-
 const columns = [
 	{
 		'name': 'ID',
@@ -54,13 +19,14 @@ const columns = [
 		'name': 'Parent ID(s)',
 		'field': 'parent_ids'
 	},
+	/*{
+		'name': 'Child ID(s)',
+		'field': 'synth_child_ids'	//This is a synthetic field, we will
+		//generate it on the fly. It is not present in the database.
+	},*/
 	{
 		'name': 'Date',
 		'field': 'date_sample'
-	},
-	{
-		'name': 'Date first modified',
-		'field': 'date_modified_first'
 	}
 ];
 
@@ -79,7 +45,6 @@ fetch(`api/card/list`).then((response) => {
 		let i=0;
 
 		resJSON.forEach((card) => {
-			console.log(card.id);
 			let r = createCardListTableRow(card, columns);
 
 			if(i%2){

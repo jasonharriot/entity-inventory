@@ -7,10 +7,11 @@ const fs = require('fs');
 const port = 8001;
 
 const { getIDCounter } = require('./get-id-counter.js');
-const { getCardByTagID } = require('./get-card-by-tag-id');
+const { getCardByTagID } = require('./get-card-by-tag-id.js');
 const { SheetManager } = require('./sheet-manager.js');
 const { updateCardOnScan } = require('./update-card-on-scan.js');
 const { updateFields } = require('./update-fields.js');
+const { getCards } = require('./get-cards.js');
 
 app.use((req, res, next) => {
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
@@ -93,17 +94,9 @@ app.get('/s/:tagid', (req, res) => {
 });
 
 app.get('/api/card/list', (req, res) => {
-	const q = database.prepare(`SELECT * FROM cards WHERE
-		((contents IS NOT NULL AND contents <> '') OR
-		(type IS NOT NULL AND type <> '') OR
-		(date_sample IS NOT NULL AND date_sample <> '')) AND
-		((date_modified_first IS NOT NULL AND date_modified_first <> '') OR
-		id < 1000)
-		`);
+	const cards = getCards(database);
 
-	const rows = q.all();
-
-	res.send(rows);
+	res.send(cards);
 	res.end();
 })
 

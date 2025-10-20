@@ -5,13 +5,6 @@ h1{
 	
 }
 
-.cardTable{
-
-}
-
-.fieldCol{
-}
-
 #container{
 	min-width: 800px;
 	padding: 20px;
@@ -55,20 +48,7 @@ h1{
 	justify-content: space-between;
 }
 
-.cardTable{
-	border-spacing: 0px;
-}
 
-.cardTable td{
-	padding: 5px 15px 5px 15px;
-}
-
-.rowEven{
-	background-color: #eee;
-}
-.rowOdd{
-	/*background-color: #ddd;*/
-}
 
 
 

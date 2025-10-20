@@ -1,6 +1,4 @@
 function getTagID(){
-	console.log('Getting card...');
-
 	const params = new URLSearchParams(window.location.search);
 
 	let tagID = 'n/a';

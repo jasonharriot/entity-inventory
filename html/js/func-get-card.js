@@ -12,15 +12,14 @@ function getCard(tagID){
 			//data.
 				
 		}).then((card) => {
-			console.log('Received card info:', card);
+			//console.log('Received card info:', card);
 			resolve(card);	//Resolve the outer promise, yielding the card JSON
 			//to wherever we called getCard() from.
 
 		}).catch((e) => {
 			console.error(`Couldn't get card ${tagID}.`);
-			console.error(e);
 
-			resolve(null);
+			reject();
 		});
 	});
 }
