@@ -41,7 +41,13 @@ document.addEventListener('keydown', (e) => {
 			e.preventDefault();
 		}
 
-		cumulativeString += e.key;
+		cumulativeString += e.key.toLowerCase();	//Note: This toLowerCase
+		//call fixes the issue where scanning a code does nothing if the caps
+		//lock key is pressed, but means that the URLs on QR codes cannot
+		//contain uppercase letters.
+
 		lastAppendTime = now;
+
+		//console.log(cumulativeString);
 	}
 })
