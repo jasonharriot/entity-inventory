@@ -7,7 +7,9 @@ function createCardListTableRow(card, columns){
 		if(column.field == 'id'){
 			const anchor = document.createElement('a');
 			anchor.href=`view-card.html?tagid=${card.id}`;
-			anchor.innerText = sampleIDString(card[column.field]);
+
+			//anchor.innerText = sampleIDString(card[column.field]);
+			anchor.innerText = card[column.field];
 
 			col.appendChild(anchor);
 		} else{
