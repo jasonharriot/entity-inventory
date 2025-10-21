@@ -51,6 +51,11 @@ function showCard(c){	//Takes the fields supplied and displays them on the
 			})
 		}*/
 
+		if(field == 'notes' && fieldValue.length == 0){
+			fillElem.innerHTML = '<i>No notes saved.</i>';
+			continue;
+		}
+
 		fillElem.innerText = fieldValue;
 	}
 	

@@ -17,3 +17,7 @@
 .rowOdd{
 	/*background-color: #ddd;*/
 }
+
+.columnTypeDate{
+	font-family: monospace;
+}
