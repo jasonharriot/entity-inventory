@@ -33,6 +33,23 @@ const columns = [
 const cardListTableElem = document.getElementById(`cardListTable`);
 const pTableMessageElem = document.getElementById(`pTableMessage`);
 
+function compareCardsByDate(a, b){
+	const dateA = parseDate(a.date_sample);
+	const dateB = parseDate(b.date_sample);
+
+	if(dateA < dateB){
+		//console.log(dateA, '<', dateB);
+		return -1;
+	}
+
+	if(dateA > dateB){
+		//console.log(dateA, '>', dateB);
+		return 1;
+	}
+
+	return 0;
+}
+
 let header = createCardListTableHeader(columns);
 
 fetch(`api/card/list`).then((response) => {
@@ -44,7 +61,13 @@ fetch(`api/card/list`).then((response) => {
 		pTableMessageElem.innerText = `${resJSON.length} cards`;
 		let i=0;
 
-		resJSON.forEach((card) => {
+		const sortedCardList = resJSON.sort((a, b) =>
+			compareCardsByDate(a, b, 'date_sample'));	//TODO: This parses
+		//the same date strings multiple times. Would be faster if parsed
+		//dates were inserted as synthetic properties in each card object, e.g.
+		//[{synth_date_sample: Moment(this.date_sample), ...}, ...]
+
+		sortedCardList.forEach((card) => {
 			let r = createCardListTableRow(card, columns);
 
 			if(i%2){
