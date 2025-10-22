@@ -50,4 +50,12 @@ document.addEventListener('keydown', (e) => {
 
 		//console.log(cumulativeString);
 	}
+
+	if(cumulativeString == 'g'){	//Hotkey for goto
+		window.location.href = 'go-to-card.html';
+	}
+
+	if(cumulativeString == 'l'){	//Hotkey for goto
+		window.location.href = 'card-list.html';
+	}
 })
