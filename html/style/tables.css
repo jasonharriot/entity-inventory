@@ -1,0 +1,28 @@
+.cardTableContainer{
+	overflow-x: scroll;
+}
+
+.cardTable{
+	border-spacing: 0px;
+}
+
+.cardTable td, .cardTable th{
+	padding: .3rem 1rem .3rem 1rem;
+	white-space: nowrap;
+}
+
+.cardTable th{
+	text-align: left;
+	border-bottom: .2em solid #000;
+}
+
+.columnTypeDate{
+	font-family: monospace;
+}
+
+.rowEven{
+	background-color: #eee;
+}
+.rowOdd{
+	/*background-color: #ddd;*/
+}

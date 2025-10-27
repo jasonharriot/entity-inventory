@@ -1,28 +1,12 @@
-.cardTableContainer{
-	overflow-x: scroll;
+#container{	/*Kind of a bodge fix. Make the container as big as possible so the
+card list table doesn't need horizontal scrolling.*/
+	width: fit-content;
+	max-width: none;
 }
 
-.cardTable{
-	border-spacing: 0px;
-}
-
-.cardTable td, .cardTable th{
-	padding: .3rem 1rem .3rem 1rem;
-	white-space: nowrap;
-}
-
-.cardTable th{
-	text-align: left;
-	border-bottom: .2em solid #000;
-}
-
-.rowEven{
-	background-color: #eee;
-}
-.rowOdd{
-	/*background-color: #ddd;*/
-}
-
-.columnTypeDate{
-	font-family: monospace;
+@media only screen and (max-width: 1000px){
+	#container{
+		width: auto;
+		max-width: none;
+	}
 }
