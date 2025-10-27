@@ -1,9 +1,46 @@
-#fillNotes{
-	width: 100%;
-	min-height: 100px;
-	resize: vertical;
+.cardNotesEdit{
+	padding: 0px;
+	background: none;
 }
 
-input.fill{
+.cardNotesEdit textarea{
+	min-height: 5rem;
+	resize: vertical;
+	padding: .2rem;
+	min-height: 5rem;
+	font-size: 1rem;
 	width: 100%;
+	box-sizing: border-box;
+}
+
+.editFieldContainer{
+	margin-top: 1rem;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	padding: .3rem;
+}
+
+.editFieldText{
+	display: flex;
+	flex-direction: column;
+}
+
+.editFieldName{
+	font-weight: bold;
+}
+
+.editFieldDesc{
+	font-style: italic;
+}
+
+.editFieldContainer input{
+	height: 1.4rem;
+}
+
+@media only screen and (max-width: 1000px){
+	.editFieldContainer{
+		display: flex;
+		flex-direction: column;
+	}
 }

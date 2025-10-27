@@ -4,13 +4,18 @@ const columns = [
 		'field': 'id'
 	},
 	{
-		'name': 'Entity type',
-		'field': 'type'
+		'name': 'Date',
+		'field': 'date_sample'
 	},
 	{
 		'name': 'Contents',
 		'field': 'contents'
 	},
+	{
+		'name': 'Entity type',
+		'field': 'type'
+	},
+	
 	{
 		'name': 'Container size',
 		'field': 'container_size'
@@ -18,16 +23,12 @@ const columns = [
 	{
 		'name': 'Parent ID(s)',
 		'field': 'parent_ids'
-	},
+	}
 	/*{
 		'name': 'Child ID(s)',
 		'field': 'synth_child_ids'	//This is a synthetic field, we will
 		//generate it on the fly. It is not present in the database.
 	},*/
-	{
-		'name': 'Date',
-		'field': 'date_sample'
-	}
 ];
 
 const cardListTableElem = document.getElementById(`cardListTable`);

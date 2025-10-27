@@ -13,20 +13,20 @@ const columns = [	//Which columns to show for parent and child cards
 		'field': 'id'
 	},
 	{
-		'name': 'Entity type',
-		'field': 'type'
+		'name': 'Date',
+		'field': 'date_sample'
 	},
 	{
 		'name': 'Contents',
 		'field': 'contents'
 	},
 	{
-		'name': 'Container size',
-		'field': 'container_size'
+		'name': 'Entity type',
+		'field': 'type'
 	},
 	{
-		'name': 'Date',
-		'field': 'date_sample'
+		'name': 'Container size',
+		'field': 'container_size'
 	}
 ];
 

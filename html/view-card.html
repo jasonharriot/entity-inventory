@@ -5,10 +5,12 @@
 		<link rel="stylesheet" href="style/style.css" />
 		<link rel="stylesheet" href="style/fields.css" />
 		<link rel="stylesheet" href="style/list.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	</head>
 	<body>
 		<div id="container">
-			<div id="header">
+			<div id="header" class="section">
 				<div>
 					<div>
 						<h1>Entity Inventory</h1>
@@ -38,46 +40,48 @@
 					</h1>
 					<p><input type="button" id="buttonEdit" value="Edit..."/></p>
 					
-					<table class="cardTable">
-						<tbody>
-							<tr class="rowEven">
-								<td class="fieldCol">Entity type</td>
-								<td class="valueCol fill" id="fillType"></td>
-							</tr>
-							<tr class="rowOdd">
-								<td class="fieldCol">Contents</td>
-								<td class="valueCol fill" id="fillContents"></td>
-							</tr>
-							<tr class="rowEven">
-								<td class="fieldCol">Date</td>
-								<td class="valueCol fill" id="fillDateSample"></td>
-							</tr>
-							<tr class="rowOdd">
-								<td class="fieldCol">Initial mass of sample</td>
-								<td class="valueCol fill" id="fillMassInitial"></td>
-							</tr>
-							<tr class="rowEven">
-								<td class="fieldCol">Parent ID(s)</td>
-								<td class="valueCol fill" id="fillParentIDs"></td>
-							</tr>
-							<tr class="rowOdd">
-								<td class="fieldCol">Status</td>
-								<td class="valueCol fill" id="fillStatus"></td>
-							</tr>
-							<tr class="rowEven">
-								<td class="fieldCol">Container size</td>
-								<td class="valueCol fill" id="fillContainerSize"></td>
-							</tr>
-							<tr class="rowOdd">
-								<td class="fieldCol">Physical form</td>
-								<td class="valueCol fill" id="fillForm"></td>
-							</tr>
-							<tr class="rowEven">
-								<td class="fieldCol">Date of original experiment/batch</td>
-								<td class="valueCol fill" id="fillDateExperiment"></td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="cardTableContainer">
+						<table class="cardTable">
+							<tbody>
+								<tr class="rowEven">
+									<td class="fieldCol">Entity type</td>
+									<td class="valueCol fill" id="fillType"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Contents</td>
+									<td class="valueCol fill" id="fillContents"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Date</td>
+									<td class="valueCol fill" id="fillDateSample"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Initial mass of sample</td>
+									<td class="valueCol fill" id="fillMassInitial"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Parent ID(s)</td>
+									<td class="valueCol fill" id="fillParentIDs"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Status</td>
+									<td class="valueCol fill" id="fillStatus"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Container size</td>
+									<td class="valueCol fill" id="fillContainerSize"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Physical form</td>
+									<td class="valueCol fill" id="fillForm"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Date of original experiment/batch</td>
+									<td class="valueCol fill" id="fillDateExperiment"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 					<h3>Notes</h3>
 					<div class="cardNotes">
 						<div class="fill" id="fillNotes">
@@ -88,41 +92,47 @@
 				<div class="section">
 
 					<h3>Parent entities</h3>
-					<table id="parentCardTable" class="cardTable"></table>
+					<div class="cardTableContainer">
+						<table id="parentCardTable" class="cardTable"></table>
+					</div>
 
 					<h3>Child entities</h3>
-					<table id="childCardTable" class="cardTable"></table>
+					<div class="cardTableContainer">
+						<table id="childCardTable" class="cardTable"></table>
+					</div>
 
 					<h3>History</h3>
 					<p>The following dates are in UTC for now (TODO!).</p>
-					<table class="cardTable">
-						<tbody>
-							<tr class="rowEven">
-								<td class="fieldCol">Date label printed</td>
-								<td class="valueCol fill" id="fillDateIssued"></td>
-							</tr>
-							<tr class="rowOdd">
-								<td class="fieldCol">Date first scanned</td>
-								<td class="valueCol fill" id="fillDateScannedFirst"></td>
-							</tr>
-							<tr class="rowEven">
-								<td class="fieldCol">Date first edited</td>
-								<td class="valueCol fill" id="fillDateModifiedFirst"></td>
-							</tr>
-							<tr class="rowOdd">
-								<td class="fieldCol">Date last scanned</td>
-								<td class="valueCol fill" id="fillDateScannedLatest"></td>
-							</tr>
-							<tr class="rowEven">
-								<td class="fieldCol">Date last edited</td>
-								<td class="valueCol fill" id="fillDateModifiedLatest"></td>
-							</tr>
-						</tbody>
-					</table>
+					<div class="cardTableContainer">
+						<table class="cardTable">
+							<tbody>
+								<tr class="rowEven">
+									<td class="fieldCol">Date label printed</td>
+									<td class="valueCol fill" id="fillDateIssued"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Date first scanned</td>
+									<td class="valueCol fill" id="fillDateScannedFirst"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Date first edited</td>
+									<td class="valueCol fill" id="fillDateModifiedFirst"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Date last scanned</td>
+									<td class="valueCol fill" id="fillDateScannedLatest"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Date last edited</td>
+									<td class="valueCol fill" id="fillDateModifiedLatest"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 
-			<div id="footer">
+			<div id="footer" class="section">
 				<div>
 					<p>EDAC Labs, Inc.</p>
 				</div>

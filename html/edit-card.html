@@ -5,10 +5,13 @@
 		<link rel="stylesheet" href="style/style.css" />
 		<link rel="stylesheet" href="style/fields.css" />
 		<link rel="stylesheet" href="style/edit.css" />
+		<link rel="stylesheet" href="style/list.css"/>
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	</head>
 	<body>
 		<div id="container">
-			<div id="header">
+			<div id="header" class="section">
 				<div>
 					<div>
 						<h1>Entity Inventory</h1>
@@ -34,52 +37,98 @@
 								<i>loading...</i>
 							</span>
 						</h2>
-						<table class="cardTable">
-							<tbody>
-								<tr class="rowEven">
-									<td class="fieldCol">Entity type (sample, part, document, bag, etc.)</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillType" name="type"/></td>
-								</tr>
-								<tr class="rowOdd">
-									<td class="fieldCol">Contents (chemical name)</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillContents" name="contents"/></td>
-								</tr>
-								<tr class="rowEven">
-									<td class="fieldCol">Date (when this object was created/labeled)</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillDateSample" name="date_sample"/></td>
-								</tr>
-								<tr class="rowOdd">
-									<td class="fieldCol">Initial mass of sample</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillMassInitial" name="mass_initial"/></td>
-								</tr>
-								<tr class="rowEven">
-									<td class="fieldCol"><p>Parent ID(s)</p><p>What sample(s) is this sample derived from?</p></td>
-									<td class="valueCol"><input type="text" class="fill" id="fillParentIDs" name="parent_ids"/></td>
-								</tr>
-								<tr class="rowOdd">
-									<td class="fieldCol">Status (thrown away, consumed, lost, etc.)</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillStatus" name="status"/></td>
-								</tr>
-								<tr class="rowEven">
-									<td class="fieldCol">Container size</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillContainerSize" name="container_size"/></td>
-								</tr>
-								<tr class="rowOdd">
-									<td class="fieldCol">Physical form (liquid, solid, dust, chunks, paste, slime, gas, plasma, antimatter, etc.)</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillForm" name="form"/></td>
-								</tr>
-								<tr class="rowEven">
-									<td class="fieldCol">Date of original experiment/batch</td>
-									<td class="valueCol"><input type="text" class="fill" id="fillDateExperiment" name="date_experiment"/></td>
-								</tr>
-							</tbody>
-						</table>
-						
+
+
+						<div class="editFieldContainer rowOdd">
+							<div class="editFieldText">
+								<span class="editFieldName">Entity type</span>
+								<span class="editFieldDesc">Sample, slide, bag, equipment...</span>
+							</div>
+							<div>
+								<input type="text" id="fillType" name="type"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowEven">
+							<div class="editFieldText">
+								<span class="editFieldName">Contents</span>
+								<span class="editFieldDesc">Chemical name, material, specification...</span>
+							</div>
+							<div>
+								<input type="text" id="fillContents" name="contents"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowOdd">
+							<div class="editFieldText">
+								<span class="editFieldName">Date</span>
+								<span class="editFieldDesc">The date written on the label&mdash;the date this entity was created</span>
+							</div>
+							<div>
+								<input type="text" id="fillDateSample" name="date_sample"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowEven">
+							<div class="editFieldText">
+								<span class="editFieldName">Initial ammount</span>
+								<span class="editFieldDesc">Mass, volume, quantity, etc. Specify units</span>
+							</div>
+							<div>
+								<input type="text" id="fillMassInitial" name="mass_initial"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowOdd">
+							<div class="editFieldText">
+								<span class="editFieldName">Parent ID(s)</span>
+								<span class="editFieldDesc">The IDs of the samples combined/mixed which this sample contains. Separate with commas, i.e. "123, 456, 789"</span>
+							</div>
+							<div>
+								<input type="text" id="fillParentIDs" name="parent_ids"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowEven">
+							<div class="editFieldText">
+								<span class="editFieldName">Status</span>
+								<span class="editFieldDesc">Transferred to John Doe, consumed, lost...</span>
+							</div>
+							<div>
+								<input type="text" id="fillStatus" name="status"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowOdd">
+							<div class="editFieldText">
+								<span class="editFieldName">Container size</span>
+								<span class="editFieldDesc">Volume of the container, if applicable</span>
+							</div>
+							<div>
+								<input type="text" id="fillContainerSize" name="container_size"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowEven">
+							<div class="editFieldText">
+								<span class="editFieldName">Physical form</span>
+								<span class="editFieldDesc">Liquid, solid, powder, chunks, mud...</span>
+							</div>
+							<div>
+								<input type="text" id="fillForm" name="form"/>
+							</div>
+						</div>
+						<div class="editFieldContainer rowOdd">
+							<div class="editFieldText">
+								<span class="editFieldName">Date of original experiment/batch</span>
+								<span class="editFieldDesc">For reference</span>
+							</div>
+							<div>
+								<input type="text" id="fillDateExperiment" name="date_experiment"/>
+							</div>
+						</div>
+
+
 						<h3>Notes</h3>
-						<div class="cardNotes">
+						<div class="cardNotes cardNotesEdit">
 							<textarea class="fill" id="fillNotes" name="notes">
 							</textarea>
 						</div>
+
+
 						<p>
 							<input type="button" id="buttonDiscard" value="Discard changes" />
 							<input type="submit" id="buttonSave" target="_new" value="Save changes"/>
@@ -88,7 +137,7 @@
 				</div>
 			</div>
 
-			<div id="footer">
+			<div id="footer" class="section">
 				EDAC Labs, Inc.
 			</div>
 		</div>

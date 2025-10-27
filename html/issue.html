@@ -4,10 +4,12 @@
 	<head>
 		<link rel="stylesheet" href="style/style.css" />
 		<link rel="stylesheet" href="style/issue.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 	</head>
 	<body>
 		<div id="container">
-			<div id="header">
+			<div id="header" class="section">
 				<div>
 					<div>
 						<h1>Entity Inventory</h1>
@@ -24,44 +26,44 @@
 			</div>
 
 			<div id="contentContainer">
-				<p>To print more labels, get a new PDF file here.</p>
-				<p>Important notes:</p>
-				<ul>
-					<li>Don't save the PDF file. Once generated, print it
-					immedately and then close the window.</li>
-					<li>
-						Don't print multiple copies. To print multiple sheets at
-					 	once, enter a quantity below, <i>then</i> generate the
-					 	PDF.
-					</li>
-					<li>Print single-sided.</li>
-					<li>Set the correct sizing options</li>
+				<div class="section">
+					<p>To print more labels, get a new PDF file here.</p>
+					<p>Important notes:</p>
 					<ul>
-						<li>Set margins to zero</li>
-						<li>Set scale to 100%</li>
+						<li>Don't save the PDF file. Once generated, print it
+						immedately and then close the window.</li>
+						<li>
+							Don't print multiple copies. To print multiple sheets at
+						 	once, enter a quantity below, <i>then</i> generate the
+						 	PDF.
+						</li>
+						<li>Print single-sided.</li>
+						<li>Set the correct sizing options</li>
+						<ul>
+							<li>Set margins to zero</li>
+							<li>Set scale to 100%</li>
+						</ul>
 					</ul>
-				</ul>
 
-				<p>Select from the available templates below.</p>
+					<p>Select from the available templates below.</p>
+				</div>
 
-				<div class="issueOptionsSection">
+				<div class="section">
 					<p>Template:</p>
 					<select id="selectTemplate">
 						<option value="">Select...</option>
 					</select>
-				</div>
-				<div class="issueOptionsSection">
+
 					<p>Number of pages:</p>
 					<input id="inputPageCount" type="number" value="0">
-				</div>
-				<div class="issueOptionsSection">
+					
 					<p>Generate PDF:</p>
 					<input type="button" value="Go!" id="buttonIssuePDF">
 				</div>
 
 			</div>
 
-			<div id="footer">
+			<div id="footer" class="section">
 				<p>
 					EDAC Labs, Inc.
 				</p>
