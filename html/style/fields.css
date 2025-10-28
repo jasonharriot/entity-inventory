@@ -1,7 +1,7 @@
-#fillTagID{
+.fillTagID{
 	/*font-family: monospace;*/
 }
 
-#fillDateSample, #fillDateIssued, #fillDateExperiment, #fillDateScannedFirst, #fillDateModifiedFirst, #fillDateScannedLatest, #fillDateModifiedLatest{
+.fillDateSample, .fillDateIssued, .fillDateExperiment, .fillDateScannedFirst, .fillDateModifiedFirst, .fillDateScannedLatest, .fillDateModifiedLatest{
 	font-family: monospace;
 }
