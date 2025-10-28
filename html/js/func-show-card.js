@@ -27,36 +27,41 @@ function showCard(c){	//Takes the fields supplied and displays them on the
 			fieldValue = c[field];
 		}
 
-		let fillElem = document.getElementById(fillField)
+		let fillElemHTMLCollection = document.getElementsByClassName(fillField);
 
-		if(!fillElem){
-			console.log(`Missing element for field ${fillField}`)
-			continue;
-		}
+		let fillElems = [...fillElemHTMLCollection]	//Use the spread operator
+		//to convert the HTMLCollection to an Array.
 
-		if(fillElem.tagName == 'INPUT' || fillElem.tagName == 'TEXTAREA'){	//If the element is an input tag,
-			//set the value property instead of inner text.
+		fillElems.forEach((fillElem) => {
+			if(!fillElem){
+				console.log(`Missing element for field ${fillField}`)
+				return;
+			}
 
-			fillElem.value = fieldValue;
-			continue
-		}
+			if(fillElem.tagName == 'INPUT' || fillElem.tagName == 'TEXTAREA'){	//If the element is an input tag,
+				//set the value property instead of inner text.
 
-		/*if(fillElem.classList.contains('edit')){	//If this 
-			//element has the edit class, then attach an event listener to open
-			//the corresponding edit page when we click it.
+				fillElem.value = fieldValue;
+				return
+			}
 
-			fillElem.addEventListener('click', () => {
-				console.log(`Editing card for tag ID ${c.id}, field ${field}`)
-				window.location.href = `editcard.html?tagid=${c.id}&field=${field}`
-			})
-		}*/
+			/*if(fillElem.classList.contains('edit')){	//If this 
+				//element has the edit class, then attach an event listener to open
+				//the corresponding edit page when we click it.
 
-		if(field == 'notes' && fieldValue.length == 0){
-			fillElem.innerHTML = '<i>No notes saved.</i>';
-			continue;
-		}
+				fillElem.addEventListener('click', () => {
+					console.log(`Editing card for tag ID ${c.id}, field ${field}`)
+					window.location.href = `editcard.html?tagid=${c.id}&field=${field}`
+				})
+			}*/
 
-		fillElem.innerText = fieldValue;
+			if(field == 'notes' && fieldValue.length == 0){
+				fillElem.innerHTML = '<i>No notes saved.</i>';
+				return;
+			}
+
+			fillElem.innerText = fieldValue;
+		});
 	}
 	
 }
