@@ -33,7 +33,11 @@ function showCard(c){	//Takes the fields supplied and displays them on the
 	for(const [fillClass, field] of Object.entries(fields)){
 		let fieldValue = '';
 
-		if(field in c){
+		if(!(field in c)){
+			console.error(`Card data received has no field "${field}`);
+		} else if(c[field] == null){
+			console.error(`Field ${field} is null.`);
+		} else{
 			fieldValue = c[field];
 		}
 
