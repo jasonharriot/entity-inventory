@@ -107,7 +107,8 @@ getCard(tagID).then((card) => {
 	}
 
 }).catch( (e) => {
-	console.error('Something went wrong:', e);
+	console.error(`Couldn't get card info for ID ${tagID}`);
+	alert(`No card for ID ${tagID} exists.`);
 });
 
 

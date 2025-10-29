@@ -4,6 +4,12 @@ module.exports = {
 		//work with different separators, encodings, and glyphs (different 
 		//commas on iOS vs desktop, etc., tabs, semicolons...)
 
+		if(idString == null){	//If the string is null or undefined, do not
+			//attempt to parse IDs from it.
+			
+			return [];
+		}
+
 		const segments = idString.split(',');
 
 		let IDs = [];
