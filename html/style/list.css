@@ -1,11 +1,13 @@
 #container{	/*Kind of a bodge fix. Make the container as big as possible so the
 card list table doesn't need horizontal scrolling.*/
+	min-width: 800px;
 	width: fit-content;
 	max-width: none;
 }
 
 @media only screen and (max-width: 1000px){
 	#container{
+		min-width: 0px;
 		width: auto;
 		max-width: none;
 	}

@@ -13,9 +13,9 @@ const cardReadHandler = require('./card-read-handler.js');
 const cardWriteHandler = require('./card-write-handler.js');
 const backupSQLiteHandler = require('./backup-sqlite-handler.js');
 const sheetGenerateHandler = require('./sheet-generate-handler.js');
+const searchHandler = require('./search-handler.js');
 
 app.use((req, res, next) => {	//Middleware to dump everything to console. 
-
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
 
 	req.sqlite = database;	//Add the database as a property of req, so it can
@@ -41,6 +41,8 @@ app.get('/api/card/write/:tagid', cardWriteHandler);
 
 app.get('/api/backup/sqlite', backupSQLiteHandler);
 
+app.get('/api/search/:searchString', searchHandler);
+
 app.get('/api/sheet/generate/:templatePartial/:numPages', sheetGenerateHandler);
 
 app.listen(port, () => {
@@ -60,7 +62,6 @@ app.listen(port, () => {
 		
 		form TEXT DEFAULT '',
 		
-		
 		date_experiment TEXT DEFAULT '',
 
 		date_issued TEXT DEFAULT CURRENT_TIMESTAMP,
@@ -71,7 +72,6 @@ app.listen(port, () => {
 		notes TEXT DEFAULT ''
 		
 		);`);
-
 
 	console.log(`Server running on port ${port}`);
 });

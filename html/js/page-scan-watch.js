@@ -55,7 +55,11 @@ document.addEventListener('keydown', (e) => {
 		window.location.href = 'go-to-card.html';
 	}
 
-	if(cumulativeString == 'l'){	//Hotkey for goto
+	if(cumulativeString == 'l'){	//Hotkey for list
 		window.location.href = 'card-list.html';
+	}
+
+	if(cumulativeString == 's'){	//Hotkey for search
+		window.location.href = 'search.html';
 	}
 })
