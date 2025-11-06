@@ -25,7 +25,7 @@ function parseDate(s){	//Parses the given date string to a Moment object. See
 
 	const date = moment(s);
 
-	console.log(s, '->', date.toString());
+	//console.log(s, '->', date.toString());
 
 	if(!date.isValid()){	//Return null if parsing did not yield a valid date
 		return null;
