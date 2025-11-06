@@ -20,8 +20,8 @@ function showCard(c){	//Takes the fields supplied and displays them on the
 		fillType: 'type'
 	}
 
-	const fieldsFromUTC = [	//Take data for these fields and convert it from UTC to
-		//the local timezone, then display it
+	const fieldsFromUTC = [	//Take data for these fields and convert it from UTC
+		//to the local timezone, then display it
 
 		'date_issued',
 		'date_scanned_first',
@@ -29,6 +29,9 @@ function showCard(c){	//Takes the fields supplied and displays them on the
 		'date_modified_first',
 		'date_modified_latest'
 		]
+
+	document.title = `ID ${c.id} - ${c.contents}`;	//Show the card ID and 
+	//contents in the browser tab.
 
 	for(const [fillClass, field] of Object.entries(fields)){
 		let fieldValue = '';
