@@ -38,7 +38,6 @@
 							</span>
 						</h2>
 
-
 						<div class="editFieldContainer rowOdd">
 							<div class="editFieldText">
 								<span class="editFieldName">Entity type</span>
@@ -60,10 +59,13 @@
 						<div class="editFieldContainer rowOdd">
 							<div class="editFieldText">
 								<span class="editFieldName">Date</span>
-								<span class="editFieldDesc">The date written on the label&mdash;the date this entity was created</span>
+								<span class="editFieldDesc">The date written on the label, or the date this entity was created</span>
 							</div>
 							<div>
-								<input type="text" class="fillDateSample" name="date_sample"/>
+								<input type="button" id="buttonToday" value="Use today's date"/>
+							</div>
+							<div>
+								<input type="text" class="fillDateSample" id="fieldDateToday" name="date_sample"/>
 							</div>
 						</div>
 						<div class="editFieldContainer rowEven">
@@ -140,6 +142,7 @@
 				EDAC Labs, Inc.
 			</div>
 		</div>
+		<script type="text/javascript" src="js/moment.js"></script>
 		<script type="text/javascript" src="js/func-get-card.js"></script>
 		<script type="text/javascript" src="js/func-show-card.js"></script>
 		<script type="text/javascript" src="js/func-get-tag-id.js"></script>
