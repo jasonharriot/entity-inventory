@@ -86,8 +86,12 @@ function doSearch(){
 			signal: AbortSignal.timeout(1000),	//Abort the search after this
 			//time.
 
-			cache: 'no-store'	//Do not retrieve from cache. Search results
+			cache: 'no-store',	//Do not retrieve from cache. Search results
 			//may have changed even if query is the same.
+
+			headers: {
+				"Content-Type": "application/x-www-form-urlencoded"
+			}
 
 		});
 
