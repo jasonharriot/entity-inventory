@@ -78,7 +78,10 @@ function doSearch(){
 			return;
 		}
 
+		console.log('Search string:', searchString);
+
 		searchRequestState = true;
+
 		const searchPromise = fetch(`${searchURL}/${searchString}`, {
 			signal: AbortSignal.timeout(1000),	//Abort the search after this
 			//time.
@@ -92,9 +95,12 @@ function doSearch(){
 			searchRequestState = false;
 			
 			e.json().then((json) => {
-				console.log(`"${searchString}": ${json.length} cards`);
+				console.log(`Search results: ${json.length} cards`);
 				createTable(json);
-			})
+			}).catch((e) => {
+				console.error(`Couldn't parse JSON response:`);
+				console.error(e);
+			});
 
 		}).catch((e) => {
 			searchRequestState = false;
