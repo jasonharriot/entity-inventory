@@ -1,9 +1,11 @@
 module.exports = function(req, res, next){
-	const searchQueryString = req.body.query_string;
-	if(!searchQueryString){
+	if(!req.body || !req.body.query_string){
 		console.error(`Body does not contain a valid search query.`);
 		next();
+		return;
 	}
+
+	const searchQueryString = req.body.query_string;
 
 	console.log(`Search: ${searchQueryString}`);
 
