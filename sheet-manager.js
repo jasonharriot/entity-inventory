@@ -254,8 +254,8 @@ module.exports = {
 						}
 
 						//Footer
-						let footerString = 'PRINT ONLY ONE COPY. DO NOT SAVE \
-							THIS FILE. ' + new Date().toISOString()
+						let footerString = 'PRINT ONLY ONE COPY. DO NOT SAVE '
+							+ 'THIS FILE. ' + new Date().toISOString()
 
 						newPage.drawText(footerString, {
 								x: .5*72, 
