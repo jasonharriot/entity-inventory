@@ -27,6 +27,9 @@ buttonTodayElem.addEventListener('click', () => {
 getCard(tagID).then((card) => {
 	showCard(card);
 
+	document.title = `Edit: ${card.id}`;	//Change the tab title to
+	//show that this tab is the Edit window.
+
 	formEditElem.setAttribute('action', `api/card/write/${tagID}`);
 	//Tell the form to POST to the API endpoint which includes the
 	//correct tag ID.

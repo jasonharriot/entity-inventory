@@ -30,7 +30,7 @@ function showCard(c){	//Takes the fields supplied and displays them on the
 		'date_modified_latest'
 		]
 
-	document.title = `ID ${c.id} - ${c.contents}`;	//Show the card ID and 
+	document.title = `${c.id} ${c.contents}`;	//Show the card ID and 
 	//contents in the browser tab.
 
 	for(const [fillClass, field] of Object.entries(fields)){
