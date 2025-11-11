@@ -27,6 +27,8 @@ app.use((req, res, next) => {	//Middleware to dump everything to console.
 app.use('/', express.static('html'));	//For requests to the root, just serve
 //static files.
 
+app.use(express.json());
+
 app.get('/api/get-id-counter', getIDCounterHandler);
 
 app.get('/api/template/list', templateListHandler);
@@ -41,7 +43,7 @@ app.get('/api/card/write/:tagid', cardWriteHandler);
 
 app.get('/api/backup/sqlite', backupSQLiteHandler);
 
-app.get('/api/search/:searchString', searchHandler);
+app.use('/api/search', searchHandler);
 
 app.get('/api/sheet/generate/:templatePartial/:numPages', sheetGenerateHandler);
 

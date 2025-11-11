@@ -71,7 +71,8 @@ function doSearch(){
 
 	if(!searchRequestState){
 
-		const searchString = encodeURIComponent(inputSearchElem.value);
+		//const searchString = encodeURIComponent(inputSearchElem.value);
+		const searchString = inputSearchElem.value;
 
 		if(searchString == ''){
 			console.log('Empty search.');
@@ -82,7 +83,9 @@ function doSearch(){
 
 		searchRequestState = true;
 
-		const searchPromise = fetch(`${searchURL}/${searchString}`, {
+		const searchPromise = fetch(`${searchURL}`, {
+			method: "POST",
+
 			signal: AbortSignal.timeout(1000),	//Abort the search after this
 			//time.
 
@@ -90,8 +93,13 @@ function doSearch(){
 			//may have changed even if query is the same.
 
 			headers: {
-				"Content-Type": "application/x-www-form-urlencoded"
-			}
+				'Accept': 'application/json',
+				'Content-Type': 'application/json'
+			},
+
+			body: JSON.stringify({
+				'query_string': searchString
+			})
 
 		});
 
@@ -101,18 +109,22 @@ function doSearch(){
 			e.json().then((json) => {
 				console.log(`Search results: ${json.length} cards`);
 				createTable(json);
+
 			}).catch((e) => {
 				console.error(`Couldn't parse JSON response:`);
 				console.error(e);
+				createTable([]);
 			});
 
 		}).catch((e) => {
 			searchRequestState = false;
 			console.error('The search request failed');
 			console.error(e);
+			createTable([]);
 		});
+
 	} else{
-		console.log('Skipped concurrent search request.');
+		//console.log('Skipped concurrent search request.');
 	}
 }
 

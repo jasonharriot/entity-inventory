@@ -1,5 +1,11 @@
-module.exports = function(req, res){
-	console.log(`Search: ${req.params.searchString}`);
+module.exports = function(req, res, next){
+	const searchQueryString = req.body.query_string;
+	if(!searchQueryString){
+		console.error(`Body does not contain a valid search query.`);
+		next();
+	}
+
+	console.log(`Search: ${searchQueryString}`);
 
 	const fieldsGroup1 = [
 		'id',
@@ -22,7 +28,7 @@ module.exports = function(req, res){
 	//const terms = [];
 
 	//TODO
-	const term = req.params.searchString;
+	const term = searchQueryString;
 	//
 
 	fieldsGroup1.forEach((field) => {
@@ -37,16 +43,18 @@ module.exports = function(req, res){
 		
 	});
 
-	const queryString = `SELECT * FROM cards WHERE (${fieldOps.join(` OR `)})`;
+	const sqlQueryString = `SELECT * FROM cards WHERE (${fieldOps.join(` OR `)})`;
 
 	//console.log(`Search terms: ${terms}`);
 
-	//console.log(`Query string: ${queryString}`);
+	//console.log(`Query string: ${sqlQueryString}`);
 
-	const query = req.sqlite.prepare(queryString);
+	const query = req.sqlite.prepare(sqlQueryString);
 	const results = query.all(parameters);
 
 	console.log(`Query yielded ${results.length} cards.`);
 
 	res.send(results);
+
+	next();
 }
