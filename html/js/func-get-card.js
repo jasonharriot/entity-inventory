@@ -5,7 +5,8 @@ function getCard(tagID){
 			//which will resolve once the JSON data base been parsed.
 
 			if(!response.ok){
-				return Promise.reject('Response is not OK.');
+				return Promise.reject('Failed to fetch card, resposne code ' +
+					response.status);
 			}
 
 			return response.json()	//Begin parsing the JSON
@@ -17,7 +18,8 @@ function getCard(tagID){
 			//to wherever we called getCard() from.
 
 		}).catch((e) => {
-			console.error(`Couldn't get card ${tagID}.`);
+			console.error(`Couldn't get card with ID ${tagID}.`);
+			console.error(e);
 
 			reject();
 		});

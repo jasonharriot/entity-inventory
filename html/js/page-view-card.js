@@ -73,20 +73,9 @@ function makeTableFromIDs(tableElem, columns, IDs){
 
 		tableElem.prepend(header);
 	});
-
-	
-	
 }
 
 getCard(tagID).then((card) => {
-	if(card == null){
-		alert('This card does not exist. The tag ID is invalid, or \
-			has not been issued yet.');
-
-		history.back();
-		return;
-	}
-
 	showCard(card)
 
 	buttonEditElem.addEventListener('click', () =>  {
@@ -107,8 +96,19 @@ getCard(tagID).then((card) => {
 	}
 
 }).catch( (e) => {
-	console.error(`Couldn't get card info for ID ${tagID}`);
-	alert(`No card for ID ${tagID} exists.`);
+	if(tagID > 0 && tagID <= 999){	//Inform the user that if an old 
+		//numerical ID is in use, but has no database entry, they cannot
+		//create an entry for it, and instead must use a new label, and
+		//should reference the old label as the parent.
+		
+		alert('Attention! This ID is in the old format (< 1000), and does not' +
+			' have an entry in the database. Please replace the old' +
+			' sticker with a new printed label, and enter the old ID in' +
+			' the Parent ID field.');
+	} else{
+		alert('This card does not exist. The tag ID is invalid, or has' +
+			' not been issued yet.');
+	}
 });
 
 

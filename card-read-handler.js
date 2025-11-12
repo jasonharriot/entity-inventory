@@ -7,5 +7,10 @@ module.exports = function(req, res){
 
 	let card = getCardByTagID(req.sqlite, tagID);
 
-	res.send(card);
+	if(card){
+		res.send(card);
+	} else{
+		res.writeHead(400);
+		res.end();
+	}
 }
