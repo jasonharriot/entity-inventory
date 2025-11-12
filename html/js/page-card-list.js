@@ -31,8 +31,9 @@ const columns = [
 	},*/
 ];
 
-const cardListTableElem = document.getElementById(`cardListTable`);
-const pTableMessageElem = document.getElementById(`pTableMessage`);
+//const cardListTableElem = document.getElementById('cardListTable');
+const cardTableBodyElem = document.getElementById('cardTableBody');
+const pTableMessageElem = document.getElementById('pTableMessage');
 
 let header = createCardListTableHeader(columns);
 
@@ -61,11 +62,11 @@ fetch(`api/card/list`).then((response) => {
 				r.classList.add('rowOdd');
 			}
 
-			cardListTableElem.prepend(r);
+			cardTableBodyElem.prepend(r);
 
 			i++;
 		});
 
-		cardListTableElem.prepend(header);
+		cardTableBodyElem.prepend(header);
 	})
 })
