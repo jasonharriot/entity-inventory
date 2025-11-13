@@ -1,12 +1,12 @@
 {
 	"filename": "template_0.75-inch_square.pdf",
-	"labelOffset": [0.4, 0.4],
+	"labelOffset": [0.37, 0.37],
 	"labelSpacing": [1, 1],
 	"labelNum": [8, 10],
-	"tagOffset": [0.073, 0.128],
+	"tagOffset": [0.075, 0.14],
 	"tagSize": 0.6,
 	"pageSize": [8.5, 11],
 	"fontSize": 10,
-	"textOffset": [0.07, -0.09],
+	"textOffset": [0.07, -0.1],
 	"labelSize": [0.75, 0.75]
 }
