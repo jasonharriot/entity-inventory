@@ -7,5 +7,6 @@
 	"tagSize": 0.6,
 	"pageSize": [8.5, 11],
 	"fontSize": 10,
-	"textOffset": [0.07, -0.09]
+	"textOffset": [0.07, -0.09],
+	"labelSize": [0.75, 0.75]
 }

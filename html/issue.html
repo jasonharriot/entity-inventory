@@ -29,37 +29,42 @@
 
 			<div id="contentContainer">
 				<div class="section">
-					<p>To print more labels, get a new PDF file here.</p>
-					<p>Important notes:</p>
+					<h2>Issue new labels</h2>
+					<p>Important notes to avoid duplicate labels:</p>
 					<ul>
-						<li>Don't save the PDF file. Once generated, print it
+						<li>Don't save the PDF file. Print it
 						immedately and then close the window.</li>
-						<li>
-							Don't print multiple copies. To print multiple sheets at
-						 	once, enter a quantity below, <i>then</i> generate the
-						 	PDF.
-						</li>
-						<li>Print single-sided.</li>
-						<li>Set the correct sizing options</li>
-						<ul>
-							<li>Set margins to zero</li>
-							<li>Set scale to 100%</li>
-						</ul>
+
+						<li>Don't print multiple copies. To print multiple
+							sheets at once, enter a quantity below.</li>
 					</ul>
 
-					<p>Select from the available templates below.</p>
+					<p>Tips:</p>
+					<ul>
+						<li>Print single-sided.</li>
+						<li>Set margins to zero</li>
+						<li>Set scale to 100%</li>
+					</ul>
 				</div>
 
 				<div class="section">
-					<p>Template:</p>
+					<h3>Select template</h3>
 					<select id="selectTemplate">
 						<option value="">Select...</option>
 					</select>
 
-					<p>Number of pages:</p>
+					<h3>Select number of pages</h3>
 					<input id="inputPageCount" type="number" value="0">
+
+					<h3>Template information</h3>
+					<p>Label size: <span id="fillLabelSize"></span></p>
+					<p>Page size: <span id="fillPageSize"></span></p>
+					<p>Number of labels per page: <span id="fillLabelsPerPage"></span></p>
+					<p>Number of labels total: <span id="fillLabelsTotal"></span></p>
 					
-					<p>Generate PDF:</p>
+
+					
+					
 					<input type="button" value="Go!" id="buttonIssuePDF">
 				</div>
 

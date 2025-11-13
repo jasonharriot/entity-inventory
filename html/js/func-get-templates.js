@@ -9,7 +9,7 @@ function getTemplates(){
 
 			return response.json();
 		}).then((templates) => {
-			console.log(`Fetched templates: ${templates}`);
+			console.log(`Fetched ${templates.length} templates.`);
 			resolve(templates);
 		}).catch((e) => {
 			console.error(`Couldn't fetch templates.`);
