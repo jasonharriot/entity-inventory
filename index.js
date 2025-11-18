@@ -10,6 +10,7 @@ const scanHandler = require('./scan-handler.js');
 const getIDCounterHandler = require('./get-id-counter-handler.js');
 const cardListHandler = require('./card-list-handler.js');
 const cardReadHandler = require('./card-read-handler.js');
+const cardFamilyHandler = require('./card-family-handler.js');
 const cardWriteHandler = require('./card-write-handler.js');
 const backupSQLiteHandler = require('./backup-sqlite-handler.js');
 const sheetGenerateHandler = require('./sheet-generate-handler.js');
@@ -38,6 +39,8 @@ app.get('/s/:tagid', scanHandler);
 app.get('/api/card/list', cardListHandler)
 
 app.get('/api/card/read/:tagid', cardReadHandler);
+
+app.get('/api/card/family/:tagid', cardFamilyHandler);
 
 app.get('/api/card/write/:tagid', cardWriteHandler);
 

@@ -6,7 +6,7 @@ module.exports = {
 		//cards who have the specified card (tagID) as a parent.
 
 		const cards = getCards(database);	//All cards which have some info
-		//filled out.
+		//filled out.	TODO: Only query cards which have tagID as a parent
 
 		const childCards = cards.filter((card) => {
 			const parentIDs = parseIDListString(card.parent_ids);

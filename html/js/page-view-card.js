@@ -2,8 +2,9 @@
 
 const buttonEditElem = document.getElementById('buttonEdit');
 
-const parentCardTableElem = document.getElementById(`parentCardTable`);
-const childCardTableElem = document.getElementById(`childCardTable`);
+const parentCardTableElem = document.getElementById('parentCardTable');
+const siblingCardTableElem = document.getElementById('siblingCardTable');
+const childCardTableElem = document.getElementById('childCardTable');
 
 const tagID = getTagID();
 
@@ -31,6 +32,11 @@ const columns = [	//Which columns to show for parent and child cards
 ];
 
 function makeTableFromIDs(tableElem, columns, IDs){
+	if(!IDs || !IDs.length){
+		tableElem.innerHTML = '<i>None.</i>';
+		return;
+	}
+
 	let header = createCardListTableHeader(columns);
 
 	let cardProms = [];
@@ -83,17 +89,7 @@ getCard(tagID).then((card) => {
 		window.location.href = hrefString;
 	});
 
-	if(card.synth_parent_ids.length > 0){
-		makeTableFromIDs(parentCardTableElem, columns, card.synth_parent_ids);
-	} else{
-		parentCardTableElem.innerText = "This entity has no parents."
-	}
-
-	if(card.synth_child_ids.length > 0){
-		makeTableFromIDs(childCardTableElem, columns, card.synth_child_ids);
-	} else{
-		childCardTableElem.innerText = "This entity has no children."
-	}
+	makeTableFromIDs(parentCardTableElem, columns, card.synth_parent_ids);
 
 }).catch( (e) => {
 	if(tagID > 0 && tagID <= 999){	//Inform the user that if an old 
@@ -109,6 +105,14 @@ getCard(tagID).then((card) => {
 		alert('This card does not exist. The tag ID is invalid, or has' +
 			' not been issued yet.');
 	}
+
+	console.log(e);
 });
 
-
+getFamily(tagID).then((family) => {
+	makeTableFromIDs(siblingCardTableElem, columns, family.sibling_ids);
+	makeTableFromIDs(childCardTableElem, columns, family.child_ids);
+}).catch( (e) => {
+	console.error('Error while fetching family for ID ${tagID}');
+	console.error(e);
+})
