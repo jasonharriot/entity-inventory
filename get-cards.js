@@ -2,8 +2,9 @@ const { parseIDListString } = require('./parse-id-list-string.js');
 
 module.exports = {
 	getCards: function(database){
-		const q = database.prepare(`SELECT * FROM cards WHERE
-			((contents IS NOT NULL AND contents <> '') OR
+		const q = database.prepare(`SELECT * FROM cards WHERE (
+			(contents IS NOT NULL AND contents <> '') OR
+			(parent_ids IS NOT NULL AND parent_ids <> '') OR
 			(type IS NOT NULL AND type <> '') OR
 			(date_sample IS NOT NULL AND date_sample <> '')) AND
 			((date_modified_first IS NOT NULL AND date_modified_first <> '') OR
