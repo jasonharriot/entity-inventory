@@ -15,7 +15,7 @@ module.exports = {
 		});
 
 		if(childCards.length == 0){
-			console.log(`No child cards exist for ${tagID}`);
+			//console.log(`No child cards exist for ${tagID}`);
 			return [];
 		}
 
