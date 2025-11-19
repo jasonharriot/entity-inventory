@@ -13,7 +13,7 @@ module.exports = {
 		}
 
 		if(cards.length == 0){
-			console.log(`No cards for ${id}.`);
+			//console.log(`No cards for ${id}.`);
 			return null;
 		}
 
