@@ -2,3 +2,4 @@ node_modules
 qr
 db.sqlite
 qrtemp
+html/chart-old.html

@@ -1,10 +1,10 @@
 function getTagID(){
 	const params = new URLSearchParams(window.location.search);
 
-	let tagID = 'n/a';
+	let tagID = '';
 
 	if(params.has('tagid')){
-		tagID = params.get('tagid');
+		tagID = Number(params.get('tagid'));
 	} else{
 		console.log('No tag ID in URL.');
 		return null;

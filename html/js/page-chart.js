@@ -9,6 +9,18 @@ const childCardTableElem = document.getElementById('childCardTable');
 
 const tagID = getTagID();
 
+function nodeClickHandler(event, obj){
+	const clickedID = obj.data.card.id;
+
+	if(obj.data.card.dummy){
+		alert(`There is no card for ID ${clickedID}. It is invalid, or has not`
+			+ ` been issued yet.`);
+	} else if(confirm(`View card details for ID ${clickedID}?`)){
+		window.location.href=`view-card.html?tagid=${clickedID}`;
+		//window.location.href=`chart.html?tagid=${clickedID}`;
+	}
+}
+
 getCard(tagID).then((card) => {
 	showCard(card);
 
@@ -22,40 +34,81 @@ getExtendedFamily(tagID).then((cards) => {
 		initialAutoScale: go.AutoScale.UniformToFill,
 		//'panningTool.isEnabled': false,
 		//'draggingTool.isEnabled': false,
-		allowHorizontalScroll: false,
-		allowVerticalScroll: false,
-		allowZoom: false,
+		//allowHorizontalScroll: false,
+		//allowVerticalScroll: false,
+		//allowZoom: false,
+		//scrollMargin: new go.Margin(400, 400, 400, 400),
+		scrollMode: "Infinite",
 		isReadOnly: true,
 		layout: new go.LayeredDigraphLayout({
 			direction: 90
 		})
 	});
 
-	chart.nodeTemplate = new go.Node('Spot', {
-		selectable: false,
-		locationSpot: go.Spot.Center
+	chart.animationManager.initialAnimationStyle = go.AnimationStyle.None;
+
+	//Make several node templates, add them to a map, then apply the map to the
+	//chart.
+
+	const margin = 10;
+
+	const nodeSize = new go.Size(120, 90);
+	const nodeTextSize = new go.Size(nodeSize.width-margin,
+		nodeSize.height-margin);
+
+	nodeTemplateNormal = new go.Node('Spot', {
+		selectable: true,
+		locationSpot: go.Spot.Center,
+		click: nodeClickHandler
 	}).add(
 		new go.Shape('Rectangle', {
-			fill: 'lightgray',
-			stroke: null,
-			desiredSize: new go.Size(80, 60)
+			fill: '#fff',
+			stroke: '#000',
+			strokeWidth: 1,
+			desiredSize: nodeSize
 		}),
 		new go.TextBlock({
-			maxSize: new go.Size(80, 60)
+			maxSize: nodeTextSize
 		}).bind('text')
 	);
+
+	nodeTemplateTarget = new go.Node('Spot', {
+		selectable: false,
+		locationSpot: go.Spot.Center,
+		click: null	//No clicking the card you are already viewing!
+	}).add(
+		new go.Shape('Rectangle', {
+			fill: '#fff0f0',
+			stroke: '#f00',
+			strokeWidth: 2,
+			desiredSize: nodeSize
+		}),
+		new go.TextBlock({
+			maxSize: nodeTextSize
+		}).bind('text')
+	);
+
+	const nodeTemplateMap = new go.Map();
+
+	nodeTemplateMap.add('', nodeTemplateNormal);	//Normal template, for when
+	//specific template is unspecified
+
+	nodeTemplateMap.add('Target', nodeTemplateTarget);
+
+	chart.nodeTemplateMap = nodeTemplateMap;
 
 	chart.linkTemplate =
 		new go.Link({
 			selectable: false,
-			corner: 10,
+			corner: 5,
 			curve: go.Curve.Bezier,
-			fromEndSegmentLength: 30,
-			toEndSegmentLength: 30
+			fromEndSegmentLength: 40,
+			toEndSegmentLength: 40
+
 		}).add(
 			new go.Shape({
 				strokeWidth: 2,
-				stroke: '#999'
+				stroke: '#000'
 			}),
 
 			new go.Shape({
@@ -71,15 +124,23 @@ getExtendedFamily(tagID).then((cards) => {
 	let nodeArray = [];
 
 	for(const [index, card] of cards.entries()){
+		let nodeText = `${card.id}\n(no entry)`;
+
+		if(!card.dummy){
+			nodeText = `${card.id}\n${card.contents}\n${card.container_size}`
+			+ `\n${card.mass_initial}`;
+		}
+
 		nodeArray.push({
 			key: index,
-			text: (card.dummy ? `${card.id} (?)` : `${card.id}`)
-				+ '\n' + (card.dummy? `...` : `${card.contents}`),
-			card: card
+			text: nodeText,
+			card: card,
+			category: (card.id == tagID) ? 'Target' : ''	//Use the Target or
+			//default category for different styling
 		});
 	}
 
-	console.log(nodeArray);
+	//console.log(nodeArray);
 
 	chart.model.nodeDataArray = nodeArray;
 

@@ -1,14 +1,56 @@
+html{
+	width: 100%;
+	height: 100%;
+}
+body{
+	height: 100%;
+}
+
+#header{
+	width: auto;
+	display: inline;
+	
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	z-index: 100;
+}
+
+#header h2{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+
+.backArrow{
+	font-weight: bold;
+}
+
+#container{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+	height: 100%;
+	max-width: none;
+
+	display: flex;
+	flex-direction: column;
+}
+
 #chartContainer{
 	width: 100%;
-	height: 1000px;
+	height: 100%;
 
 	/*order: 1px solid #000;*/
 }
 
 #chartContainer canvas{
-	touch-action: auto !important;	/*Override the touch-action: none property
+	/*touch-action: auto !important;	/*Override the touch-action: none property
 	that go.js canvas has by default. Allows scrolling the whole page when the
 	diagram itself has no internal scrolling*/
 
-	outline: none;	/*Remove blue outline (on iOS, at least).*/
+	/*outline: none;	/*Remove blue outline (on iOS, at least).*/
+}
+
+#contentContainer{
+	height: 100%;
 }
