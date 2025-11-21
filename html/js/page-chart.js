@@ -24,6 +24,7 @@ getExtendedFamily(tagID).then((cards) => {
 		//'draggingTool.isEnabled': false,
 		allowHorizontalScroll: false,
 		allowVerticalScroll: false,
+		allowZoom: false,
 		isReadOnly: true,
 		layout: new go.LayeredDigraphLayout({
 			direction: 90
