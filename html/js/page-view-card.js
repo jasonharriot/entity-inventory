@@ -1,6 +1,7 @@
 //Display the parent and child entity tables on the "view card" page.
 
 const buttonEditElem = document.getElementById('buttonEdit');
+const aChartElem = document.getElementById('aChart');
 
 const parentCardTableElem = document.getElementById('parentCardTable');
 const siblingCardTableElem = document.getElementById('siblingCardTable');
@@ -82,12 +83,14 @@ function makeTableFromIDs(tableElem, columns, IDs){
 }
 
 getCard(tagID).then((card) => {
-	showCard(card)
+	showCard(card);
 
 	buttonEditElem.addEventListener('click', () =>  {
 		const hrefString = `edit-card.html?tagid=${tagID}`;
 		window.location.href = hrefString;
 	});
+
+	aChartElem.href=`chart.html?tagid=${tagID}`;
 
 	makeTableFromIDs(parentCardTableElem, columns, card.synth_parent_ids);
 
