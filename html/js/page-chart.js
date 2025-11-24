@@ -21,11 +21,43 @@ function nodeClickHandler(event, obj){
 	}
 }
 
-getCard(tagID).then((card) => {
+function getNodeText(card){
+	//let s = `${card.id}—${card.type}\n${card.contents}. `
+	//+ `${card.container_size}. `
+	//+ `${card.mass_initial}.`;
+
+	let s = `${card.id}\n`;
+
+	if(card.dummy){
+		s += `\nNo entry.`;
+
+		return s;
+	}
+
+	if(card.type){
+		s += `${card.type}\n`
+	}
+
+	if(card.contents){
+		s += `${card.contents}\n`;
+	}
+
+	if(card.container_size){
+		s += `${card.container_size}\n`;
+	}
+
+	if(card.mass_initial){
+		s += `${card.mass_initial}\n`;
+	}
+
+	return s;
+}
+
+/*getCard(tagID).then((card) => {
 	showCard(card);
 
 	aViewCardElem.href = `view-card.html?tagid=${tagID}`;
-});
+});*/
 
 let chart = null;
 
@@ -41,7 +73,8 @@ getExtendedFamily(tagID).then((cards) => {
 		scrollMode: "Infinite",
 		isReadOnly: true,
 		layout: new go.LayeredDigraphLayout({
-			direction: 90
+			direction: 90,
+			layerSpacing: 100
 		})
 	});
 
@@ -52,7 +85,7 @@ getExtendedFamily(tagID).then((cards) => {
 
 	const margin = 10;
 
-	const nodeSize = new go.Size(120, 90);
+	const nodeSize = new go.Size(135, 180);
 	const nodeTextSize = new go.Size(nodeSize.width-margin,
 		nodeSize.height-margin);
 
@@ -68,7 +101,8 @@ getExtendedFamily(tagID).then((cards) => {
 			desiredSize: nodeSize
 		}),
 		new go.TextBlock({
-			maxSize: nodeTextSize
+			maxSize: nodeTextSize,
+			textAlign: 'center'
 		}).bind('text')
 	);
 
@@ -84,7 +118,8 @@ getExtendedFamily(tagID).then((cards) => {
 			desiredSize: nodeSize
 		}),
 		new go.TextBlock({
-			maxSize: nodeTextSize
+			maxSize: nodeTextSize,
+			textAlign: 'center'
 		}).bind('text')
 	);
 
@@ -124,12 +159,7 @@ getExtendedFamily(tagID).then((cards) => {
 	let nodeArray = [];
 
 	for(const [index, card] of cards.entries()){
-		let nodeText = `${card.id}\n(no entry)`;
-
-		if(!card.dummy){
-			nodeText = `${card.id}\n${card.contents}\n${card.container_size}`
-			+ `\n${card.mass_initial}`;
-		}
+		const nodeText = getNodeText(card);
 
 		nodeArray.push({
 			key: index,
