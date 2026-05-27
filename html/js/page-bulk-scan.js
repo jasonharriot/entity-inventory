@@ -68,12 +68,14 @@ function getURLParamEdits(){
 }
 
 function editApplicable(append, old){
+	if(!old) return true;
+	
 	return !(old.toLowerCase().includes(append.toLowerCase()))
 }
 
 function computeNewValue(append, old, separator){
-	if(old.trim().length == 0) return append;	//New value is just the edit
-	//if the old value is empty
+	if(!old || old.trim().length == 0) return append;	//New value is just the
+	//edit if the old value is empty. !old catches null values.
 
 	newValue = old + separator + append;
 
@@ -227,7 +229,5 @@ if(tagID == null){
 
 		if(editsPending) buttonApplyElem.removeAttribute('disabled');
 
-	}).catch( (e) => {
-		console.error('Something went wrong:', e);
-	});
+	})
 }
