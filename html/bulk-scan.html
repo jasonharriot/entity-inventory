@@ -33,20 +33,18 @@
 			</div>
 
 			<div id="contentContainer">
+
 				<div class="section">
 					<p>Scan a tag or enter an ID, then click Apply Change(s) to make the selected edits to this card.</p>
 					<input type="number" placeholder="ID number" id="inputTagID">
-					<p><input type="button" id="buttonTagID" value="Submit"></p>
+					<!--<p><input type="button" id="buttonTagID" value="Submit"></p>-->
 
-					<p>To return to the bulk operations menu, use the back button on your browser.</p>
-					<p>Fields marked "<i>Redundant</i>" won't be modified because it appears they already contain similar or identical data.</p>
+					<p><input type="button" id="buttonApply" value="Apply Change(s)" disabled/></p>
 
-
-
-					<h3>
+					<h2>
 						ID
 						<span class="fill fill-id">...</span>
-					</h3>
+					</h2>
 
 					<div class="cardTableContainer">
 						<table class="cardTable">
@@ -106,7 +104,8 @@
 						</div>
 					</div>
 
-					<p><input type="button" id="buttonApply" value="Apply Change(s)" disabled/></p>
+					<p>To return to the bulk operations menu, use the back button on your browser.</p>
+					<p>Fields marked "<i>Redundant</i>" won't be modified because it appears they already contain similar or identical data.</p>
 				</div>
 			</div>
 

@@ -17,7 +17,7 @@ editableNames = [
 	"notes"
 ]
 
-const buttonTagIDElem = document.getElementById('buttonTagID');
+//const buttonTagIDElem = document.getElementById('buttonTagID');
 const inputTagIDElem = document.getElementById('inputTagID');
 const buttonApplyElem = document.getElementById('buttonApply');
 
@@ -133,7 +133,7 @@ function useManualID(){
 	goToTagID(id);
 }
 
-buttonTagIDElem.addEventListener('click', useManualID);
+//buttonTagIDElem.addEventListener('click', useManualID);
 
 inputTagIDElem.addEventListener('change', useManualID);
 
