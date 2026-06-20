@@ -15,10 +15,11 @@ let cumulativeString = '';
 
 let lastAppendTime = null;
 
-function handleTypedURL(s){
-	console.log('Received url:', s);
-	window.location.href=s;
-	return;
+let shortcutKeysEnabled = true;
+
+function disableShortcutKeys(){	//Quick way to disable shortcut keys in pages
+	//where shortcuts are unacceptable but tag scanning will be done.
+	shortcutKeysEnabled = false;
 }
 
 document.addEventListener('keydown', (e) => {
@@ -34,32 +35,47 @@ document.addEventListener('keydown', (e) => {
 	}
 
 	if(e.key == 'Enter' && cumulativeString.startsWith('http')){
-		handleTypedURL(cumulativeString);
+		//The URL from the QR code has been fully typed, and an event can be
+		//dispatched so it can be handled.
 
-	} else if(basicAllowedCharacters.indexOf(e.key) >= 0){
-		if(shortcutBodgeCharacters.indexOf(e.key) >= 0){
-			e.preventDefault();
+		let tagScannedEvent = new CustomEvent('tagscanned', {
+			detail:{
+				url: cumulativeString
+			}
+		})
+
+		document.dispatchEvent(tagScannedEvent);
+
+		//console.log('Dispatched scan event! URL:', cumulativeString);
+
+		return;
+
+	} else{
+		if(basicAllowedCharacters.indexOf(e.key) >= 0){
+			if(shortcutBodgeCharacters.indexOf(e.key) >= 0){
+				e.preventDefault();
+			}
+
+			cumulativeString += e.key.toLowerCase();	//Note: This toLowerCase
+			//call fixes the issue where scanning a code does nothing if the caps
+			//lock key is pressed, but means that the URLs on QR codes cannot
+			//contain uppercase letters.
+
+			lastAppendTime = now;
 		}
 
-		cumulativeString += e.key.toLowerCase();	//Note: This toLowerCase
-		//call fixes the issue where scanning a code does nothing if the caps
-		//lock key is pressed, but means that the URLs on QR codes cannot
-		//contain uppercase letters.
+		if(shortcutKeysEnabled){
+			if(cumulativeString == 'g'){	//Hotkey for goto
+				window.location.href = 'go-to-card.html';
+			}
 
-		lastAppendTime = now;
+			if(cumulativeString == 'l'){	//Hotkey for list
+				window.location.href = 'card-list.html';
+			}
 
-		//console.log(cumulativeString);
-	}
-
-	if(cumulativeString == 'g'){	//Hotkey for goto
-		window.location.href = 'go-to-card.html';
-	}
-
-	if(cumulativeString == 'l'){	//Hotkey for list
-		window.location.href = 'card-list.html';
-	}
-
-	if(cumulativeString == 's'){	//Hotkey for search
-		window.location.href = 'search.html';
+			if(cumulativeString == 's'){	//Hotkey for search
+				window.location.href = 'search.html';
+			}
+		}
 	}
 })

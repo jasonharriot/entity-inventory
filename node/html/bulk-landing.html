@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="style/style.css" />
+		<link rel="stylesheet" href="style/fields.css" />
+		<link rel="stylesheet" href="style/edit.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<title>Bulk Operations</title>
+	</head>
+	<body>
+		<div id="container">
+			<div id="header" class="section">
+				<div>
+					<div>
+						<h1>Entity Inventory</h1>
+					</div>
+					<div>
+						<h2>
+							<a class="backArrow" href=".">
+								<img src="img/arrow-left.png">
+								Home
+							</a>
+						</h2>
+					</div>
+				</div>
+			</div>
+
+			<div id="contentContainer">
+				<div class="section">
+					<h2>Bulk operations</h2>
+					<p>This option can be used to quickly add data to several cards without needing to manually edit each.</p>
+					<p>Select the properties you would like modify, enter value(s) to append, then click Next.</p>
+					<p><input type="checkbox" id="bulk-check-type">Entity type<br><input type="text" id="bulk-field-type" disabled></p>
+					<p><input type="checkbox" id="bulk-check-contents">Contents<br><input type="text" id="bulk-field-contents" disabled></p>
+					<p><input type="checkbox" id="bulk-check-date_sample">Date<br><input type="text" id="bulk-field-date_sample" disabled></p>
+					<p><input type="checkbox" id="bulk-check-parent_ids">Parent ID(s)<br><input type="text" id="bulk-field-parent_ids" disabled></p>
+					<p><input type="checkbox" id="bulk-check-status">Status<br><input type="text" id="bulk-field-status" disabled></p>
+					<p><input type="checkbox" id="bulk-check-container_size">Container size<br><input type="text" id="bulk-field-container_size" disabled></p>
+					<p><input type="checkbox" id="bulk-check-form">Physical form<br><input type="text" id="bulk-field-form" disabled></p>
+					<p><input type="checkbox" id="bulk-check-notes">Note<br><input type="text" id="bulk-field-notes" disabled></p>
+
+					<p><input type="button" value="Next" id="nextButton"></p>
+				</div>
+			</div>
+
+			<div id="footer" class="section">
+				<div>
+					<p>EDAC Labs, Inc.</p>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="js/page-bulk-landing.js"></script>
+	</body>
+</html>

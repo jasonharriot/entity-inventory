@@ -88,10 +88,22 @@ input[type="text"]{
 	html{
 		font-size: 16px;
 	}
+	#header{
+		padding: .5rem;
+		border-left: .5rem solid #f00;
+	}
+	#header h1{
+		margin: 0rem;
+	}
+	#header h2{
+		margin: .3rem;
+	}
 	#container{
 		padding: 0rem;
 	}
 	.section{
+		margin-top: 0rem;
+		border-left: none;
 	}
 	#footer{
 	}

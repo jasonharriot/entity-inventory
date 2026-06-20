@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="style/style.css" />
+		<link rel="stylesheet" href="style/fields.css" />
+		<link rel="stylesheet" href="style/tables.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<title>Bulk Operations</title>
+	</head>
+	<body>
+		<div id="container">
+			<div id="header" class="section">
+				<div>
+					<div>
+						<h1>Entity Inventory</h1>
+					</div>
+					<div>
+						<h2>
+							<a class="backArrow" href=".">
+								<img src="img/arrow-left.png">
+								Home
+							</a>
+						</h2>
+					</div>
+				</div>
+				<div class="scanDiv">
+					<img src="img/scanner-bw.png" width="100px">
+					<p>Scan another tag at any time to continue making bulk edits.</p>
+				</div>
+			</div>
+
+			<div id="contentContainer">
+
+				<div class="section">
+					<p>Scan a tag or enter an ID, then click Apply Change(s) to make the selected edits to this card.</p>
+					<input type="number" placeholder="ID number" id="inputTagID">
+					<!--<p><input type="button" id="buttonTagID" value="Submit"></p>-->
+
+					<p><input type="button" id="buttonApply" value="Apply Change(s)" disabled/></p>
+
+					<h2>
+						ID
+						<span class="fill fill-id">...</span>
+					</h2>
+
+					<div class="cardTableContainer">
+						<table class="cardTable">
+							<tbody>
+								<tr class="rowOdd">
+									<th class="fieldCol"></th>
+									<th class="fieldCol">Old</th>
+									<th class="fieldCol">New</th>
+								<tr class="rowOdd">
+									<td class="fieldCol">Entity type</td>
+									<td class="valueCol fill-type-old"></td>
+									<td class="valueCol fill-type-new"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Contents</td>
+									<td class="valueCol fill-contents-old"></td>
+									<td class="valueCol fill-contents-new"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Date</td>
+									<td class="valueCol fill-date_sample-old columnTypeDate"></td>
+									<td class="valueCol fill-date_sample-new columnTypeDate"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Parent ID(s)</td>
+									<td class="valueCol fill-parent_ids-old"></td>
+									<td class="valueCol fill-parent_ids-new"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Status</td>
+									<td class="valueCol fill-status-old"></td>
+									<td class="valueCol fill-status-new"></td>
+								</tr>
+								<tr class="rowEven">
+									<td class="fieldCol">Container size</td>
+									<td class="valueCol fill-container_size-old"></td>
+									<td class="valueCol fill-container_size-new"></td>
+								</tr>
+								<tr class="rowOdd">
+									<td class="fieldCol">Physical form</td>
+									<td class="valueCol fill-form-old"></td>
+									<td class="valueCol fill-form-new"></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+
+					<h3>Notes&mdash;Old</h3>
+					<div class="cardNotes">
+						<div class="fill fill-notes-old">
+						</div>
+					</div>
+
+					<h3>Notes&mdash;New</h3>
+					<div class="cardNotes">
+						<div class="fill fill-notes-new">
+						</div>
+					</div>
+
+					<p>To return to the bulk operations menu, use the back button on your browser.</p>
+					<p>Fields marked "<i>Redundant</i>" won't be modified because it appears they already contain similar or identical data.</p>
+				</div>
+			</div>
+
+			<div id="footer" class="section">
+				<div>
+					<p>EDAC Labs, Inc.</p>
+				</div>
+			</div>
+		</div>
+
+		<script type="text/javascript" src="js/moment.js"></script>
+		<script type="text/javascript" src="js/func-get-card.js"></script>
+		<script type="text/javascript" src="js/func-get-tag-id.js"></script>
+		<script type="text/javascript" src="js/func-sample-id-string.js"></script>
+
+		<script type="text/javascript" src="js/page-scan-watch.js"></script>
+		<script type="text/javascript" src="js/page-bulk-scan.js"></script>
+	</body>
+</html>
