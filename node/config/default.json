@@ -1,0 +1,13 @@
+{
+	"port": 8123,
+	"scheme": "http",
+	"hostname": "einventory.local",
+	"db_file_path": "./db.sqlite",
+	"minimum_tag_id": 1000,
+	"maximum_tag_id": 999999,
+	"template_dir_path": "./templates",
+	"qr_dir_path": "./qrtemp",
+	"label_pdf_name": "labels.pdf",
+	"qr_color_dark": "#000000",
+	"qr_color_light": "#ffffff"
+}

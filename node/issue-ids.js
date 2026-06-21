@@ -1,11 +1,12 @@
 const { getIDCounter } = require('./get-id-counter.js');
 const { getCardByTagID } = require('./get-card-by-tag-id.js');
+const config = require('config')
 
 module.exports = {
 	issueIDs: function(database, num){
 		let idList = [];
 
-		const minimumTagID = 1000;	//Start all tags from this number up. Do not
+		const minimumTagID = config.get('minimum_tag_id');	//Start all tags from this number up. Do not
 		//issue any cards with tag IDs below this number.
 
 		let i=0;

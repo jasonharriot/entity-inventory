@@ -1,9 +1,11 @@
 const express = require('express');
 const { DatabaseSync } = require('node:sqlite');
 const app = express();
-const database = new DatabaseSync('db.sqlite');
+const config = require('config');
+const database = new DatabaseSync(config.get('db_file_path'));
 
-const port = 8001;
+
+const port = config.get('port');
 
 const templateListHandler = require('./template-list-handler.js');
 const scanHandler = require('./scan-handler.js');

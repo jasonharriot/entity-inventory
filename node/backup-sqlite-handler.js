@@ -1,3 +1,5 @@
+const config = require('config')
+
 module.exports = function(req, res){	//Send the whole database file.
 
 	const timestamp = new Date().toISOString().slice(0, 19)
@@ -7,7 +9,7 @@ module.exports = function(req, res){	//Send the whole database file.
 
 	console.log(`Sending database file: ${filename}`);
 
-	res.download('db.sqlite', filename, (err) => {
+	res.download(config.get('db_file_path'), filename, (err) => {
 		if(err){
 			console.error('There was an error sending the database file.');
 			console.error(err);
