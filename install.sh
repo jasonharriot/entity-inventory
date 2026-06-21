@@ -1,168 +1,184 @@
 #!/bin/bash
 
-echo "Installing Entity Inventory service @ $(date)"
+#This script installs Entity Inventory on the system.
 
-cd $(dirname $0)
+prompt() {	#prompt <prompt text> [default option [y, n]]
+	#Returns 0 if yes, 1 if no.
+	#Demands yes or no if no default set.
+
+	defaultset=0
+	defaultisyes=1
+	yestext=y
+	notext=n
+
+	if [[ $2 =~ ^[yY] ]]; then
+		#echo "prompt() using default: Y"
+		defaultset=1
+		#defaultisyes=1
+		yestext=Y
+		#notext=n
+	elif [[ $2 =~ ^[nN] ]]; then
+		#echo "prompt() using default: N"
+		defaultset=1
+		defaultisyes=0
+		#yestext=y
+		notext=N
+	fi
+
+
+	while true; do
+		read -r -p "$1 ($yestext/$notext) " choice
+
+		case $choice in
+			[yY]) return 0 ;;
+			[nN]) return 1 ;;
+			*) if [ $defaultset -eq 1 ]; then
+				if [ $defaultisyes -eq 0 ]; then
+					#echo "Defaulting to no."
+					return 1;
+				else
+					#echo "Defaulting to yes."
+					return 0;
+				fi
+			fi
+		esac
+	done
+}
+
+echo "Installing Entity Inventory @ $(date)"
 
 #Configuration variables:
 
-repositorydirpath="$(realpath .)"	#Absolute path to the directory where this script lives, which should be the root of the repository.
-#daemonuser="pidaq"	#Username for the daemon user. Must match that of the service file.
-daemonuser="pi"	#pi is the login user. Separate daemon user will not be used.
-hostname="einventory"	#This script changes the hostname of the pi to pidaq.local.
-daemondirpath="/var/einventory"	#Directory where the daemon start script lives. It is a symlink to a script in this directory.
+repopath="$(realpath $(dirname $0))"	#Absolute path to the directory where this script lives, which should be the root of the repository.
+daemonuser="einvuser"
+daemongroup="$daemonuser"
+hostname="einventory"
+installpath="/var/einventory"
+serviceinstallpath="/etc/systemd/system"
+appsrcpath="$repopath/node"	#Source of the web app source
+appmode="755"
+servicename="einventory.service"	#Name of the service file
+servicepath="$repopath/service/$servicename"	#Source of the systemd configuration file
+startscriptpath="$repopath/node/start.sh"
 
+#
+echo "Installing from: $repopath"
+echo "Creating user $daemonuser..."
+sudo useradd -m "$daemonuser"
 
 
 #
 generalerror=0
+e=0
 
 
+#Install nvm
+sudo su einvuser -c 'wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash'
 
+#Install npm
 
-#Checks
-if [ $(whoami) != "pi" ]; then
-	echo "Please run as pi. Do not run as root or another user."
-	generalerror=1
-fi
-
-
-
-
+#Warning: This functionality hasn't been validated yet.
+#sudo apt install -y npm
+#
 
 
 #Change hostname
 
-sudo su -c "printf \"$hostname\" > /etc/hostname" root
+if prompt "Change hostname to \"$hostname\"? It is currently set to \"$(cat /etc/hostname)\"." y; then
+	sudo su -c "printf \"$hostname\" > /etc/hostname" root
+	e=$?
+	echo "Changed hostname to $(cat /etc/hostname)."
+fi
 
-e=$?
-
-if [ $e -eq "0" ]; then
-	echo "Changed hostname to $(cat /etc/hostname)"
-else
-	echo "Couldn't change hostname. Hostname is currently: $(cat /etc/hostname). ($e)"
+if [[ $e -ne 0 ]]; then
+	echo "Couldn't change hostname. Hostname is: $(cat /etc/hostname). ($e)"
 	generalerror=1
 fi
 
 
 
+#Install program files
+#find "$appsrcpath" -type f -exec 'install -v -D -o "$daemonuser" -g "$daemonuser" -m 751 -t "$installpath/{}" "{}"'
 
-#Configure linked directory in /var. All hardcoded paths such as in the .service file will point to /var/einventory.
-
-sudo rm "$daemondirpath"	#Remove symlink
-
-e=$?
-
-if [ $e -eq "0" ]; then
-	echo "Removed old daemon directory/symlink."
-else
-	echo "Failed to remove old daemon directory/symlink. ($e)"
-	generalerror=1
-fi
-
-sudo ln -s "$repositorydirpath" "$daemondirpath" > /dev/null 2>&1
+echo "Copying program files..."
+sudo mkdir -p "$installpath"
 
 e=$?
 
-if [ $e -eq "0" ]; then
-	echo "Created daemon dir symlink."
-else
-	echo "Couldn't create daemon dir symlink $daemondirpath. ($e)"
-	generalerror=1
-fi
+sudo cp -r "$appsrcpath/." "$installpath/"
 
-sudo chown -h "$daemonuser:$daemonuser" "$daemondirpath" > /dev/null 2>&1
+[ "$?" -ne 0 -o "$e" -ne 0 ] && e=1
 
-e=$?
+sudo chown -R "$daemonuser":"$daemongroup" "$installpath"
 
-if [ $e -eq "0" ]; then
-	echo "Set permissions for dir symlink."
-else
-	echo "Couldn't set permissions for dir symlink. ($e)"
+[ "$?" -ne 0 -o "$e" -ne 0 ] && e=1
+
+sudo chmod -R "$appmode" "$installpath"
+
+[ "$?" -ne 0 -o "$e" -ne 0 ] && e=1
+
+
+
+#Install start script with proper permissions
+echo "Installing start scsript..."
+sudo install -o "$daemonuser" -g "$daemonuser" -m 744 -t "$installpath" "$startscriptpath"
+
+if [[ $e -ne 0 ]]; then
+	echo "Failed to install program files in $installpath."
+	echo "Current contents of install path:"
+	ls -la "$installpath"
 	generalerror=1
 fi
 
 
 
-# Set up start script permissions
-chmod +x "start.sh"
+#Install required node packages.
+echo "Installing node packages..."
+sudo su einvuser -c "(cd $installpath && npm install)"
+
+
+
+#Install systemd service files
+
+echo "Copying service files..."
+sudo install -o "root" -g "root" -m 400 -t "$serviceinstallpath" "$servicepath"
 
 e=$?
 
+echo "Starting daemon..."
+sudo systemctl enable "$servicename"
 
-if [ $e -eq "1" ]; then
-	echo "Could not set permissions on start.sh."
-	generalerror=1
-elif [ $e -eq "0" ]; then
-	echo "Set execute permissions on start.sh."
-else
-	echo "Unknown permissions issue on start.sh."
+[ "$?" -ne 0 -o "$e" -ne 0 ] && e=1
+
+sudo systemctl restart "$servicename"
+
+[ "$?" -ne 0 -o "$e" -ne 0 ] && e=1
+
+if [ $e -ne 0 ]; then
+	echo "Failed to start the daemon."
 	generalerror=1
 fi
 
+sleep 5
 
-
-# Start service
-servicefilepath="$repositorydirpath/einventory.service" 
-
-sudo rm "/etc/systemd/system/einventory.service" > /dev/null 2>&1
-
-sudo ln -s "$servicefilepath" "/etc/systemd/system/" > /dev/null 2>&1
+systemctl status "$servicename" > /dev/null 2>&1
 
 e=$?
 
-if [ $e -eq "1" ]; then
-	echo "Symlink $servicefilepath already exists."
-elif [ $e -eq "0" ]; then
-	echo "Created service symlink."
-else
-	echo "Failed to create service symlink $servicefilepath. ($e)"
+if [ $e -ne 0 ]; then
+	echo "The daemon is dead. Check \"journalctl -xeu einventory.service\"."
 	generalerror=1
 fi
-
-sudo systemctl enable "einventory.service"
-
-sudo systemctl restart "einventory.service"
-
-systemctl status "einventory.service" > /dev/null 2>&1
-
-e=$?
-
-if [ $e -eq "3" ]; then
-	echo "Daemon is dead. ($e)"
-	generalerror=1
-elif [ $e -eq "4" ]; then
-	echo "Daemon service does not exist. ($e)"
-	generalerror=1
-elif [ $e -eq "0" ]; then
-	echo "Daemon is running."
-fi
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
 
 #End section
 
-if [ $generalerror -eq "0" ]; then
-	echo "Server configuration completed without errors. The hostname change may not come into effect until a reboot."
+if [ $generalerror -eq 0 ]; then
+	printf "\n\n\nInstallation completed without errors. The hostname change may not come into effect until a reboot.\n"
+	exit 0
 else
-	echo "Configuration did not complete sucessfully, please fix the issues."
+	printf "\n\n\nConfiguration did not complete sucessfully, please fix the issues.\n"
+	exit 1
 fi
-
-echo "Installation done @ $(date)"
-
-
