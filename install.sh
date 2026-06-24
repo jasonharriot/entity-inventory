@@ -161,7 +161,7 @@ do_install() {
 		return 1
 	fi
 
-	sleep 5
+	sleep 1
 
 	systemctl status "$servicename" > /dev/null 2>&1
 
@@ -177,7 +177,7 @@ do_install() {
 	#Fetch hostname from the config file and set it.
 	hostname=$(cd "$installpath" && printf "config = require('config')\nconsole.log(config.get('hostname').split('.')[0])" | node)
 
-	if prompt "Change hostname to \"$hostname\"? It is currently set to \"$(cat /etc/hostname)\"." y; then
+	if prompt "Change hostname to \"$hostname\"? It is currently set to \"$(cat /etc/hostname)\"." n; then
 		#sudo su -c "printf \"$hostname\" > /etc/hostname" root
 		sudo hostnamectl --static set-hostname "$hostname"
 		e=$?

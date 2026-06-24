@@ -3,10 +3,14 @@ const { DatabaseSync } = require('node:sqlite');
 const app = express();
 const config = require('config');
 const database = new DatabaseSync(config.get('db_file_path'));
-
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
 
 const port = config.get('port');
 
+const registrationHandler = require('./user-register-handler');
+const loginHandler = require('./login-handler.js');
+const passwordChangeHandler = require('./password-change-handler.js');
 const templateListHandler = require('./template-list-handler.js');
 const scanHandler = require('./scan-handler.js');
 const getIDCounterHandler = require('./get-id-counter-handler.js');
@@ -32,6 +36,14 @@ app.use('/', express.static('html'));	//For requests to the root, just serve
 //static files.
 
 app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+
+app.post('/api/register', registrationHandler);
+
+app.post('/api/login', loginHandler);
+
+app.post('/api/pwchange', passwordChangeHandler);
 
 app.get('/api/get-id-counter', getIDCounterHandler);
 
@@ -81,7 +93,28 @@ app.listen(port, () => {
 		date_modified_latest TEXT DEFAULT '',
 		notes TEXT DEFAULT ''
 		
-		);`);
+	);`);
+
+	database.exec(`CREATE TABLE IF NOT EXISTS users (
+		id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+		email TEXT NOT NULL UNIQUE,
+		password_hash TEXT NOT NULL,
+		password_salt TEXT NOT NULL,
+		password_hash_iter INTEGER NOT NULL
+	);`);
+
+	database.exec(`CREATE TABLE IF NOT EXISTS sessions (
+		id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+		user_id INTEGER NOT NULL,
+		hash TEXT NOT NULL,
+		date_created INTEGER NOT NULL
+	);`);
+
+	let q = database.prepare(`SELECT datetime('now')`);
+
+	let test = q.all();
+
+	console.log(test[0]);
 
 	console.log(`Server running on port ${port}`);
 });
