@@ -122,7 +122,7 @@ do_install() {
 
 
 	#Install start script with proper permissions
-	echo "Installing start scsript..."
+	echo "Installing start script..."
 	sudo install -o "$daemonuser" -g "$daemonuser" -m 744 -t "$installpath" "$startscriptpath"
 
 	if [[ $e -ne 0 ]]; then
