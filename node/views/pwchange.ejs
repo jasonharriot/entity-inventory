@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="style/style.css" />
+		<link rel="stylesheet" href="style/issue.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<title>Change password</title>
+	</head>
+	<body>
+		<div id="container">
+			<div id="header" class="section">
+				<div>
+					<div>
+						<h1><%= config.get('site_name') %></h1>
+					</div>
+					<div>
+						<h2>
+							<a class="backArrow" href=".">
+								<img src="img/arrow-left.png">
+								Home
+							</a>
+						</h2>
+					</div>
+				</div>
+			</div>
+
+			<div id="contentContainer">
+				<div class="section">
+					<h2>Change your password</h2>
+					<form action="/api/pwchange" method="post">
+						<p>
+							Logged in as <%- authenticatedUser.email %>
+						</p>
+						<p>
+							<input type="password" name="old_password" placeholder="Old password">
+						</p>
+						<p>
+							<input type="password" name="new_password" placeholder="New password">
+						</p>
+						<p>
+							<input type="submit" value="Submit">
+						</p>
+					</form>
+					<p>
+						Minimum length: 8 characters.
+					</p>
+				</div>
+			</div>
+
+			<div id="footer" class="section">
+				<p>
+					<%- config.get('copyright_text') %>
+				</p>
+			</div>
+		</div>
+	</body>
+</html>

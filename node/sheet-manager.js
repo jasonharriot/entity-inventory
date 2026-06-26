@@ -27,8 +27,7 @@ module.exports = {
 
 			this.textOffset = template.textOffset;
 
-
-			this.tagBase = `${config.get('scheme')}://${config.get('hostname')}/s/`	//QR codes have URLs
+			this.tagBase = `${config.get('tag_scheme')}://${config.get('hostname')}/s/`	//QR codes have URLs
 			//like: "einventory.local/s/10229"
 		}
 
