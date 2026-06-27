@@ -1,10 +1,9 @@
 const { updateCardOnScan } = require('./update-card-on-scan.js');
-const config = require('config');
 
 module.exports = function(req, res){
 	let tagID = req.params.tagid;
 
-	if(isNaN(tagID) || tagID <= 0 || tagID > config.get('maximum_tag_id')){	//Max id is 999999. 
+	if(isNaN(tagID) || tagID <= 0 || tagID > 999999){	//Max id is 999999. 
 		console.error(`Bad tag ID: ${tagID}`);
 		console.error(e);
 		res.writeHead(400);

@@ -1,6 +1,5 @@
 const fs = require('fs');
 const { SheetManager } = require('./sheet-manager.js');
-const config = require('config');
 
 module.exports = function(req, res){
 	/*if(!('templatePartial' in req.params) || !('numPages' in req.params)){
@@ -15,7 +14,7 @@ module.exports = function(req, res){
 	const numPages = req.params.numPages;
 	const templatePartial = req.params.templatePartial;
 
-	const templateSidecarPath = `${config.get('template_dir_path')}/template_${templatePartial}.json`;
+	const templateSidecarPath = `templates/template_${templatePartial}.json`;
 
 	if(!fs.existsSync(templateSidecarPath)){
 		console.error(`JSON file ${templateSidecarPath} does not exist or cannot
@@ -39,7 +38,7 @@ module.exports = function(req, res){
 		pdfObj.save().then((b64String) => {
 			res.writeHead(200, {
 				'Content-Type': 'application/pdf',
-				'Content-Disposition': `filename="${config.get("label_pdf_name")}"`,
+				'Content-Disposition': 'filename="labels.pdf"',
 				'Cache-Control': 'no-cache, no-store, must-revalidate',
 				'Pragma': 'no-cache',
 				'Expires': '0'

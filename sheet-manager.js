@@ -2,14 +2,13 @@ const {PDFDocument, StandardFonts, rgb} = require('pdf-lib');
 const { issueIDs } = require('./issue-ids.js');
 const fs = require('node:fs');
 const qr = require('qrcode');
-const config = require('config');
 
 const { tagIDString } = require('./tag-id-string.js');
 
 module.exports = {
 	SheetManager: class{
 		constructor(template){
-			this.templateFilePath = `${config.get("template_dir_path")}/${template.filename}`;
+			this.templateFilePath = `templates/${template.filename}`;
 			this.labelOffset = template.labelOffset;	//Where is the top left
 			//of the first label, relative to the top left of the page?
 
@@ -27,7 +26,8 @@ module.exports = {
 
 			this.textOffset = template.textOffset;
 
-			this.tagBase = `${config.get('tag_scheme')}://${config.get('hostname')}/s/`	//QR codes have URLs
+
+			this.tagBase = 'http://einventory.local/s/'	//QR codes have URLs
 			//like: "einventory.local/s/10229"
 		}
 
@@ -57,7 +57,7 @@ module.exports = {
 		}
 
 		getQRCodePNGB64(id){
-			let filePath = `./${config.get("qr_dir_path")}/${id}.png`;
+			let filePath = `./qrtemp/${id}.png`;
 
 			return new Promise((resolve, reject) => {
 				qr.toFile(
@@ -65,8 +65,8 @@ module.exports = {
 					this.tagBase + id,
 					{
 						color: {
-							dark: config.get('qr_color_dark'),
-							light: config.get('qr_color_light')
+							dark: '#000000',
+							light: '#ffffff'
 						},
 						width: 300,
 						scale: 1,

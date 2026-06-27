@@ -5,11 +5,10 @@ Wants=network-online.target
 
 [Service]
 Restart=always
-RestartSec=30s
 Type=simple
 ExecStart=/var/einventory/start.sh
 Environment=
-User=einvuser
+User=pi
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

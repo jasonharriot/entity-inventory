@@ -1,42 +1,34 @@
 # entity-inventory
-Create and manage unique physical entities, their relationships, properties, and status, with specialized labels printable labels.
+Create and manage information for unique physical entities with specialized labels
 
-# Prerequisites
-* A server to which you have priviliged shell access
+# Installation
+`sudo apt install -y nodejs npm nginx`
 
-# Basic installation
-These instructions assume nodejs and npm are installed.
+`curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash`
 
-Run the installation script:
+Logout and log back in.
+
+`nvm install 22`
+
+`nvm use 22`
+
+
+Edit /etc/nginx/sites-enabled/default:
+
+```
+server {
+	listen 80 default_server;
+	listen [::]:80 default_server;
+
+	server_name einventory.local;
+
+	location / {
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_pass http://localhost:8001/;
+	}
+}
+```
 
 `chmod +x install.sh`
 
 `./install.sh`
-
-# Reverse proxy for local access
-These instructions assume Nginx is used.
-
-Modify `/etc/nginx/sites-available/einventory.local`
-
-```
-server {
-	...
-
-	server_name einventory.local;
-
-	proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-
-	location / {
-		proxy_pass http://localhost:8001/;
-	}
-
-	...
-}
-```
-
-`ln -s /etc/nginx/sites-available/einventory.local /etc/nginx/sites-enabled/einventory.local`
-
-`systemctl restart nginx`

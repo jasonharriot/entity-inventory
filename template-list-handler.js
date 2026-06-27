@@ -1,8 +1,7 @@
 const fs = require('fs');
-const config = require('config')
 
 module.exports = function(req, res){
-	fs.readdir(config.get('template_dir_path'), (err, files) => {
+	fs.readdir('templates', (err, files) => {
 		if(err){
 			console.error(err);
 
@@ -27,7 +26,7 @@ module.exports = function(req, res){
 
 				//console.log(partial);
 
-				const sidecarFilename = `${config.get('template_dir_path')}/template_${partial}.json`;
+				const sidecarFilename = `templates/template_${partial}.json`;
 
 				try{
 					const sidecar = JSON.parse(fs.readFileSync(sidecarFilename,
