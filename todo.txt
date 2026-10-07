@@ -1,0 +1,7 @@
+- Lock generator edit & save buttons during loading
+- Handle generator timeouts
+- Fix / improve write api handling
+- Show table of cards by family, table of families
+- Authentication system
+- Card history with user attribution
+- Bulk edit should be dissallowed when no changes are entered.
