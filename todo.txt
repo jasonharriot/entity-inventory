@@ -1,0 +1,17 @@
+TODO
+
+- Password reset by privileged users
+- Back arrow as UTF-8 character
+- Change email address
+- User list page
+- Login prompt with redirect to original url
+- Permissions:
+	login (Allows a user to log in. Without it, they are locked out. Session tokens revoked separately.)
+	read (all queries for card information, id counter, lists)
+	write (submit edits for cards)
+	issue_ids (can generate new IDs and label PDF)
+	officer (Can reset passwords, grant/revoke permissions, and download database file)
+	chief (Same as officer, but permissions cannot be changed by any other user. Chief can only be granted manually.)
+- Force user to reset password
+
+- view-card.html replace with ejs, handle not having permissions or not being logged in.

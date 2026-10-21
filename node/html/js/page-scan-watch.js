@@ -70,7 +70,7 @@ document.addEventListener('keydown', (e) => {
 			}
 
 			if(cumulativeString == 'l'){	//Hotkey for list
-				window.location.href = 'card-list.html';
+				window.location.href = 'card-list';
 			}
 
 			if(cumulativeString == 's'){	//Hotkey for search

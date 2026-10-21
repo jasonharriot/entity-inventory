@@ -13,6 +13,13 @@
 			<div id="header" class="section">
 				<div>
 					<h1><%= config.get("site_name"); %></h1>
+					<div>
+						<% if(authenticatedUser){%>
+						Logged in: <a href="user"><%= authenticatedUser.email %></a>
+						<%} else{%>
+						<a href="login">Log in</a> | <a href="register">Register new account</a>
+						<%}%>
+					</div>
 				</div>
 				<div class="scanDiv">
 					<img src="img/scanner-bw.png" width="100px">
@@ -21,14 +28,22 @@
 			</div>
 
 			<div id="contentContainer">
+				<% if(authenticatedUser && authenticatedUser.permissions.hasAny(['read', 'write', 'issue-ids'])){ %>
 				<div class="section">
 					<h2>Tools</h2>
+					<% if(authenticatedUser.permissions.has('read')){ %>
 					<p><a href="search.html">Search</a>&mdash;<i>Shortcut key: S</i></p>
-					<p><a href="card-list.html">View all cards</a>&mdash;<i>Shortcut key: L</i></p>
+					<p><a href="card-list">View all cards</a>&mdash;<i>Shortcut key: L</i></p>
 					<p><a href="go-to-card.html">Go to ID number</a>&mdash;<i>Shortcut key: G</i></p>
+					<% } %>
+					<% if(authenticatedUser.permissions.has('write')){ %>
 					<p><a href="bulk-landing.html">Bulk operations</a></p>
+					<% } %>
+					<% if(authenticatedUser.permissions.has('issue_ids')){ %>
 					<p><a href="issue.html">Print new labels</a></p>
+					<% } %>
 				</div>
+				<% } %>
 
 				<div class="section">
 					<h2>
@@ -39,13 +54,9 @@
 							<a href="https://github.com/jasonharriot/entity-inventory">
 								Entity Inventory&mdash;GitHub
 							</a>
-							<% if(authenticatedUser){%>
-							<p><a href="user">User profile</a></p>
-							<%} else{%>
-							<p><a href="login">Log in</a></p>
-							<p><a href="register">Register new account</a></p>
-							<%}%>
+							<% if(authenticatedUser){ %>
 							<p><a href="debug.html">Debugging tools</a></p>
+							<% } %>
 						</p>
 					</div>
 					

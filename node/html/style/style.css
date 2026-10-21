@@ -1,13 +1,23 @@
+:root {
+	--theme-color-background: #fff;
+	--theme-color-foreground-primary: #ddf;
+	--theme-color-foreground-secondary: #f9f9f9;
+	--theme-color-hyperlink: #000;
+	--theme-color-hyperlink-hover: #000;
+	--theme-color-accent: #000;
+}
+
 body{
 	margin: 0px;
+	background-color: var(--theme-color-background);
 }
 
 a{
-	color: #000;
+	color: var(--theme-color-hyperlink);
 }
 
 a:hover{
-	color: #f00;
+	color: var(--theme-color-hyperlink-hover);
 }
 
 #container{
@@ -19,7 +29,7 @@ a:hover{
 }
 
 #header{
-	background-color: #fff0f0;
+	background-color: var(--theme-color-foreground-primary);
 	
 	padding: .8rem;
 
@@ -32,7 +42,7 @@ a:hover{
 #footer{
 	padding: 1rem;
 	margin-bottom: 5rem;
-	background-color: #fff0f0;
+	background-color: var(--theme-color-foreground-primary);
 
 	display: flex;
 	flex-direction: row;
@@ -50,7 +60,7 @@ a:hover{
 
 .backArrow{
 	text-decoration: none;
-	color: #000;
+	color: var(--theme-color-hyperlink);
 }
 
 .backArrow img{
@@ -62,13 +72,13 @@ a:hover{
 	margin-top: 3rem;
 	padding: 1rem;
 	padding-left: 1rem;
-	background-color: #f9f9f9;
+	background-color: var(--theme-color-foreground-secondary);
 
-	border-left: .5rem solid #f00;
+	border-left: .5rem solid var(--theme-color-accent);
 }
 
 .cardNotes{
-	background-color: #fff;
+	background-color: var(--theme-color-foreground-secondary);
 	min-height: 1.5rem;
 	padding: 1rem;
 	font-family: monospace;
@@ -90,7 +100,7 @@ input[type="text"]{
 	}
 	#header{
 		padding: .5rem;
-		border-left: .5rem solid #f00;
+		border-left: .5rem solid var(--theme-color-accent);
 	}
 	#header h1{
 		margin: 0rem;

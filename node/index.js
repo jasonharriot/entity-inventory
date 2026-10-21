@@ -25,6 +25,7 @@ const backupSQLiteHandler = require('./backup-sqlite-handler.js');
 const sheetGenerateHandler = require('./sheet-generate-handler.js');
 const searchHandler = require('./search-handler.js');
 const authTools = require('./auth-tools.js');
+const permissionChecker = require('./permission-checker.js')
 
 app.use((req, res, next) => {	//Middleware to dump everything to console. 
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
@@ -64,23 +65,23 @@ app.post('/api/logout', logoutHandler);
 
 app.post('/api/pwchange', passwordChangeHandler);
 
-app.get('/api/get-id-counter', getIDCounterHandler);
+app.get('/api/get-id-counter', permissionChecker('read'), getIDCounterHandler);
 
-app.get('/api/template/list', templateListHandler);
+app.get('/api/template/list', permissionChecker('read'), templateListHandler);
 
-app.get('/api/card/list', cardListHandler)
+app.get('/api/card/list', permissionChecker('read'), cardListHandler)
 
-app.get('/api/card/read/:tagid', cardReadHandler);
+app.get('/api/card/read/:tagid', permissionChecker('read'), cardReadHandler);
 
-app.get('/api/card/family/:tagid', cardFamilyHandler);
+app.get('/api/card/family/:tagid', permissionChecker('read'), cardFamilyHandler);
 
-app.get('/api/card/extended-family/:tagid', cardExtendedFamilyHandler);
+app.get('/api/card/extended-family/:tagid', permissionChecker('read'), cardExtendedFamilyHandler);
 
-app.get('/api/card/write/:tagid', cardWriteHandler);
+app.get('/api/card/write/:tagid', permissionChecker('write'), cardWriteHandler);
 
-app.get('/api/backup/sqlite', backupSQLiteHandler);
+app.get('/api/backup/sqlite', permissionChecker('officer'), backupSQLiteHandler);
 
-app.use('/api/search', searchHandler);
+app.use('/api/search', permissionChecker('read'), searchHandler);
 
 app.get('/api/sheet/generate/:templatePartial/:numPages', sheetGenerateHandler);
 
@@ -91,6 +92,10 @@ app.get('/s/:tagid', scanHandler);
 app.get('/', (req, res) => {
 	res.render('index.ejs');
 });
+
+app.get('/card-list', (req, res) => {
+	res.render('card-list.ejs');
+})
 
 app.get('/register', (req, res) => {
 	if(app.locals.authenticatedUser){
@@ -113,11 +118,15 @@ app.get('/login', (req, res) => {
 app.get('/user', (req, res) => {
 	if(!app.locals.authenticatedUser){
 		res.redirect('login');
-		//console.log('Redirected to login page because user was not logged in.');
 		return;
 	}
 
 	res.render('user.ejs');
+});
+
+//app.get('/user-list', permissionChecker('officer'), (req, res) => {
+app.get('/user-list', permissionChecker(), (req, res) => {
+	res.render('user-list.ejs');
 });
 
 app.get('/pwchange', (req, res) => {
@@ -127,7 +136,7 @@ app.get('/pwchange', (req, res) => {
 	}
 
 	res.render('pwchange.ejs');
-})
+});
 
 app.listen(port, () => {
 	//Create the table if it does not already exist
@@ -161,7 +170,8 @@ app.listen(port, () => {
 		email TEXT NOT NULL UNIQUE,
 		password_hash TEXT NOT NULL,
 		password_salt TEXT NOT NULL,
-		password_hash_iter INTEGER NOT NULL
+		password_hash_iter INTEGER NOT NULL,
+		date TEXT NOT NULL
 	);`);
 
 	database.exec(`CREATE TABLE IF NOT EXISTS sessions (
@@ -177,7 +187,9 @@ app.listen(port, () => {
 		user_id INTEGER NOT NULL,
 		name TEXT NOT NULL,
 		date_granted INTEGER NOT NULL,
+		granted_by_id INTEGER,
 		FOREIGN KEY (user_id) REFERENCES users(id),
+		FOREIGN KEY (granted_by_id) REFERENCES users(id),
 		UNIQUE (user_id, name)
 	);`);
 });

@@ -1,6 +1,8 @@
 const crypto = require('crypto');
 const config = require('config');
 
+const PermissionManager = require('./permission-manager.js');
+
 const saltLengthBytes = 16;
 const minPasswordLength = 8;
 const passwordHashIterations = 10000;
@@ -60,8 +62,10 @@ module.exports = {
 	createUser: function(db, email, password){
 		let passInfo = module.exports.generatePasswordInfo(password);
 
-		let q = db.prepare(`INSERT INTO users (email, password_hash, password_salt, password_hash_iter) VALUES (?, ?, ?, ?)`);
-		q.run(email, passInfo.hash, passInfo.salt, passInfo.iterations);
+		let now = new Date().getTime();
+
+		let q = db.prepare(`INSERT INTO users (email, password_hash, password_salt, password_hash_iter, date) VALUES (?, ?, ?, ?, ?)`);
+		q.run(email, passInfo.hash, passInfo.salt, passInfo.iterations, now);
 
 		console.log('Created user:', email);
 	},
@@ -129,6 +133,19 @@ module.exports = {
 		if(!res){
 			return null;
 		}
+
+		//Insert permissions into the return value
+		let q2 = db.prepare(`SELECT * FROM permissions WHERE user_id == ?`);
+
+		let res2 = q2.all(id);
+
+		let permissions = new PermissionManager();
+
+		for (let row of res2){
+			permissions.grant(row['name']);
+		}
+
+		res['permissions'] = permissions;
 
 		return res;
 	},
@@ -232,7 +249,7 @@ module.exports = {
 
 		req.app.locals['authenticatedUser'] = user;
 
-		console.log('User is currently logged in:', user.email);
+		console.log('User:', user.email);
 
 		next();
 	}

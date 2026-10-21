@@ -29,7 +29,7 @@
 
 			<div id="contentContainer">
 				<div class="section">
-					<h2>User profile</h2>
+					<h2>User info</h2>
 					<p>
 						E-mail address: <%= authenticatedUser.email %>
 					</p>
@@ -37,7 +37,10 @@
 						User ID: <%= authenticatedUser.id %>
 					</p>
 					<p>
-						Permissions: <%= (authenticatedUser.permissions ? authenticatedUser.permissions : ['No data.']).join(', ') %>
+						Permissions: <%= (authenticatedUser.permissions.toArray() ? authenticatedUser.permissions.toArray().join(', ') : 'No permissions granted.') %>
+					</p>
+					<p>
+						Registered on: <%= (new Date(authenticatedUser.date)).toDateString() %>
 					</p>
 					<p>
 						<form action="api/logout" method="POST">
@@ -46,6 +49,7 @@
 					</p>
 					<p>
 						<a href="pwchange">Change password</a>
+					</p>
 				</div>
 			</div>
 
