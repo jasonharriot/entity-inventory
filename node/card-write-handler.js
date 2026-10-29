@@ -40,5 +40,5 @@ module.exports = function(req, res){
 
 	updateFields(req.sqlite, tagID, data);
 
-	res.redirect(`../../../view-card.html?tagid=${tagID}`);
+	res.redirect(`../../../view-card?tagid=${tagID}`);
 }

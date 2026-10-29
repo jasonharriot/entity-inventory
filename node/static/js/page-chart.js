@@ -16,8 +16,8 @@ function nodeClickHandler(event, obj){
 		alert(`There is no card for ID ${clickedID}. It is invalid, or has not`
 			+ ` been issued yet.`);
 	} else if(confirm(`View card details for ID ${clickedID}?`)){
-		window.location.href=`view-card.html?tagid=${clickedID}`;
-		//window.location.href=`chart.html?tagid=${clickedID}`;
+		window.location.href=`view-card?tagid=${clickedID}`;
+		//window.location.href=`chart?tagid=${clickedID}`;
 	}
 }
 
@@ -56,7 +56,7 @@ function getNodeText(card){
 /*getCard(tagID).then((card) => {
 	showCard(card);
 
-	aViewCardElem.href = `view-card.html?tagid=${tagID}`;
+	aViewCardElem.href = `view-card?tagid=${tagID}`;
 });*/
 
 let chart = null;

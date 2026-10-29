@@ -1,0 +1,35 @@
+<div id="header" class="section">
+	<div>
+		<h1><%= config.get("site_name"); %></h1>
+		<div>
+			<% if(typeof(hideLogin) == 'undefined'){ %>
+				<% if(authenticatedUser){%>
+				Logged in: <a href="user"><%= authenticatedUser.email %></a>
+				<%} else{%>
+				<a href="login">Log in</a> | <a href="register">Register new account</a>
+				<%}%>
+			<% } %>
+		</div>
+		<% if(typeof(backButtonDisabled) == 'undefined'){ %>
+		<div>
+			<h2>
+				<a class="backArrow" href="<%= typeof(backButtonPath) == 'undefined' ? '.' : backButtonPath %>">
+					← Back to <%= typeof(backButtonLabel) == 'undefined' ? 'Home' : backButtonLabel %>
+				</a>
+			</h2>
+		</div>
+		<% } %>
+	</div>
+	<div class="scanDiv">
+		<% if(typeof(scanningDisabled) == 'undefined'){ %>
+			<img src="img/scanner-bw.png" width="100px">
+			<i>Scanning is active</i>
+			<br>
+			<% if(typeof(scanningAction) == 'undefined'){ %>
+				Scan a tag to view its card
+			<% } else if(scanningAction == 'bulk'){ %>
+				Scan another tag to continue making bulk edits
+			<% } %>
+		<% } %>
+	</div>
+</div>

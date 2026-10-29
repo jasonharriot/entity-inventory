@@ -86,11 +86,11 @@ getCard(tagID).then((card) => {
 	showCard(card);
 
 	buttonEditElem.addEventListener('click', () =>  {
-		const hrefString = `edit-card.html?tagid=${tagID}`;
+		const hrefString = `edit-card?tagid=${tagID}`;
 		window.location.href = hrefString;
 	});
 
-	aChartElem.href=`chart.html?tagid=${tagID}`;
+	aChartElem.href=`chart?tagid=${tagID}`;
 
 	makeTableFromIDs(parentCardTableElem, columns, card.synth_parent_ids);
 

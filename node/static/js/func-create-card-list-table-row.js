@@ -8,7 +8,7 @@ function createCardListTableRow(card, columns){
 			//anchor which links to the view-card page for that entity.
 
 			const anchor = document.createElement('a');
-			anchor.href=`view-card.html?tagid=${card.id}`;
+			anchor.href=`view-card?tagid=${card.id}`;
 
 			//anchor.innerText = sampleIDString(card[column.field]);
 			anchor.innerText = card[column.field];

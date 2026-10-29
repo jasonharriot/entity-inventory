@@ -1,5 +1,6 @@
 TODO
 
+- Move all pages to ejs
 - Password reset by privileged users
 - Back arrow as UTF-8 character
 - Change email address
@@ -15,3 +16,7 @@ TODO
 - Force user to reset password
 
 - view-card.html replace with ejs, handle not having permissions or not being logged in.
+
+- User email on generated label sheet
+- Generated-by attribute on IDs
+- Label template name attribute on IDs

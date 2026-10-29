@@ -7,26 +7,11 @@
 
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-		<title>Profile</title>
+		<title>User Profile</title>
 	</head>
 	<body>
 		<div id="container">
-			<div id="header" class="section">
-				<div>
-					<div>
-						<h1><%= config.get('site_name') %></h1>
-					</div>
-					<div>
-						<h2>
-							<a class="backArrow" href=".">
-								<img src="img/arrow-left.png">
-								Home
-							</a>
-						</h2>
-					</div>
-				</div>
-			</div>
-
+			<%- include('header.ejs', {hideLogin:true}) %>
 			<div id="contentContainer">
 				<div class="section">
 					<h2>User info</h2>
@@ -53,11 +38,7 @@
 				</div>
 			</div>
 
-			<div id="footer" class="section">
-				<p>
-					<%- config.get("copyright_text") %>
-				</p>
-			</div>
+			<%- include ('footer.ejs') %>
 		</div>
 	</body>
 </html>

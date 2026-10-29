@@ -66,7 +66,7 @@ document.addEventListener('keydown', (e) => {
 
 		if(shortcutKeysEnabled){
 			if(cumulativeString == 'g'){	//Hotkey for goto
-				window.location.href = 'go-to-card.html';
+				window.location.href = 'go-to-card';
 			}
 
 			if(cumulativeString == 'l'){	//Hotkey for list
@@ -74,7 +74,7 @@ document.addEventListener('keydown', (e) => {
 			}
 
 			if(cumulativeString == 's'){	//Hotkey for search
-				window.location.href = 'search.html';
+				window.location.href = 'search';
 			}
 		}
 	}

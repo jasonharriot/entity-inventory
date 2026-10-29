@@ -36,8 +36,8 @@ app.use((req, res, next) => {	//Middleware to dump everything to console.
 	return next();
 });
 
-app.use('/', express.static('html'));	//For requests to the root, just serve
-//static files.
+app.use('/', express.static('static'));	//For requests to the root, just serve
+//static files from the directory.
 
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -83,7 +83,7 @@ app.get('/api/backup/sqlite', permissionChecker('officer'), backupSQLiteHandler)
 
 app.use('/api/search', permissionChecker('read'), searchHandler);
 
-app.get('/api/sheet/generate/:templatePartial/:numPages', sheetGenerateHandler);
+app.get('/api/sheet/generate/:templatePartial/:numPages', permissionChecker('issue_ids'), sheetGenerateHandler);
 
 //Scan endpoint
 app.get('/s/:tagid', scanHandler);
@@ -93,17 +93,35 @@ app.get('/', (req, res) => {
 	res.render('index.ejs');
 });
 
-app.get('/card-list', (req, res) => {
+app.get('/bulk-landing', permissionChecker('write'), (req, res) => {
+	res.render('bulk-landing.ejs');
+});
+
+app.get('/bulk-scan', permissionChecker('write'), (req, res) => {
+	res.render('bulk-scan.ejs');
+});
+
+app.get('/card-list', permissionChecker('read'), (req, res) => {
 	res.render('card-list.ejs');
 })
 
-app.get('/register', (req, res) => {
-	if(app.locals.authenticatedUser){
-		res.redirect('user');
-		return;
-	}
+app.get('/chart', permissionChecker('read'), (req, res) => {
+	res.render('chart.ejs');
+})
 
-	res.render('register.ejs');
+app.get('/debug', permissionChecker('officer'), (req, res) => {
+	res.render('debug.ejs')
+});
+
+app.get('/edit-card', permissionChecker('write'), (req, res) => {
+	res.render('edit-card.ejs');
+})
+
+app.get('/go-to-card', permissionChecker('read'), (req, res) => {
+	res.render('go-to-card.ejs');
+})
+app.get('/issue', permissionChecker('issue_ids'), (req, res) => {
+	res.render('issue.ejs');
 });
 
 app.get('/login', (req, res) => {
@@ -115,20 +133,6 @@ app.get('/login', (req, res) => {
 	res.render('login.ejs');
 })
 
-app.get('/user', (req, res) => {
-	if(!app.locals.authenticatedUser){
-		res.redirect('login');
-		return;
-	}
-
-	res.render('user.ejs');
-});
-
-//app.get('/user-list', permissionChecker('officer'), (req, res) => {
-app.get('/user-list', permissionChecker(), (req, res) => {
-	res.render('user-list.ejs');
-});
-
 app.get('/pwchange', (req, res) => {
 	if(!app.locals.authenticatedUser){
 		res.redirect('login');
@@ -138,6 +142,39 @@ app.get('/pwchange', (req, res) => {
 	res.render('pwchange.ejs');
 });
 
+app.get('/register', (req, res) => {
+	if(app.locals.authenticatedUser){
+		res.redirect('user');
+		return;
+	}
+
+	res.render('register.ejs');
+});
+
+app.get('/search', permissionChecker('read'), (req, res) => {
+	res.render('search.ejs');
+});
+
+app.get('/user', (req, res) => {
+	if(!app.locals.authenticatedUser){
+		res.redirect('login');
+		return;
+	}
+
+	res.render('user.ejs');
+});
+
+app.get('/user-list', permissionChecker('officer'), (req, res) => {
+//app.get('/user-list', permissionChecker(), (req, res) => {
+	res.render('user-list.ejs');
+});
+
+app.get('/view-card', permissionChecker('read'), (req, res) => {
+	res.render('view-card.ejs');
+})
+
+
+//Server start
 app.listen(port, () => {
 	//Create the table if it does not already exist
 	database.exec(`CREATE TABLE IF NOT EXISTS cards (

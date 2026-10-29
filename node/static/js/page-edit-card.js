@@ -8,7 +8,7 @@ const tagID = getTagID();
 
 buttonDiscardElem.addEventListener('click', () => {
 	if(confirm('Really discard changes?')){
-		window.location.href = `view-card.html?tagid=${tagID}`
+		window.location.href = `view-card?tagid=${tagID}`
 	} 
 });
 

@@ -50,7 +50,7 @@ document.getElementById('nextButton').addEventListener('click', (e) => {
 
 	//console.log(params)
 
-	let newURL = '/bulk-scan.html?' + String(params);
+	let newURL = '/bulk-scan?' + String(params);
 
 	window.location.href = newURL;
 })

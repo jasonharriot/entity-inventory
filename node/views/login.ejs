@@ -3,7 +3,6 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="style/style.css" />
-		<link rel="stylesheet" href="style/issue.css" />
 
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
@@ -11,26 +10,12 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="header" class="section">
-				<div>
-					<div>
-						<h1><%= config.get("site_name") %></h1>
-					</div>
-					<div>
-						<h2>
-							<a class="backArrow" href=".">
-								<img src="img/arrow-left.png">
-								Home
-							</a>
-						</h2>
-					</div>
-				</div>
-			</div>
+			<%- include('header.ejs', {scanningDisabled:true}) %>
 
 			<div id="contentContainer">
 				<div class="section">
 					<h2>Log in to Entity Inventory</h2>
-					<div id="fillMessage" display="none"></div>
+					<div id="fillMessage" display="none" style="color:#f00"></div>
 					<form action="/api/login" method="post">
 						<p>
 							<input type="email" name="email" placeholder="e-mail address">
@@ -45,11 +30,7 @@
 				</div>
 			</div>
 
-			<div id="footer" class="section">
-				<p>
-					<%= config.get("copyright_text") %>
-				</p>
-			</div>
+			<%- include('footer.ejs') %>
 
 			<script type="text/javascript" src="js/func-url-message.js"></script>
 		</div>

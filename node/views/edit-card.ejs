@@ -13,22 +13,7 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="header" class="section">
-				<div>
-					<div>
-						<h1>Entity Inventory</h1>
-					</div>
-
-					<div>
-						<h2>
-							<a class="backArrow" href=".">
-								<img src="img/arrow-left.png">
-								Home
-							</a>
-						</h2>
-					</div>
-				</div>
-			</div>
+			<%- include('header.ejs', {scanningDisabled:true}) %>
 
 			<div id="contentContainer">
 				<div class="section">
@@ -140,9 +125,7 @@
 				</div>
 			</div>
 
-			<div id="footer" class="section">
-				EDAC Labs, Inc.
-			</div>
+			<%- include('footer.ejs') %>
 		</div>
 		<script type="text/javascript" src="js/moment.js"></script>
 		<script type="text/javascript" src="js/func-get-card.js"></script>

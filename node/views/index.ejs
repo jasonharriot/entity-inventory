@@ -10,38 +10,29 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="header" class="section">
-				<div>
-					<h1><%= config.get("site_name"); %></h1>
-					<div>
-						<% if(authenticatedUser){%>
-						Logged in: <a href="user"><%= authenticatedUser.email %></a>
-						<%} else{%>
-						<a href="login">Log in</a> | <a href="register">Register new account</a>
-						<%}%>
-					</div>
-				</div>
-				<div class="scanDiv">
-					<img src="img/scanner-bw.png" width="100px">
-					<p>Scan a tag at any time to view its details.</p>
-				</div>
-			</div>
-
+			<%- include('header.ejs', {backButtonDisabled: true}) %>
 			<div id="contentContainer">
 				<% if(authenticatedUser && authenticatedUser.permissions.hasAny(['read', 'write', 'issue-ids'])){ %>
 				<div class="section">
 					<h2>Tools</h2>
 					<% if(authenticatedUser.permissions.has('read')){ %>
-					<p><a href="search.html">Search</a>&mdash;<i>Shortcut key: S</i></p>
+					<p><a href="search">Search</a>&mdash;<i>Shortcut key: S</i></p>
 					<p><a href="card-list">View all cards</a>&mdash;<i>Shortcut key: L</i></p>
-					<p><a href="go-to-card.html">Go to ID number</a>&mdash;<i>Shortcut key: G</i></p>
+					<p><a href="go-to-card">Go to ID number</a>&mdash;<i>Shortcut key: G</i></p>
 					<% } %>
 					<% if(authenticatedUser.permissions.has('write')){ %>
-					<p><a href="bulk-landing.html">Bulk operations</a></p>
+					<p><a href="bulk-landing">Bulk operations</a></p>
 					<% } %>
 					<% if(authenticatedUser.permissions.has('issue_ids')){ %>
-					<p><a href="issue.html">Print new labels</a></p>
+					<p><a href="issue">Print new labels</a></p>
 					<% } %>
+				</div>
+				<% } %>
+
+				<% if(authenticatedUser && authenticatedUser.permissions.hasAny(['officer'])){ %>
+				<div class="section">
+					<h2>Administration</h2>
+					<p><a href="user-list">User list</a></p>
 				</div>
 				<% } %>
 
@@ -55,7 +46,7 @@
 								Entity Inventory&mdash;GitHub
 							</a>
 							<% if(authenticatedUser){ %>
-							<p><a href="debug.html">Debugging tools</a></p>
+							<p><a href="debug">Debugging tools</a></p>
 							<% } %>
 						</p>
 					</div>
@@ -63,11 +54,7 @@
 				</div>
 			</div>
 
-			<div id="footer" class="section">
-				<div>
-					<p><%- config.get('copyright_text') %></p>
-				</div>
-			</div>
+			<%- include ('footer.ejs') %>
 		</div>
 
 		<script type="text/javascript" src="js/page-scan-watch.js"></script>
