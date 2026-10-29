@@ -5,7 +5,6 @@
 		<link rel="stylesheet" href="style/style.css" />
 		<link rel="stylesheet" href="style/fields.css" />
 		<link rel="stylesheet" href="style/tables.css" />
-		<link rel="stylesheet" href="style/list.css" />
 
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
@@ -13,24 +12,7 @@
 	</head>
 	<body>
 		<div id="container">
-			<div id="header" class="section">
-				<div>
-					<div>
-						<h1><%= config.get("site_name"); %></h1>
-					</div>
-					<div>
-						<h2>
-							<a class="backArrow" href=".">
-								← Home
-							</a>
-						</h2>
-					</div>
-				</div>
-				<div class="scanDiv">
-					<img src="img/scanner-bw.png" width="100px">
-					<p>Scan a tag at any time to view its details.</p>
-				</div>
-			</div>
+			<%- include('header.ejs') %>
 
 			<div id="contentContainer">
 				<div class="section">

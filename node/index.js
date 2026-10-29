@@ -1,15 +1,12 @@
 const express = require('express');
 const { DatabaseSync } = require('node:sqlite');
-const app = express();
 const config = require('config');
-const database = new DatabaseSync(config.get('db_file_path'));
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const ejs = require('ejs');
 
-const port = config.get('port');
-
 const registrationHandler = require('./user-register-handler');
+//const userListHandler = require('./user-list-handler');
 const loginHandler = require('./login-handler.js');
 const logoutHandler = require('./logout-handler.js');
 const passwordChangeHandler = require('./password-change-handler.js');
@@ -27,11 +24,19 @@ const searchHandler = require('./search-handler.js');
 const authTools = require('./auth-tools.js');
 const permissionChecker = require('./permission-checker.js')
 
+const Database = require('./database.js');
+
+const port = config.get('port');
+
+const app = express();
+
 app.use((req, res, next) => {	//Middleware to dump everything to console. 
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
 
-	req.sqlite = database;	//Add the database as a property of req, so it can
+	//req.sqlite = database;	//Add the database as a property of req, so it can
 	//be accessed by other middle-ware.
+
+	req.db = Database(config.get('db_file_path'));
 
 	return next();
 });
@@ -57,13 +62,13 @@ app.locals = {
 
 app.use(authTools.authMiddleware);
 
-app.post('/api/register', registrationHandler);
+app.post('/api/user/register', registrationHandler);
 
-app.post('/api/login', loginHandler);
+app.post('/api/user/login', loginHandler);
 
-app.post('/api/logout', logoutHandler);
+app.post('/api/user/logout', logoutHandler);
 
-app.post('/api/pwchange', passwordChangeHandler);
+app.post('/api/user/pwchange', passwordChangeHandler);
 
 app.get('/api/get-id-counter', permissionChecker('read'), getIDCounterHandler);
 
@@ -103,11 +108,11 @@ app.get('/bulk-scan', permissionChecker('write'), (req, res) => {
 
 app.get('/card-list', permissionChecker('read'), (req, res) => {
 	res.render('card-list.ejs');
-})
+});
 
 app.get('/chart', permissionChecker('read'), (req, res) => {
 	res.render('chart.ejs');
-})
+});
 
 app.get('/debug', permissionChecker('officer'), (req, res) => {
 	res.render('debug.ejs')
@@ -115,11 +120,12 @@ app.get('/debug', permissionChecker('officer'), (req, res) => {
 
 app.get('/edit-card', permissionChecker('write'), (req, res) => {
 	res.render('edit-card.ejs');
-})
+});
 
 app.get('/go-to-card', permissionChecker('read'), (req, res) => {
 	res.render('go-to-card.ejs');
-})
+});
+
 app.get('/issue', permissionChecker('issue_ids'), (req, res) => {
 	res.render('issue.ejs');
 });
@@ -166,7 +172,7 @@ app.get('/user', (req, res) => {
 
 app.get('/user-list', permissionChecker('officer'), (req, res) => {
 //app.get('/user-list', permissionChecker(), (req, res) => {
-	res.render('user-list.ejs');
+	res.render('user-list.ejs', {users:getUsers(database)});
 });
 
 app.get('/view-card', permissionChecker('read'), (req, res) => {

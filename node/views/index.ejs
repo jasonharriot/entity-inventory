@@ -45,7 +45,7 @@
 							<a href="https://github.com/jasonharriot/entity-inventory">
 								Entity Inventory&mdash;GitHub
 							</a>
-							<% if(authenticatedUser){ %>
+							<% if(authenticatedUser && authenticatedUser.permissions.hasAny(['officer'])){ %>
 							<p><a href="debug">Debugging tools</a></p>
 							<% } %>
 						</p>

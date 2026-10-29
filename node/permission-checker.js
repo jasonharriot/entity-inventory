@@ -8,19 +8,19 @@ const config = require('config');
 //Check always fails if user is not logged in.
 
 module.exports = (p) => {
-	let permissions = [];
-
-	if(p == undefined){
-		permissions = [];
-	} else if(!Array.isArray(p)){
-		permissions = [p];
-	} else{
-		permissions = p;
-	}
-
-	console.log('Permission checker: ', permissions)
-
 	return (req, res, next) => {
+		let permissions = [];
+
+		if(p == undefined){
+			permissions = [];
+		} else if(!Array.isArray(p)){
+			permissions = [p];
+		} else{
+			permissions = p;
+		}
+
+		console.log('Permissions middleware: ', permissions)
+
 		//Check if a user is logged in
 		if(!req.app.locals.authenticatedUser){
 			res.writeHead(403, 'You must be logged in to do this.');
@@ -32,7 +32,7 @@ module.exports = (p) => {
 		//...
 
 		if(!req.app.locals.authenticatedUser.permissions.hasAll(permissions)){
-			res.writeHead(403, 'The following permissions are required:', permissions.join(', '));
+			res.writeHead(403, 'The following permissions are required: ' + permissions.join(', '));
 			res.end();
 			return;
 		}

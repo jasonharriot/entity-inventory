@@ -1,8 +1,6 @@
 TODO
 
-- Move all pages to ejs
 - Password reset by privileged users
-- Back arrow as UTF-8 character
 - Change email address
 - User list page
 - Login prompt with redirect to original url
@@ -20,3 +18,6 @@ TODO
 - User email on generated label sheet
 - Generated-by attribute on IDs
 - Label template name attribute on IDs
+- Edit logs ip, user agent
+- Registration logs ip, user agent
+- IP whitelist
