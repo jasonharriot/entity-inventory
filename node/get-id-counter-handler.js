@@ -1,6 +1,4 @@
-const { getIDCounter } = require('./get-id-counter.js');
-
 module.exports = function(req, res){
-	let counter = getIDCounter(req.sqlite);
+	let counter = req.db.getIDCounter();
 	res.send(counter);
 }

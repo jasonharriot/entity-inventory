@@ -1,5 +1,4 @@
 const {PDFDocument, StandardFonts, rgb} = require('pdf-lib');
-const { issueIDs } = require('./issue-ids.js');
 const fs = require('node:fs');
 const qr = require('qrcode');
 const config = require('config');
@@ -171,7 +170,7 @@ module.exports = {
 		}
 
 		makePage(database, templatePage, doc){
-			const newIDs = issueIDs(database, this.getLabelCount());	//
+			const newIDs = database.issueIDs(this.getLabelCount());	//
 			//Generate tag IDs for each label on this page
 
 			let newPage = doc.addPage([this.pageSize[0] * 72, 

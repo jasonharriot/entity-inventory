@@ -32,7 +32,7 @@ module.exports = function(req, res){
 
 	console.log('Making document...');
 
-	let prom = s.makeDocument(req.sqlite, numPages);	//makeDocument will return
+	let prom = s.makeDocument(req.db, numPages);	//makeDocument will return
 	//a PDF object (from pdf-lib, see the respective documentation).
 
 	prom.then((pdfObj, err) => {

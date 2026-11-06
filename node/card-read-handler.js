@@ -1,5 +1,3 @@
-const { getCardByTagID } = require('./get-card-by-tag-id.js');
-
 module.exports = function(req, res){
 	const safeID = Number(req.params.tagid);
 		
@@ -10,9 +8,9 @@ module.exports = function(req, res){
 		return;
 	}
 
-	console.log('Card info request:', safeID);
+	//console.log('Card info request:', safeID);
 
-	const card = getCardByTagID(req.sqlite, safeID);
+	const card = req.db.getCardByTagID(safeID);
 
 	if(card){
 		res.send(card);

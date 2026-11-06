@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="style/style.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<title>Error</title>
+	</head>
+	<body>
+		<div id="container">
+			<%- include('header.ejs', {hideLogin:true}) %>
+			<div id="contentContainer">
+				<div class="section">
+					<h2>Insufficient permissions</h2>
+					<p>You don't have the required permission. Ask an officer to grant the following permissions:</p>
+					<ul>
+						<% requiredPermissions.forEach((perm, i) => { %>
+							<li><%= perm %></li>
+						<% }); %>
+					</ul>
+				</div>
+			</div>
+
+			<%- include ('footer.ejs') %>
+		</div>
+	</body>
+</html>

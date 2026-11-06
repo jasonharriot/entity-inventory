@@ -1,7 +1,3 @@
-const { getCardByTagID } = require('./get-card-by-tag-id.js');
-const { getSiblingIDs } = require('./get-sibling-ids.js');
-const { getChildIDsByTagID } = require('./get-child-ids-by-tag-id.js');
-
 module.exports = function(req, res){
 	const safeID = Number(req.params.tagid);
 		
@@ -12,20 +8,20 @@ module.exports = function(req, res){
 		return;
 	}
 
-	console.log('Card family request:', safeID);
+	//console.log('Card family request:', safeID);
 
-	const card = getCardByTagID(req.sqlite, safeID);
+	const card = req.db.getCardByTagID(safeID);
 
-	const siblingIDs = getSiblingIDs(req.sqlite, safeID, card.synth_parent_ids);
+	const siblingIDs = req.db.getSiblingIDs(safeID, card.synth_parent_ids);
 
-	const childIDs = getChildIDsByTagID(req.sqlite, safeID);
+	const childIDs = req.db.getChildIDsByTagID(safeID);
 
 	const family = {
 		'sibling_ids': siblingIDs,
 		'child_ids': childIDs
 	}
 
-	console.log(family);
+	//console.log(family);
 
 	res.send(family);
 }

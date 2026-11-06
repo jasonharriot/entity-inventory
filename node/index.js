@@ -1,5 +1,4 @@
 const express = require('express');
-const { DatabaseSync } = require('node:sqlite');
 const config = require('config');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -21,22 +20,20 @@ const cardWriteHandler = require('./card-write-handler.js');
 const backupSQLiteHandler = require('./backup-sqlite-handler.js');
 const sheetGenerateHandler = require('./sheet-generate-handler.js');
 const searchHandler = require('./search-handler.js');
-const authTools = require('./auth-tools.js');
 const permissionChecker = require('./permission-checker.js')
 
 const Database = require('./database.js');
 
 const port = config.get('port');
 
+const db = new Database(config.get('db_file_path'));
+
 const app = express();
 
 app.use((req, res, next) => {	//Middleware to dump everything to console. 
 	console.log(`[${new Date().toISOString()}] ${req.url}`);
 
-	//req.sqlite = database;	//Add the database as a property of req, so it can
-	//be accessed by other middle-ware.
-
-	req.db = Database(config.get('db_file_path'));
+	req.db = db;	//Insert the database object
 
 	return next();
 });
@@ -60,7 +57,7 @@ app.locals = {
 // 	}
 // }
 
-app.use(authTools.authMiddleware);
+app.use(db.authMiddleware);	//The database object provides a middleware that handles checking user authentication
 
 app.post('/api/user/register', registrationHandler);
 
@@ -90,8 +87,14 @@ app.use('/api/search', permissionChecker('read'), searchHandler);
 
 app.get('/api/sheet/generate/:templatePartial/:numPages', permissionChecker('issue_ids'), sheetGenerateHandler);
 
+
+
+
 //Scan endpoint
 app.get('/s/:tagid', scanHandler);
+
+
+
 
 //EJS
 app.get('/', (req, res) => {
@@ -137,7 +140,7 @@ app.get('/login', (req, res) => {
 	}
 
 	res.render('login.ejs');
-})
+});
 
 app.get('/pwchange', (req, res) => {
 	if(!app.locals.authenticatedUser){
@@ -172,67 +175,15 @@ app.get('/user', (req, res) => {
 
 app.get('/user-list', permissionChecker('officer'), (req, res) => {
 //app.get('/user-list', permissionChecker(), (req, res) => {
-	res.render('user-list.ejs', {users:getUsers(database)});
+	res.render('user-list.ejs', {users: db.getUsers()});
 });
 
 app.get('/view-card', permissionChecker('read'), (req, res) => {
 	res.render('view-card.ejs');
-})
+});
+
+
 
 
 //Server start
-app.listen(port, () => {
-	//Create the table if it does not already exist
-	database.exec(`CREATE TABLE IF NOT EXISTS cards (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-
-		type TEXT DEFAULT '',
-		contents TEXT DEFAULT '',
-		date_sample TEXT DEFAULT '', 
-		mass_initial TEXT DEFAULT '',
-
-		parent_ids TEXT DEFAULT '',
-		status TEXT DEFAULT '',
-
-		container_size TEXT DEFAULT '',
-		
-		form TEXT DEFAULT '',
-		
-		date_experiment TEXT DEFAULT '',
-
-		date_issued TEXT DEFAULT CURRENT_TIMESTAMP,
-		date_scanned_first TEXT DEFAULT '',
-		date_scanned_latest TEXT DEFAULT '',
-		date_modified_first TEXT DEFAULT '',
-		date_modified_latest TEXT DEFAULT '',
-		notes TEXT DEFAULT ''
-	);`);
-
-	database.exec(`CREATE TABLE IF NOT EXISTS users (
-		id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-		email TEXT NOT NULL UNIQUE,
-		password_hash TEXT NOT NULL,
-		password_salt TEXT NOT NULL,
-		password_hash_iter INTEGER NOT NULL,
-		date TEXT NOT NULL
-	);`);
-
-	database.exec(`CREATE TABLE IF NOT EXISTS sessions (
-		id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
-		user_id INTEGER NOT NULL,
-		hash TEXT NOT NULL,
-		date_created INTEGER NOT NULL,
-		FOREIGN KEY (user_id) REFERENCES users(id)
-	);`);
-
-	database.exec(`CREATE TABLE IF NOT EXISTS permissions (
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		user_id INTEGER NOT NULL,
-		name TEXT NOT NULL,
-		date_granted INTEGER NOT NULL,
-		granted_by_id INTEGER,
-		FOREIGN KEY (user_id) REFERENCES users(id),
-		FOREIGN KEY (granted_by_id) REFERENCES users(id),
-		UNIQUE (user_id, name)
-	);`);
-});
+app.listen(port);

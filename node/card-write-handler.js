@@ -1,5 +1,3 @@
-const { updateFields } = require('./update-fields.js');
-
 module.exports = function(req, res){
 	let tagID = req.params.tagid;
 
@@ -23,7 +21,7 @@ module.exports = function(req, res){
 	for(let [queryField, queryValue] of data){	//Check if 
 		//allowed to update field and (TODO) validate input
 
-		console.log(`Write: ${queryField}: "${queryValue}"`);
+		//console.log(`Write: ${queryField}: "${queryValue}"`);
 
 		if(editableFields.includes(queryField)){
 			//console.log('Can edit.');
@@ -38,7 +36,7 @@ module.exports = function(req, res){
 		}
 	}
 
-	updateFields(req.sqlite, tagID, data);
+	req.db.updateFields(tagID, data);
 
 	res.redirect(`../../../view-card?tagid=${tagID}`);
 }

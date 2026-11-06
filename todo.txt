@@ -1,5 +1,7 @@
 TODO
 
+- Remove orphaned handlers 
+
 - Password reset by privileged users
 - Change email address
 - User list page
@@ -21,3 +23,5 @@ TODO
 - Edit logs ip, user agent
 - Registration logs ip, user agent
 - IP whitelist
+- Prepared statements in class constructor, not methods
+- Keep session alive with authMiddleware

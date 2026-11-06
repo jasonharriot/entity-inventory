@@ -1,11 +1,10 @@
-const { updateCardOnScan } = require('./update-card-on-scan.js');
 const config = require('config');
 
 module.exports = function(req, res){
 	let tagID = req.params.tagid;
 
 	if(!req.app.locals.authenticatedUser){
-		console.log('No user logged in');
+		//console.log('No user logged in');
 
 		//let redirURL = req.url;
 
@@ -27,7 +26,7 @@ module.exports = function(req, res){
 
 	console.log('Tag scan event:', tagID);
 
-	updateCardOnScan(req.sqlite, tagID);	//Update the date_scanned fields
+	req.db.updateCardOnScan(tagID);	//Update the date_scanned fields
 
 	res.redirect(`../view-card?tagid=${tagID}`);
 }

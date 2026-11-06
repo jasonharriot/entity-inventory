@@ -1,7 +1,5 @@
-const { getCards } = require('./get-cards.js');
-
 module.exports = function(req, res){
-	const cards = getCards(req.sqlite);
+	const cards = req.db.getCards();
 
 	res.send(cards);
 	res.end();

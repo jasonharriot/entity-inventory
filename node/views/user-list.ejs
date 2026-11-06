@@ -24,14 +24,17 @@
 									<th>E-mail</th>
 									<th>Registration date</th>
 									<th>Registration IP</th>
+									<th>Most recent IP</th>
+									<th>Permissions</th>
 								</tr>
 								<% users.forEach((user, i) => { %>
 									<tr class="<%= i%2 == 0 ? 'rowEven' : 'rowOdd' %>">
-										<% for(let col of ['id', 'email', 'date', 'ip']){ %>
-											<td>
-												<%= col in user ? user[col] : '' %>
-											</td>
-										<% } %>
+										<td><%= user['id'] %></td>
+										<td><a href="user-manage?id=<%-user['id']%>"><%= user['email'] %></a></td>
+										<td><%= user['date'] %></a></td>
+										<td><%= user['registration_ip'] %></a></td>
+										<td><%= user['last_ip'] %></a></td>
+										<td><%= user['permissions'] %></td>
 									</tr>
 								<% }); %>
 							</tbody>
@@ -42,7 +45,5 @@
 
 			<%- include('footer.ejs') %>
 		</div>
-
-		<script type="text/javascript" src="js/user-list.js"></script>
 	</body>
 </html>

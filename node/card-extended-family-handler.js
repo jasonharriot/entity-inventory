@@ -1,7 +1,3 @@
-const { getExtendedFamilyIDs } = require('./get-extended-family-ids.js');
-const { getChildIDsByTagID } = require('./get-child-ids-by-tag-id.js');
-const { getCardByTagID } = require('./get-card-by-tag-id.js');
-
 module.exports = function(req, res){	//Returns a list of cards. Some entries
 	//may be null if the card is not filled or is invalid.
 
@@ -14,14 +10,14 @@ module.exports = function(req, res){	//Returns a list of cards. Some entries
 		return;
 	}
 
-	console.log('Card extended family request:', safeID);
+	//console.log('Card extended family request:', safeID);
 
-	const ids = getExtendedFamilyIDs(req.sqlite, safeID);
+	const ids = req.db.getExtendedFamilyIDs(safeID);
 
 	let cards = [];
 
 	ids.forEach((id) => {
-		const card = getCardByTagID(req.sqlite, id);
+		const card = req.db.getCardByTagID(id);
 		if(!card){	//If this card does not exist, insert a dummy entry that
 			//contains only the ID. This behavior is not representative of
 			//getCardByTagID, but is needed for creating the relational chart,

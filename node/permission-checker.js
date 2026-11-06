@@ -19,11 +19,14 @@ module.exports = (p) => {
 			permissions = p;
 		}
 
-		console.log('Permissions middleware: ', permissions)
+		//console.log('Permissions middleware: ', permissions)
 
 		//Check if a user is logged in
 		if(!req.app.locals.authenticatedUser){
-			res.writeHead(403, 'You must be logged in to do this.');
+			//res.writeHead(403, 'You must be logged in to do this.');
+			let msg = 'Please login before doing that.'
+
+			res.redirect(`/login?msg=${encodeURIComponent(msg)}`);
 			res.end();
 			return;
 		}
@@ -32,8 +35,8 @@ module.exports = (p) => {
 		//...
 
 		if(!req.app.locals.authenticatedUser.permissions.hasAll(permissions)){
-			res.writeHead(403, 'The following permissions are required: ' + permissions.join(', '));
-			res.end();
+			//res.writeHead(403, 'The following permissions are required: ' + permissions.join(', '));
+			res.render('permission-error.ejs', {requiredPermissions: permissions});
 			return;
 		}
 

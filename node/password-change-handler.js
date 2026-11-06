@@ -1,9 +1,5 @@
-const authTools = require('./auth-tools.js');
-
 module.exports = function(req, res){
 	console.log('Changing password...');
-
-	//let user = authTools.getAuthenticatedUser(req.cookie);
 
 	let user = req.app.locals.authenticatedUser;
 
@@ -16,9 +12,9 @@ module.exports = function(req, res){
 	let newPW = req.body['new_password'];
 	let oldPW = req.body['old_password'];
 
-	let oldPassIsGood = authTools.verifyPassword(oldPW, user.password_hash, user.password_salt, user.password_hash_iter);
+	let oldPassIsGood = req.db.verifyPassword(oldPW, user.password_hash, user.password_salt, user.password_hash_iter);
 
-	let newPassIsGood = authTools.passwordIsAcceptable(newPW);
+	let newPassIsGood = req.db.passwordIsAcceptable(newPW);
 
 	if(!oldPassIsGood){
 		console.log('Bad old password');
@@ -31,7 +27,7 @@ module.exports = function(req, res){
 		res.redirect('/pwchange');
 	}
 
-	authTools.changePassword(req.sqlite, user.id, newPW);
+	req.db.changePassword(user.id, newPW);
 
 	res.redirect('/user');
 

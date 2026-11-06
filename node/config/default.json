@@ -14,5 +14,5 @@
 	"label_pdf_name": "einventory_labels.pdf",
 	"qr_color_dark": "#000000",
 	"qr_color_light": "#ffffff",
-	"session_duration_millis": 31536000000
+	"session_duration_millis": 3600000
 }
