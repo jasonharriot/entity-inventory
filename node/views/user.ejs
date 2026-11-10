@@ -3,7 +3,6 @@
 <html>
 	<head>
 		<link rel="stylesheet" href="style/style.css" />
-		<link rel="stylesheet" href="style/issue.css" />
 
 		<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
@@ -22,7 +21,7 @@
 						User ID: <%= authenticatedUser.id %>
 					</p>
 					<p>
-						Permissions: <%= (authenticatedUser.permissions.toArray() ? authenticatedUser.permissions.toArray().join(', ') : 'No permissions granted.') %>
+						Permissions: <%= (authenticatedUser.permissions.namesToArray() ? authenticatedUser.permissions.namesToArray().join(', ') : 'No permissions granted.') %>
 					</p>
 					<p>
 						Registered on: <%= (new Date(authenticatedUser.date)).toDateString() %>

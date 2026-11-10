@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+
+<html>
+	<head>
+		<link rel="stylesheet" href="style/style.css" />
+		<link rel="stylesheet" href="style/tables.css" />
+
+		<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+		<title>User Management</title>
+	</head>
+	<body>
+		<div id="container">
+			<%- include('header.ejs') %>
+			<div id="contentContainer">
+				<div class="section">
+					<%- include('url-message.ejs') %>
+					<h2>User info</h2>
+					<p>
+						E-mail address: <%= user.email %>
+					</p>
+					<p>
+						User ID: <%= user.id %>
+					</p>
+					<p>
+						Registered on: <%= (new Date(user.date)).toDateString() %>
+					</p>
+					<p>
+						Grant permissions:
+						<form action="api/user/permission/grant" method="POST">
+							<input type="text" name="permission_name">
+							<input type="text" name="user_id" value="<%= user.id %>" hidden>
+							<input type="submit" value="Submit">
+						</form>
+					</p>
+					<p>
+						Permissions held:
+						<table class="generalTable">
+							<tbody>
+								<tr>
+									<th></th>
+									<th>Permission</th>
+									<th>Granted on</th>
+									<th>Granted by</th>
+									
+								</tr>
+								<% user.permissions.toArray().forEach((perm, i) => { %>
+									<form action="/api/user/permission/revoke" method="POST">
+										<input type="text" name="permission_name" value="<%= perm.name %>" hidden>
+										<input type="text" name="user_id" value="<%= user.id %>" hidden>
+										<tr class="<%= i%2 == 0 ? 'rowEven' : 'rowOdd' %>">
+											<td><% if(!perm.implied){ %><input type="submit" value="Revoke" ><% } %></td>
+											<td><%= perm.name %></td>
+											<td><%= (!perm.implied) ? new Date(perm.dateGranted).toDateString() : "n/a"%></td>
+											<td><% if(perm.implied){"n/a"} else{%><a href="/user-manage?id=<%=perm.grantedByID%>"><%=perm.grantedByID%></a><% } %></td>
+										</tr>
+									</form>
+								<% }); %>
+							</tbody>
+						</table>
+					</p>
+				</div>
+			</div>
+
+			<%- include ('footer.ejs') %>
+		</div>
+	</body>
+</html>

@@ -5,6 +5,7 @@ const { DatabaseSync } = require('node:sqlite');
 const PermissionManager = require('./permission-manager');
 
 const { parseIDListString } = require('./parse-id-list-string');
+
 module.exports = class Database{
 	constructor(path){
 		this.path = path;
@@ -74,7 +75,36 @@ module.exports = class Database{
 			UNIQUE (user_id, name)
 		);`);
 
+		this.prepChangePassword = this.dbSync.prepare(`UPDATE users SET password_hash = ?, password_salt = ?, password_hash_iter = ? WHERE id == ?;`);
+		this.prepCreateBlankCard = this.dbSync.prepare(`INSERT INTO cards DEFAULT VALUES`);
+		this.prepCreateMinimumIDCard = this.dbSync.prepare('INSERT OR IGNORE INTO cards(id) VALUES(?)');
+		this.prepCreateSession = this.dbSync.prepare(`INSERT INTO sessions (user_id, hash, date_created) VALUES (?, ?, ?);`);
+		this.prepCreateUser = this.dbSync.prepare(`INSERT INTO users (email, password_hash, password_salt, password_hash_iter, date) VALUES (?, ?, ?, ?, ?)`);
+		this.prepDeleteSession = this.dbSync.prepare(`DELETE FROM sessions WHERE id == ?;`);
+		this.prepGetCardsByID = this.dbSync.prepare('SELECT * FROM cards WHERE id = ?');
+		this.prepGetCardsDescending = this.dbSync.prepare('SELECT * FROM cards ORDER BY id DESC LIMIT 1');
+		this.prepGetCardsInUse = this.dbSync.prepare(`SELECT * FROM cards WHERE (
+			(contents IS NOT NULL AND contents <> '') OR
+			(parent_ids IS NOT NULL AND parent_ids <> '') OR
+			(type IS NOT NULL AND type <> '') OR
+			(date_sample IS NOT NULL AND date_sample <> '')) AND
+			((date_modified_first IS NOT NULL AND date_modified_first <> '') OR
+			id < 1000)
+			`);
+		this.prepGetUserByEmail = this.dbSync.prepare(`SELECT * FROM users WHERE email == ?;`);
+		this.prepGetUserByID = this.dbSync.prepare(`SELECT * FROM users WHERE id == ?;`);
 		this.prepGetUsers = this.dbSync.prepare('SELECT * FROM users');
+		this.prepGrantPermission = this.dbSync.prepare('INSERT OR IGNORE INTO permissions (user_id, name, date_granted, granted_by_id) VALUES (?, ?, ?, ?)');
+		this.prepRevokePermission = this.dbSync.prepare('DELETE FROM permissions WHERE user_id == ? AND name == ?');
+		this.prepSelectEmail = this.dbSync.prepare(`SELECT * FROM users WHERE email == ?;`);
+		this.prepUpdateModifiedDate = this.dbSync.prepare(`UPDATE cards SET date_modified_first =
+			case when ifnull(date_modified_first, '') is '' then ? else
+			date_modified_first end, date_modified_latest = ? WHERE id = ?`);
+		this.prepUpdateScanDate = this.dbSync.prepare(`UPDATE cards SET date_scanned_first =
+			case when ifnull(date_scanned_first, '') is '' then ? else
+			date_scanned_first end, date_scanned_latest = ? WHERE id = ?`);
+		this.prepGetSessionByHash = this.dbSync.prepare(`SELECT * FROM sessions WHERE hash == ?;`);
+		this.prepGetPermissions = this.dbSync.prepare(`SELECT * FROM permissions WHERE user_id == ?`);
 	}
 
 
@@ -102,7 +132,7 @@ module.exports = class Database{
 	}
 
 	passwordIsAcceptable(password){
-		if(password.length < self.minPasswordLength){
+		if(password.length < this.minPasswordLength){
 			return false;
 		}
 
@@ -112,12 +142,12 @@ module.exports = class Database{
 	generatePasswordInfo(password){
 		let salt = this.generateSalt();
 
-		let hash = this.hashPassword(password, salt, self.passwordHashIterations);
+		let hash = this.hashPassword(password, salt, this.passwordHashIterations);
 
 		return {
 			hash: hash,
 			salt: salt,
-			iterations: self.passwordHashIterations
+			iterations: this.passwordHashIterations
 		}
 	}
 
@@ -130,8 +160,7 @@ module.exports = class Database{
 
 		let now = new Date().getTime();
 
-		let q = this.dbSync.prepare(`INSERT INTO users (email, password_hash, password_salt, password_hash_iter, date) VALUES (?, ?, ?, ?, ?)`);
-		q.run(email, passInfo.hash, passInfo.salt, passInfo.iterations, now);
+		this.prepCreateUser.run(email, passInfo.hash, passInfo.salt, passInfo.iterations, now);
 
 		console.log('Created user:', email);
 	}
@@ -139,11 +168,19 @@ module.exports = class Database{
 	changePassword(id, pw){
 		let newPassInfo = this.generatePasswordInfo(pw);
 
-		let q = this.dbSync.prepare(`UPDATE users SET password_hash = ?, password_salt = ?, password_hash_iter = ? WHERE id == ?;`);
-
-		q.run(newPassInfo.hash, newPassInfo.salt, newPassInfo.iterations, id);
+		this.prepChangePassword.run(newPassInfo.hash, newPassInfo.salt, newPassInfo.iterations, id);
 
 		console.log('Updated password for:', id);
+	}
+
+	grantPermission(user_id, perm, granting_user_id){
+		let now = new Date().getTime();
+
+		this.prepGrantPermission.run(user_id, perm, now, granting_user_id);
+	}
+
+	revokePermission(user_id, perm){
+		this.prepRevokePermission.run(user_id, perm);
 	}
 
 	logInUserByID(id, res){
@@ -153,9 +190,7 @@ module.exports = class Database{
 
 		let now = new Date().getTime();
 
-		let q = this.dbSync.prepare(`INSERT INTO sessions (user_id, hash, date_created) VALUES (?, ?, ?);`);
-
-		q.run(id, hash, now);
+		this.prepCreateSession.run(id, hash, now);
 
 		res.cookie('sessionid', sessionID, {
 			maxAge: config.get('session_duration_millis'),
@@ -170,8 +205,7 @@ module.exports = class Database{
 	deleteSessionByID(id){	//Delete a session by the database
 		//entry id (not session id)
 
-		let q = this.dbSync.prepare(`DELETE FROM sessions WHERE id == ?;`);
-		q.run(id);
+		this.prepDeleteSession.run(id);
 	}
 
 	deleteSessionBySessionID(sessionID){
@@ -191,9 +225,7 @@ module.exports = class Database{
 	//User query methods
 
 	emailIsUsed(email){	//Check if email address appears in db
-		let q = this.dbSync.prepare(`SELECT * FROM users WHERE email == ?;`)
-
-		let res = q.all(email);
+		let res = this.prepSelectEmail.all(email);
 
 		let isUsed = res.length > 0;
 
@@ -217,12 +249,27 @@ module.exports = class Database{
 		return true;
 	}
 
+	getPermissionsByUserID(id){
+		let res = this.prepGetPermissions.all(id);
+
+		let permissions = new PermissionManager();
+
+		for (let row of res){
+			permissions.grant({
+				name: row['name'],
+				dateGranted: row['date_granted'],
+				grantedByID: row['granted_by_id'],
+				implied: false
+			});
+		}
+
+		return permissions
+	}
+
 	getUserByEmail(email){	//Find a user by their email listed in
 		//the database
 
-		let q = this.dbSync.prepare(`SELECT * FROM users WHERE email == ?;`);
-
-		let res = q.get(email);
+		let res = this.prepGetUserByEmail.get(email);
 
 		if(!res){
 			//console.log(`No users with email ${email}.`);
@@ -234,26 +281,13 @@ module.exports = class Database{
 	}
 
 	getUserByID(id){
-		let q = this.dbSync.prepare(`SELECT * FROM users WHERE id == ?;`);
-
-		let res = q.get(id);
+		let res = this.prepGetUserByID.get(id);
 
 		if(!res){
 			return null;
 		}
 
-		//Insert permissions into the return value
-		let q2 = this.dbSync.prepare(`SELECT * FROM permissions WHERE user_id == ?`);
-
-		let res2 = q2.all(id);
-
-		let permissions = new PermissionManager();
-
-		for (let row of res2){
-			permissions.grant(row['name']);
-		}
-
-		res['permissions'] = permissions;
+		res['permissions'] = this.getPermissionsByUserID(id);
 
 		return res;
 	}
@@ -262,9 +296,8 @@ module.exports = class Database{
 		//Calculate the hash of the session ID
 		let hash = this.hashSessionID(sessionID);
 		//Does the hash of sessionid appear in the session table?
-		let q = this.dbSync.prepare(`SELECT * FROM sessions WHERE hash == ?;`);
 
-		let session = q.get(hash);
+		let session = this.prepGetSessionByHash.get(hash);
 
 		if(!session){
 			return null;
@@ -303,7 +336,7 @@ module.exports = class Database{
 		const users = this.prepGetUsers.all();
 
 		users.forEach((user, i) => {
-			//TODO: insert permissions
+			user.permissions = this.getPermissionsByUserID(user.id);
 		});
 
 		return users;
@@ -432,9 +465,7 @@ module.exports = class Database{
 	}
 
 	getCardByTagID(id){
-		const query = this.dbSync.prepare('SELECT * FROM cards WHERE id = ?');
-
-		const cards = query.all(id);	//Insert the ID value into the
+		const cards = this.prepGetCardsByID.all(id);	//Insert the ID value into the
 		//query, and execute it.
 
 		if(cards.length > 1){
@@ -457,16 +488,7 @@ module.exports = class Database{
 	}
 
 	getCards(){
-		const q = this.dbSync.prepare(`SELECT * FROM cards WHERE (
-			(contents IS NOT NULL AND contents <> '') OR
-			(parent_ids IS NOT NULL AND parent_ids <> '') OR
-			(type IS NOT NULL AND type <> '') OR
-			(date_sample IS NOT NULL AND date_sample <> '')) AND
-			((date_modified_first IS NOT NULL AND date_modified_first <> '') OR
-			id < 1000)
-			`);
-
-		const cards = q.all();
+		const cards = this.prepGetCardsInUse.all();
 
 		return cards;
 	}
@@ -501,9 +523,8 @@ module.exports = class Database{
 			
 		});
 
-		const sqlQueryString = `SELECT * FROM cards WHERE (${fieldOps.join(` OR `)})`;
-
-		const query = this.dbSync.prepare(sqlQueryString);
+		//Custom-build this query because it has many fields
+		const query = this.dbSync.prepare(`SELECT * FROM cards WHERE (${fieldOps.join(` OR `)})`);
 		const results = query.all(parameters);
 
 		//console.log(`Query yielded ${results.length} cards.`);
@@ -529,10 +550,7 @@ module.exports = class Database{
 		if(minimumEntry == null){
 			//console.log(`Adding minimum-id entry with id=${minimumTagID}`)
 
-			const query = this.db.prepare('INSERT OR IGNORE INTO cards(id) \
-				VALUES(?)');
-			query.run(minimumTagID);
-
+			this.prepCreateMinimumIDCard.run(minimumTagID);
 
 			let lastID = this.getIDCounter();	//Should be equal to 
 			//minimumTagID.
@@ -543,10 +561,8 @@ module.exports = class Database{
 		}
 
 		for(;i<num; i++){
-			this.dbSync.exec(`INSERT INTO cards DEFAULT VALUES`);	//All values
+			this.prepCreateBlankCard.run();	//All values
 			//will take on default state.
-
-				
 
 			let lastID = this.getIDCounter();	//The ID of the entry we
 			//insert comes from the autoincrement behavior of the ID field. We
@@ -572,23 +588,18 @@ module.exports = class Database{
 		//This is the current date in time in UCT (!!!). Remove the fractional
 		//seconds and replace the T with a space.
 
-		const q1 = this.dbSync.prepare(`UPDATE cards SET date_modified_first =
-			case when ifnull(date_modified_first, '') is '' then ? else
-			date_modified_first end, date_modified_latest = ? WHERE id = ?`);
 		//Update the date_modified_first field if it is null or empty (''), 
 		//otherwise set it to its current value (make no change). Also, set
 		//date_modified_latest to the current date in all cases.
 
-		const result = q1.run(now, now, id);	//Insert the ID value into the
+		const result = this.prepUpdateModifiedDate.run(now, now, id);	//Insert the ID value into the
 		//query, and execute it.
 
 		for(let [field, value] of data){	//TODO: This is bad practice, do not
 			//allow partial writes
 
-			const queryString = `UPDATE cards SET ${field}=? WHERE id=?`;
-			//console.log(queryString);
-			const q2 = this.dbSync.prepare(queryString);
-			const result = q2.run(value, safeID);
+			let query = this.dbSync.prepare(`UPDATE cards SET ${field}=? WHERE id=?`);
+			const result = query.run(value, safeID);
 			//console.log(result);
 		}
 	}
@@ -598,11 +609,7 @@ module.exports = class Database{
 		//This is the current date in time in UCT (!!!). Remove the fractional
 		//seconds and replace the T with a space.
 
-		const query = this.dbSync.prepare(`UPDATE cards SET date_scanned_first =
-			case when ifnull(date_scanned_first, '') is '' then ? else
-			date_scanned_first end, date_scanned_latest = ? WHERE id = ?`);
-
-		const result = query.run(now, now, id);	//Insert the ID value into the
+		const result = this.prepUpdateScanDate.run(now, now, id);	//Insert the ID value into the
 		//query, and execute it.
 	}
 
@@ -611,14 +618,14 @@ module.exports = class Database{
 
 	//Other query methods
 	getIDCounter(){
-		const query = this.dbSync.prepare('SELECT * FROM cards ORDER BY id DESC LIMIT 1');
-
 		let counter = 0;
 
-		if(query.all().length == 0){
+		let res = this.prepGetCardsDescending.all();
+
+		if(res.length == 0){
 			//console.log('There are no rows. Assuming counter at zero.');
 		} else{
-			const lastRow = query.all()[0];
+			const lastRow = res[0];
 			counter = lastRow.id;
 		}
 

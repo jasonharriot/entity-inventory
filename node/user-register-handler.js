@@ -3,28 +3,30 @@ module.exports = function(req, res){
 	let pw = req.body['password'];
 
 	if(!req.db.emailIsAcceptable(email)){
-		// userError('E-mail address is not valid.');
-		res.redirect('/register');
+		let msg = "E-mail address is not acceptable.";
+		res.redirect(`/register?msg=${encodeURIComponent(msg)}&msgType=error`);
 		return;
 	}
 
-	if(req.db.emailIsUsed(req.sqlite, email)){
-		// userError('E-mail address is already in use.');
-		res.redirect('/register');
+	if(req.db.emailIsUsed(email)){
+		let msg = "E-mail address is already in use.";
+		res.redirect(`/register?msg=${encodeURIComponent(msg)}&msgType=error`);
 		return;
 	}
 	
 	if(!req.db.passwordIsAcceptable(pw)){
-		// userError('Password is too short.');
-		res.redirect('/register');
+		let msg = "Password is not acceptable.";
+		res.redirect(`/register?msg=${encodeURIComponent(msg)}&msgType=error`);
 		return;
 	}
 
 	//The password and username are acceptable and we can modify the
 	//database.
 
-	req.db.createUser(req.sqlite, email, pw);
+	req.db.createUser(email, pw);
 
-	res.redirect(`/login`);
+	msg = 'Registration successful. Please log in:'
+
+	res.redirect(`/login?msg=${encodeURIComponent(msg)}&msgType=success`);
 	return
 }

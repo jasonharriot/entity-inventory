@@ -1,0 +1,21 @@
+<% if(query.msg){ %>
+	<% switch(query.msgType){
+		default:%> <div class="urlMessage infoMessage">
+		<% break;
+		case "error":%> <div class="urlMessage errorMessage">
+		<% break;
+		case "success":%> <div class="urlMessage successMessage">
+		<% break;
+	} %><%= query.msg %></div>
+	<script type="text/javascript">
+		let params = new URLSearchParams(window.location.search);
+
+		params.delete('msg');
+		params.delete('msgType');
+
+		let newPart = [window.location.pathname, '?', params.toString()].join('');
+
+		history.replaceState(null, '', newPart);
+
+	</script>
+<% } %>

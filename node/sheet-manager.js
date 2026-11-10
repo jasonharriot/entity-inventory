@@ -3,8 +3,6 @@ const fs = require('node:fs');
 const qr = require('qrcode');
 const config = require('config');
 
-const { tagIDString } = require('./tag-id-string.js');
-
 module.exports = {
 	SheetManager: class{
 		constructor(template){
@@ -237,7 +235,7 @@ module.exports = {
 								opacity: 1
 							});
 
-							newPage.drawText(tagIDString(thisID), {
+							newPage.drawText(String(thisID).padStart(6, '0'), {
 								x: (thisTagX+this.textOffset[0])*72, 
 								y: (thisTagY+this.textOffset[1])*72,
 								size:this.fontSize,

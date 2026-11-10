@@ -12,7 +12,7 @@ module.exports = function(req, res){
 	let newPW = req.body['new_password'];
 	let oldPW = req.body['old_password'];
 
-	let oldPassIsGood = req.db.verifyPassword(oldPW, user.password_hash, user.password_salt, user.password_hash_iter);
+	let oldPassIsGood = req.db.passwordIsValid(oldPW, user.password_hash, user.password_salt, user.password_hash_iter);
 
 	let newPassIsGood = req.db.passwordIsAcceptable(newPW);
 

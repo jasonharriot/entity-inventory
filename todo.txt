@@ -1,11 +1,10 @@
 TODO
 
-- Remove orphaned handlers 
-
 - Password reset by privileged users
 - Change email address
-- User list page
+
 - Login prompt with redirect to original url
+
 - Permissions:
 	login (Allows a user to log in. Without it, they are locked out. Session tokens revoked separately.)
 	read (all queries for card information, id counter, lists)
@@ -13,15 +12,19 @@ TODO
 	issue_ids (can generate new IDs and label PDF)
 	officer (Can reset passwords, grant/revoke permissions, and download database file)
 	chief (Same as officer, but permissions cannot be changed by any other user. Chief can only be granted manually.)
-- Force user to reset password
 
-- view-card.html replace with ejs, handle not having permissions or not being logged in.
+- Force user to reset password
 
 - User email on generated label sheet
 - Generated-by attribute on IDs
 - Label template name attribute on IDs
-- Edit logs ip, user agent
+- Edit logs: ip, user agent
 - Registration logs ip, user agent
 - IP whitelist
+
 - Prepared statements in class constructor, not methods
+
 - Keep session alive with authMiddleware
+- Hierarchial back button list
+
+- Unit tests

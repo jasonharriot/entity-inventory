@@ -14,28 +14,29 @@ module.exports = class PermissionManager{
 	}
 
 	grant(p){
-		//If this permission has not been granted yet, push it to the list.
-		if(this.permissions.indexOf(p) == -1){
-			this.permissions.push(p)
-		}
-
-		//Also grant permissions implied.
-		//If the permission does not appear in the hierarchy (as a key), then it has no implied permissions.
-		if(!this.hierarchy[p]){
+		if(this.has(p.name)){	//Don't modify anything if the permission is already held.
 			return;
 		}
 
-		for(let impliedPermission of this.hierarchy[p]){
-			this.grant(impliedPermission);
+		this.permissions.push(p);
+
+		if(!this.hierarchy[p.name]) return;	//Return if no implied permissions.
+
+		//Also grant permissions implied.
+		for(let impliedPermission of this.hierarchy[p.name]){
+			this.grant({
+				name: impliedPermission,
+				grantedByID: null,
+				dateGranted: null,
+				implied: true
+			});
 		}
 	}
 
 	has(p){
-		if(this.permissions.indexOf(p) >= 0){
-			return true;
-		}
+		const match = this.permissions.filter((held) => held.name == p)
 
-		return false;
+		return match.length > 0;
 	}
 
 	hasAny(pList){
@@ -56,6 +57,10 @@ module.exports = class PermissionManager{
 		}
 
 		return true;
+	}
+
+	namesToArray(){
+		return this.permissions.map((p) => p.name);
 	}
 
 	toArray(){

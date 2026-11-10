@@ -5,13 +5,11 @@ const cookieParser = require('cookie-parser');
 const ejs = require('ejs');
 
 const registrationHandler = require('./user-register-handler');
-//const userListHandler = require('./user-list-handler');
 const loginHandler = require('./login-handler.js');
 const logoutHandler = require('./logout-handler.js');
 const passwordChangeHandler = require('./password-change-handler.js');
 const templateListHandler = require('./template-list-handler.js');
 const scanHandler = require('./scan-handler.js');
-const getIDCounterHandler = require('./get-id-counter-handler.js');
 const cardListHandler = require('./card-list-handler.js');
 const cardReadHandler = require('./card-read-handler.js');
 const cardFamilyHandler = require('./card-family-handler.js');
@@ -21,6 +19,8 @@ const backupSQLiteHandler = require('./backup-sqlite-handler.js');
 const sheetGenerateHandler = require('./sheet-generate-handler.js');
 const searchHandler = require('./search-handler.js');
 const permissionChecker = require('./permission-checker.js')
+const permissionGrantHandler = require('./permission-grant-handler.js');
+const permissionRevokeHandler = require('./permission-revoke-handler.js');
 
 const Database = require('./database.js');
 
@@ -67,7 +67,9 @@ app.post('/api/user/logout', logoutHandler);
 
 app.post('/api/user/pwchange', passwordChangeHandler);
 
-app.get('/api/get-id-counter', permissionChecker('read'), getIDCounterHandler);
+app.post('/api/user/permission/grant', permissionGrantHandler);
+
+app.post('/api/user/permission/revoke', permissionRevokeHandler);
 
 app.get('/api/template/list', permissionChecker('read'), templateListHandler);
 
@@ -98,7 +100,7 @@ app.get('/s/:tagid', scanHandler);
 
 //EJS
 app.get('/', (req, res) => {
-	res.render('index.ejs');
+	res.render('index.ejs', {query: req.query});
 });
 
 app.get('/bulk-landing', permissionChecker('write'), (req, res) => {
@@ -139,7 +141,7 @@ app.get('/login', (req, res) => {
 		return;
 	}
 
-	res.render('login.ejs');
+	res.render('login.ejs', {query: req.query});
 });
 
 app.get('/pwchange', (req, res) => {
@@ -153,11 +155,11 @@ app.get('/pwchange', (req, res) => {
 
 app.get('/register', (req, res) => {
 	if(app.locals.authenticatedUser){
-		res.redirect('user');
+		res.redirect('/');
 		return;
 	}
 
-	res.render('register.ejs');
+	res.render('register.ejs', {query: req.query});
 });
 
 app.get('/search', permissionChecker('read'), (req, res) => {
@@ -178,8 +180,16 @@ app.get('/user-list', permissionChecker('officer'), (req, res) => {
 	res.render('user-list.ejs', {users: db.getUsers()});
 });
 
+app.get('/user-manage', permissionChecker('officer'), (req, res) => {
+	res.render('user-manage.ejs', {query: req.query, user: db.getUserByID(req.query.id)})
+})
+
 app.get('/view-card', permissionChecker('read'), (req, res) => {
 	res.render('view-card.ejs');
+});
+
+app.get('/url-message-test', permissionChecker('officer'), (req, res) => {
+	res.render('url-message-test.ejs', {query: req.query});
 });
 
 

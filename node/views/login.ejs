@@ -14,8 +14,9 @@
 
 			<div id="contentContainer">
 				<div class="section">
+					<%- include('url-message.ejs') %>
 					<h2>Log in to Entity Inventory</h2>
-					<div id="fillMessage" display="none" style="color:#f00"></div>
+					<div class="errorMessage" id="fillMessage" display="none" style="color:#f00"></div>
 					<form action="/api/user/login" method="post">
 						<p>
 							<input type="email" name="email" placeholder="e-mail address">
@@ -31,8 +32,6 @@
 			</div>
 
 			<%- include('footer.ejs') %>
-
-			<script type="text/javascript" src="js/func-url-message.js"></script>
 		</div>
 	</body>
 </html>

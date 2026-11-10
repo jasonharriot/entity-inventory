@@ -15,6 +15,7 @@
 
 			<div id="contentContainer">
 				<div class="section">
+					<%- include('url-message.ejs') %>
 					<h2>Register a new account</h2>
 					<div id="fillMessage" display="none"></div>
 					<form action="/api/user/register" method="post">
@@ -36,8 +37,5 @@
 
 			<%- include('footer.ejs') %>
 		</div>
-
-		<script type="text/javascript" src="js/func-url-message.js"></script>
-		<script type="text/javascript" src="js/page-register.js"></script>
 	</body>
 </html>

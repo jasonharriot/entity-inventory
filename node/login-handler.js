@@ -2,15 +2,15 @@ module.exports = function(req, res){
 	let email = req.body['email'];
 	let pw = req.body['password'];
 
+	let badLoginMessage = 'Username and/or password are incorrect. Try again.';
+
 	if(req.app.locals.authenticatedUser){
-		//userMessage('You are already logged in.');
 		res.redirect('/user');
 		return;
 	}
 
 	if(!req.db.emailIsAcceptable(email)){
-		//userMessage('E-mail address is not valid.');
-		res.redirect('/login');
+		res.redirect(`/login?msg=${encodeURIComponent(badLoginMessage)}&msgType=error`);
 		return;
 	}
 	
@@ -23,8 +23,6 @@ module.exports = function(req, res){
 		res.redirect('/');
 		return;
 	}
-
-	//userMessage('Incorrect e-mail or password. Please try again.');
-	res.redirect('/login');
+	res.redirect(`/login?msg=${encodeURIComponent(badLoginMessage)}&msgType=error`);
 	console.log('Bad login:', email);
 }
