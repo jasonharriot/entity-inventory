@@ -22,9 +22,8 @@ TODO
 - Registration logs ip, user agent
 - IP whitelist
 
-- Prepared statements in class constructor, not methods
-
 - Keep session alive with authMiddleware
+
 - Hierarchial back button list
 
 - Unit tests

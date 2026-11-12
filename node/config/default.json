@@ -5,7 +5,7 @@
 	"site_description": "Entity Inventory pre-release version 0.1",
 	"org_name": "Hubba Bubba Co., Inc.",
 	"copyright_text": "&copy; 2026 Hubba Bubba Co. Inc.",
-	"db_file_path": "./db.sqlite",
+	"db_file_path": "./database/db.sqlite",
 	"tag_scheme": "http",
 	"minimum_tag_id": 1000,
 	"maximum_tag_id": 999999,
