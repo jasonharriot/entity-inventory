@@ -327,7 +327,9 @@ module.exports = class Database{
 
 		}
 
-		return res;
+		let user = this.getUserByID(res.id);
+
+		return user;
 	}
 
 	getUserByID(id){
