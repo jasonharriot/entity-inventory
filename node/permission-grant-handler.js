@@ -5,6 +5,8 @@ module.exports = (req, res) => {
 
 	perm = perm.trim();
 
+	//res.redirect('/user-manage?id=' + user_id + '&msg=' + msg + '&msgType=error');
+
 	let msg = null;
 
 	if(perm.length <= 0){
@@ -14,7 +16,12 @@ module.exports = (req, res) => {
 	} else if(req.db.getPermissionsByUserID(user_id).has(perm)){
 		msg = 'This user already holds that permission: "' + perm + '".';
 	} else{
-		req.db.grantPermission(user_id, perm, granting_user_id);
+		if(!req.db.grantPermission(user_id, perm, granting_user_id)){
+			let msg = 'You cannot grant that permission.';
+			res.redirect('/user-manage?id=' + user_id + '&msg=' + msg + '&msgType=error');
+			return;
+		}
+
 		res.redirect('/user-manage?id=' + user_id);
 		return;
 	}

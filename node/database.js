@@ -21,6 +21,14 @@ module.exports = class Database{
 		this.passwordHashBytes = 64;
 		this.passwordHashAlgo = 'sha512';
 
+		this.requirements = {	//Permissions and the requirements to grant or revoke them. Null signifies forbidden to all.
+			officer: 'chief',
+			chief: null
+		}
+
+		this.minRequiredPerm = 'officer';	//Permission required for all permission modifications
+
+
 		//Set up the tables if they do not already exist
 		this.dbSync.exec(`CREATE TABLE IF NOT EXISTS cards (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -176,11 +184,23 @@ module.exports = class Database{
 	grantPermission(user_id, perm, granting_user_id){
 		let now = new Date().getTime();
 
+		if(!this.permissionModifiable(perm, granting_user_id)){
+			//Attempt to grant a disallowed permission
+			return false;
+		}
+
 		this.prepGrantPermission.run(user_id, perm, now, granting_user_id);
+		return true
 	}
 
-	revokePermission(user_id, perm){
+	revokePermission(user_id, perm, revoking_user_id){
+		if(!this.permissionModifiable(perm, revoking_user_id)){
+			//Attempt to revoke a disallowed permission
+			return false;
+		}
+
 		this.prepRevokePermission.run(user_id, perm);
+		return true;
 	}
 
 	logInUserByID(id, res){
@@ -200,6 +220,36 @@ module.exports = class Database{
 		});
 
 		return;
+	}
+
+	permissionModifiable(perm, user_id){	//Check if the specified user is allowed to modify the given permission
+		let heldPermObj = this.getPermissionsByUserID(user_id);
+
+		if(!heldPermObj.has(this.minRequiredPerm)){
+			console.log(`User needs to hold ${this.minRequiredPerm} to modify other permissions.`);
+			return false;
+		}
+
+		if(!this.requirements.hasOwnProperty(perm)){	//If no requirements present, it is modifiable
+			console.log('No requirements.');
+			return true;
+		}
+
+		let requiredPerm = this.requirements[perm];
+
+		if(requiredPerm === null){
+			console.log(`Permission ${perm} is forbidden.`);
+			return false;
+		}
+
+		if(heldPermObj.has(requiredPerm)){
+			console.log(`User ${user_id} holds ${perm}.`);
+			return true;
+		}
+
+		`User ${user_id} does not hold ${perm}.`
+
+		return false;
 	}
 
 	deleteSessionByID(id){	//Delete a session by the database
