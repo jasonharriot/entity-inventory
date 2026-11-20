@@ -10,14 +10,19 @@
 				<%}%>
 			<% } %>
 		</div>
-		<% if(typeof(backButtonDisabled) == 'undefined'){ %>
-		<div>
-			<h2>
-				<a class="backArrow" href="<%= typeof(backButtonPath) == 'undefined' ? '.' : backButtonPath %>">
-					← <%= typeof(backButtonLabel) == 'undefined' ? 'Home' : backButtonLabel %>
-				</a>
-			</h2>
-		</div>
+		<% if(typeof(navPath) != 'undefined'){ %>
+			<div id="navPath">
+				<% navPath.forEach((item, i) => { %>
+					<% if(i > 0){ %>&nbsp;→&nbsp;<% } %>
+					<span class="navPathItem">
+						<% if(i < navPath.length-1){ %>
+							<a href="<%= item.path %>"><%= item.name %></a>
+						<% }else{ %>
+							<%= item.name %>
+						<% } %>
+					</span>
+				<% }); %>
+			</div>
 		<% } %>
 	</div>
 	<div class="scanDiv">

@@ -215,7 +215,7 @@ module.exports = class Database{
 		res.cookie('sessionid', sessionID, {
 			maxAge: config.get('session_duration_millis'),
 			httpOnly: true,
-			secure: true,
+			//secure: true,
 			sameSite: true
 		});
 

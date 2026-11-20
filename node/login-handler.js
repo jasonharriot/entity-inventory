@@ -5,11 +5,13 @@ module.exports = function(req, res){
 	let badLoginMessage = 'Username and/or password are incorrect. Try again.';
 
 	if(req.app.locals.authenticatedUser){
+		console.log(`User already authenticated, redirecting.`);
 		res.redirect('/user');
 		return;
 	}
 
 	if(!req.db.emailIsAcceptable(email)){
+		console.log(`E-mail is not acceptable: ${email}`);
 		res.redirect(`/login?msg=${encodeURIComponent(badLoginMessage)}&msgType=error`);
 		return;
 	}
@@ -18,22 +20,22 @@ module.exports = function(req, res){
 	let user = req.db.getUserByEmail(email);
 
 	if(!user){
+		console.log(`User for e-mail not found: ${email}`);
 		res.redirect(`/login?msg=${encodeURIComponent(badLoginMessage)}&msgType=error`);
-
-		console.log('Bad login:', email);
 
 		return;
 	}
 
 	if(!user.permissions.has('login')){
+		console.log(`User does not hold login permission: ${email}`);
 		let msg = 'You do not have permission to log in. Please ask an officer to grant it to you.';
-
 		res.redirect(`/login?msg=${msg}&msgType=error`);
 
 		return;
 	}
 
 	if(req.db.passwordIsValid(pw, user.password_hash, user.password_salt, user.password_hash_iter)){
+		console.log(`Good password for: ${email}`);
 		req.db.logInUserByID(user.id, res);
 
 		res.redirect('/');
@@ -41,6 +43,6 @@ module.exports = function(req, res){
 		return;
 	}
 
+	console.log(`Bad login (general): ${email}`);
 	res.redirect(`/login?msg=${encodeURIComponent(badLoginMessage)}&msgType=error`);
-	console.log('Bad login:', email);
 }

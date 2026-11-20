@@ -1,29 +1,38 @@
 TODO
 
-- Password reset by privileged users
-- Change email address
-
-- Login prompt with redirect to original url
-
+PERMISSION MANAGEMENT
 - Permissions:
 	login (Allows a user to log in. Without it, they are locked out. Session tokens revoked separately.)
 	read (all queries for card information, id counter, lists)
 	write (submit edits for cards)
 	issue_ids (can generate new IDs and label PDF)
-	officer (Can reset passwords, grant/revoke permissions, and download database file)
-	chief (Same as officer, but permissions cannot be changed by any other user. Chief can only be granted manually.)
+	officer (Can reset passwords, grant/revoke permissions except chief and officer, and download database file)
+	chief (Same as officer, but permissions cannot be changed by any other user. Chief can only be granted manually. Chief permission cannot be revoked by self.)
 
+- Cannot grant permissions to a user with no password (waiting to be reset)
+
+REGISTRATION AND MANAGEMENT
+- Password reset by privileged users
 - Force user to reset password
+- Change email address
 
+NAVIGATION
+- Login prompt with redirect to original url
+- Hierarchial back button list
+- Help page
+
+LOGGING
 - User email on generated label sheet
 - Generated-by attribute on IDs
 - Label template name attribute on IDs
 - Edit logs: ip, user agent
 - Registration logs ip, user agent
+
+SECURITY
 - IP whitelist
-
 - Keep session alive with authMiddleware
+- Chief grant script
 
-- Hierarchial back button list
-
+BUGS
 - Unit tests
+- No option for encrypted access through LAN, cookie "secure" option must be disabled

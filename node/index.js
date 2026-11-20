@@ -7,6 +7,7 @@ const ejs = require('ejs');
 const registrationHandler = require('./user-register-handler');
 const loginHandler = require('./login-handler.js');
 const logoutHandler = require('./logout-handler.js');
+const navPathHandler = require('./nav-path-handler.js');
 const passwordChangeHandler = require('./password-change-handler.js');
 const templateListHandler = require('./template-list-handler.js');
 const scanHandler = require('./scan-handler.js');
@@ -37,6 +38,8 @@ app.use((req, res, next) => {	//Middleware to dump everything to console.
 
 	return next();
 });
+
+app.use(navPathHandler);
 
 app.use('/', express.static('static'));	//For requests to the root, just serve
 //static files from the directory.

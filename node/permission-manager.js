@@ -9,7 +9,7 @@ module.exports = class PermissionManager{
 			'officer': ['read', 'write', 'issue_ids'],
 			'read': ['login'],
 			'write': ['login'],
-			'issue_ids': ['login']
+			'issue_ids': ['read']
 		}
 	}
 
