@@ -4,9 +4,9 @@
 		<div>
 			<% if(typeof(hideLogin) == 'undefined'){ %>
 				<% if(authenticatedUser){%>
-				Logged in: <a href="user"><%= authenticatedUser.email %></a>
+				Logged in: <a href="/user"><%= authenticatedUser.email %></a>
 				<%} else{%>
-				<a href="login">Log in</a> | <a href="register">Register new account</a>
+				<a href="/login">Log in</a> | <a href="/register">Register new account</a>
 				<%}%>
 			<% } %>
 		</div>
@@ -27,7 +27,7 @@
 	</div>
 	<div class="scanDiv">
 		<% if(typeof(scanningDisabled) == 'undefined'){ %>
-			<img src="img/scanner-bw.png" width="100px">
+			<img src="/img/scanner-bw.png" width="100px">
 			<i>Scanning is active</i>
 			<br>
 			<% if(typeof(scanningAction) == 'undefined'){ %>

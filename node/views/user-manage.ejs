@@ -59,6 +59,12 @@
 							</tbody>
 						</table>
 					</p>
+					<p>
+						<form action="/api/user/pwreset/" method="POST" onsubmit="return confirm('Reset password? This will force the user to change it before logging in.');">
+							<input type="text" name="user_id" value="<%= user.id %>" hidden>
+							<input type="submit" value="Reset password">
+						</form>
+					</p>
 				</div>
 			</div>
 

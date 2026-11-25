@@ -40,6 +40,12 @@ module.exports = (p) => {
 			return;
 		}
 
+		/*if(!req.app.locals.authenticatedUser.permissions.hasAll(permissions)){
+			let msg = 'The following permissions are required: ' + permissions.join(', ');
+			res.redirect(`/error?msg=${encodeURIComponent(msg)}&msgType='error'}`);
+			return;
+		}*/
+
 		next();
 	}
 };

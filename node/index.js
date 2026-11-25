@@ -9,6 +9,7 @@ const loginHandler = require('./login-handler.js');
 const logoutHandler = require('./logout-handler.js');
 const navPathHandler = require('./nav-path-handler.js');
 const passwordChangeHandler = require('./password-change-handler.js');
+const passwordResetHandler = require('./password-reset-handler.js');
 const templateListHandler = require('./template-list-handler.js');
 const scanHandler = require('./scan-handler.js');
 const cardListHandler = require('./card-list-handler.js');
@@ -70,6 +71,8 @@ app.post('/api/user/logout', logoutHandler);
 
 app.post('/api/user/pwchange', passwordChangeHandler);
 
+app.post('/api/user/pwreset', permissionChecker('chief'), passwordResetHandler);
+
 app.post('/api/user/permission/grant', permissionGrantHandler);
 
 app.post('/api/user/permission/revoke', permissionRevokeHandler);
@@ -129,6 +132,10 @@ app.get('/debug', permissionChecker('officer'), (req, res) => {
 app.get('/edit-card', permissionChecker('write'), (req, res) => {
 	res.render('edit-card.ejs');
 });
+
+app.get('/error', (req, res) => {
+	res.render('permission-error.ejs')
+})
 
 app.get('/go-to-card', permissionChecker('read'), (req, res) => {
 	res.render('go-to-card.ejs');

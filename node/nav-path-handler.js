@@ -124,7 +124,11 @@ module.exports = (req, res, next) => {	//Insert information to build the navigat
 	} else{
 		//console.log(`Couldn't find ${viewName} in site map. Returned: ${path}`);
 		res.locals['navPath'] = [{
-			name: 'Error',
+			name: 'Home',
+			path: '/'
+		},
+		{
+			name: '?',
 			path: '.'
 		}];
 	}

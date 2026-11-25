@@ -64,6 +64,15 @@ module.exports = class Database{
 			date TEXT NOT NULL
 		);`);
 
+		this.dbSync.exec(`CREATE TABLE IF NOT EXISTS flags (
+			id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
+			user_id INTEGER NOT NULL,
+			name TEXT NOT NULL,
+			date INTEGER NOT NULL,
+			FOREIGN KEY (user_id) REFERENCES users(id),
+			UNIQUE (user_id, name)
+		);`)
+
 		this.dbSync.exec(`CREATE TABLE IF NOT EXISTS sessions (
 			id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE,
 			user_id INTEGER NOT NULL,
@@ -105,6 +114,8 @@ module.exports = class Database{
 		this.prepGrantPermission = this.dbSync.prepare('INSERT OR IGNORE INTO permissions (user_id, name, date_granted, granted_by_id) VALUES (?, ?, ?, ?)');
 		this.prepRevokePermission = this.dbSync.prepare('DELETE FROM permissions WHERE user_id == ? AND name == ?');
 		this.prepSelectEmail = this.dbSync.prepare(`SELECT * FROM users WHERE email == ?;`);
+		this.prepSetFlag = this.dbSync.prepare(`INSERT OR IGNORE INTO flags (user_id, name, date) VALUES (?, ?, ?)`);
+		this.prepClearFlag = this.dbSync.prepare(`DELETE FROM flags WHERE user_id == ? AND name == ?`);
 		this.prepUpdateModifiedDate = this.dbSync.prepare(`UPDATE cards SET date_modified_first =
 			case when ifnull(date_modified_first, '') is '' then ? else
 			date_modified_first end, date_modified_latest = ? WHERE id = ?`);
@@ -250,6 +261,16 @@ module.exports = class Database{
 		`User ${user_id} does not hold ${perm}.`
 
 		return false;
+	}
+
+	setFlag(userID, name){
+		this.prepSetFlag.run(userID, name, new Date().getTime());
+		console.log(`Set flag ${name} for ${userID}`);
+	}
+
+	clearFlag(userID, name){
+		this.prepClearFlag.run(userID, name, new Date().getTime());
+		console.log(`Cleared flag ${name} for ${userID}`);
 	}
 
 	deleteSessionByID(id){	//Delete a session by the database
